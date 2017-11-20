@@ -2,6 +2,7 @@
 #include <string>
 #include<vector>
 #include <sstream>
+#include <fstream>
 
 using namespace std;
 
@@ -17,7 +18,7 @@ class matrix
     public:
     int rows;
     int columns;
-    string mName;
+    string mName,errorHandler;
 
     double** element;
     int getRows()
@@ -198,23 +199,75 @@ class matrix
 
     }
 
+    void swapRows(int ft,int sc)
+        {
+            double *temp=this->element[ft];
+            this->element[ft]=this->element[sc];
+            this->element[sc]=temp;
+
+        }
      double getDeterminant()
     {
-        if(rows!=columns)return -1;
-        if(rows==1&&columns==1)
-            return element[0][0];
-        double determinant=0;
-		matrix test ;
-        int sign=1;
-        for(int i=0;i<columns;i++)
-        {
-			test.subMatrix(*this,0,i);
-            determinant += sign*element[0][i]*test.getDeterminant();
-            sign*=-1;
-        }
-        return determinant;
-    }
 
+        if(this->columns==this->rows)
+        {
+            int n= this->rows;
+
+            for(int col = 0; col < n; ++col) {
+
+
+      bool found = false;
+      for(int row = col; row < n; ++row) {
+         if(this->element[row][col]) {
+                    if ( row != col )
+            {
+               this->swapRows( row, col);
+
+            }
+            else
+            {
+
+            }
+            found = true;
+            break;
+         }
+      }
+      if(!found) {
+
+         return 0;
+      }
+
+      for(int row = col + 1; row < n; ++row) {
+         while(true) {
+            int del = this->element[row][col] / this->element[col][col];
+
+            for (int j = col; j < n; ++j) {
+               this->element[row][j] -= del * this->element[col][j];
+            }
+            if (this->element[row][col] == 0)
+            {
+               break;
+            }
+            else
+            {
+               this->swapRows(col,row);
+
+            }
+         }
+      }
+
+        }
+        double res = 1;
+
+   for(int i = 0; i < n; ++i) {
+      res *= this->element[i][i];
+   }
+   return res;
+
+    }
+    else
+            return 0;
+    }
     void getInverse(matrix &x)
     {
 	matrix z;
@@ -247,6 +300,20 @@ class matrix
         }
         this->getTranspose(z);
     }
+	void inversePerElement(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				if(x.element[m][n]!=0)
+					this->setElement(m, n, 1/(x.element[m][n]));
+				else
+					this->errorHandler="Error There's a zero element in the matrix"; //this is to handle 1/0 error me7taga tet3addel tab3an
+			}
+		}
+	}
 
     void add(matrix& x, matrix& y,int old=0)
     {
@@ -327,23 +394,30 @@ class matrix
 	void div(matrix &x, matrix &y)
 	{
 	    matrix inverseDenom;
-	    inverseDenom.getInverse(y);
-	    this->initialling(x.rows, inverseDenom.getColumns());
-	    this->mult(x,inverseDenom);
+        inverseDenom.getInverse(y);
+        this->initialling(x.rows, inverseDenom.getColumns());
+        this->mult(x,inverseDenom);
+
+
 	}
 	void print()
 	{
-	    cout<<endl;
-	    for(int i=0; i<rows;i++)
-        {
-            for(int j=0;j<columns;j++)
-            {
-            cout<<" "<<element[i][j];
-            }
-            cout<<endl;
-        }
-        cout<<endl;
-
+		if(errorHandler=="Error There's a zero element in the matrix" || errorHandler=="Error The determinant of this matrix is eual to zero")
+			cout<<errorHandler;
+		else
+		{
+			cout << endl;
+			cout << mName << " = " << endl;
+			for (int i = 0; i<rows; i++)
+			{
+				for (int j = 0; j<columns; j++)
+				{
+					cout << "\t" << element[i][j];
+				}
+				cout << endl;
+			}
+		}
+		cout<<endl;
 	}
 
 	~matrix()
@@ -456,7 +530,7 @@ public:
 //matrix* memory =new matrix[20];
 ram memory (10);
 int memory_arrow=0;
-int exit=0;
+int exit1=0;
 
 void removeSpaces(string &str)
 {
@@ -501,6 +575,11 @@ void cut(string &variable1,string &variable2,int &index1,int &index2,char op,str
 
     index1=memory_check(variable1);
     index2=memory_check(variable2);
+}
+void cut(string &variable1, int &index1, char op, string operation)
+{
+	variable1 = operation.substr(operation.find(op) + 1, (operation.length() - operation.find(op)) - 1);
+	index1 = memory_check(variable1);
 }
 void input_checker(string input) // assignment or operation
 {
@@ -601,11 +680,34 @@ void input_checker(string input) // assignment or operation
                 memory_arrow++;
                 }
 			}
+			else if (input.find("./") != -1)
+			{
+				cut(variable1, index1, './', operation);
+				if (index != -1)
+				{
+					memory.p[index].inversePerElement(memory.p[index1]);
+					memory.p[index].print();
+				}
+
+				else
+				{
+					memory.creat(matrix_name);
+					memory.p[memory_arrow].inversePerElement(memory.p[index1]);
+					memory.p[memory_arrow].print();
+					memory_arrow++;
+				}
+			}
 			else if(input.find("/")!=-1)
 			{
 			    cut(variable1,variable2,index1,index2,'/',operation);
+//cout<<memory.p[index2].getDeterminant()<<endl;
+				if (memory.p[index2].getDeterminant() == 0)
+				{
+					cout << "Division cannot done" << endl;
+					return;
+				}
 
-                if(index!=-1)
+                else if(index!=-1)
                 {
                 memory.p[index].div(memory.p[index1],(memory.p[index2])) ;
                 memory.p[index].print();
@@ -655,7 +757,7 @@ void input_checker(string input) // assignment or operation
              }
              else if(input=="exit")
              {
-                 exit=1;
+                 exit1=1;
                  return;
              }
              else
@@ -665,16 +767,35 @@ void input_checker(string input) // assignment or operation
 
 }
 
-int main()
+int main(int argv,char* argc[])
 {
+	if (argv>1)
+	{
+		ifstream infile(argc[1]);
+		string sFile, temp;
+		while (getline(infile, temp))
+		{
+			if(temp.find("\r")!=-1)
+				temp.replace(temp.find("\r"),2,"");
+			sFile += temp;
+			if (sFile.find("]") != -1 || sFile.find("];") != -1 || sFile.find("+") != -1 || sFile.find("*") != -1 || sFile.find("/") != -1 || sFile.find("'") != -1 || sFile.find("./") != -1 || (sFile.find("-") != -1 && sFile.length() <= 10))
+			{
+				input_checker(sFile);
+				sFile = "";
+			}
+		}
+		infile.close();
+	}else
     while(1){
-            exit=0;
+            exit1=0;
             cout<<">> ";
 
      string ins;
      getline (cin,ins);
+     if(ins.find("\r")!=-1)
+				ins.replace(ins.find("\r"),2,"");
      input_checker(ins);
-     if(exit==1)
+     if(exit1==1)
         break;
 
 /*
@@ -687,7 +808,7 @@ for(int z=0;z<memory_arrow;z++)
 
    }
 cout<<endl<<"--------------------------"<<endl;
-*/
-    }
+
+   */ }
     return 0;
 }
