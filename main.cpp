@@ -3,7 +3,6 @@
 #include<vector>
 #include <sstream>
 #include <fstream>
-#include<cmath>
 
 using namespace std;
 
@@ -748,32 +747,6 @@ void input_checker(string input) // assignment or operation
 
 
 }
-	// mo2men
-         else if(input.find("sin(")!=-1)
-        {   
-            string sinOperation=input.substr((input.find("sin(")+4),(input.find(")")-(input.find("sin(")+4)));
-		 
-            //if(sinOperation==)
-            if(index!=-1)
-                {
-		   
-                //asg=(index1==index || index2==index);
-                memory.p[index].initialling(1,1);
-                memory.p[index].setElement(1,1,sin(StringToDouble(sinOperation))) ;
-                memory.p[index].print();
-                }
-
-                else
-                {
-                memory.creat(matrix_name);
-                memory.p[memory_arrow].initialling(1,1);
-                memory.p[memory_arrow].setElement(1,1,sin(StringToDouble(sinOperation))) ;
-                memory.p[memory_arrow].print();
-                memory_arrow++;
-                }
-        }
-
-        //end
 
 		else
         {
@@ -833,10 +806,8 @@ for(int z=0;z<memory_arrow;z++)
     cout<<memory[z].getName()<<" "<<memory[z].getRows()<<" "<<memory[z].getColumns()<<endl;
     memory[z].print();
     cout<<"#############"<<endl;
-
    }
 cout<<endl<<"--------------------------"<<endl;
-
    */ }
     return 0;
 }
