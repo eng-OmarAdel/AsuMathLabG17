@@ -197,75 +197,73 @@ class matrix
 
     }
 
-    void swapRows(int ft,int sc)
-        {
-            double *temp=this->element[ft];
-            this->element[ft]=this->element[sc];
-            this->element[sc]=temp;
+    //--------------------------------------------------------------------
+	double getDeterminant() {
+		if(rows==columns){
+		int i, j, k;
+		double factor;
+		double temp;
+		matrix a(*this) ;
+		int counti=0;
+			int m=this->rows ;
+	for(i = 0; i < m - 1; i++)
+	{
+		/* Elementary Row Operation I */
+		if(a.element[i][i] == 0)
+		{
+			for(k = i; k < m; k++)
+			{
+				if(a.element[k][i] != 0)
+				{
+					for(j = 0; j < m; j++)
+					{
+						temp = a.element[i][j];
+						a.element[i][j] = a.element[k][j];
+						a.element[k][j] = temp;
+					}
+				k = m;
+				}
+			}
+			counti++;
+		}
+		/* Elementary Row Operation III */
+		if(a.element[i][i] != 0)
+		{
+			for(k = i + 1; k < m; k++)
+			{
+				factor = -1.0 * a.element[k][i] /  a.element[i][i];
+				for(j = i; j < m; j++)
+				{
+					a.element[k][j] = a.element[k][j] + (factor * a.element[i][j]);
+				}
+			}
+		}
+	}
 
-        }
-     double getDeterminant()
-    {
+	/* Display upper triangular matrix */
 
-        if(this->columns==this->rows)
-        {
-            int n= this->rows;
+	temp = 1.0;
 
-            for(int col = 0; col < n; ++col) {
-
-
-      bool found = false;
-      for(int row = col; row < n; ++row) {
-         if(this->element[row][col]) {
-                    if ( row != col )
-            {
-               this->swapRows( row, col);
-
-            }
-            else
-            {
-
-            }
-            found = true;
-            break;
-         }
-      }
-      if(!found) {
-
-         return 0;
-      }
-
-      for(int row = col + 1; row < n; ++row) {
-         while(true) {
-            int del = this->element[row][col] / this->element[col][col];
-
-            for (int j = col; j < n; ++j) {
-               this->element[row][j] -= del * this->element[col][j];
-            }
-            if (this->element[row][col] == 0)
-            {
-               break;
-            }
-            else
-            {
-               this->swapRows(col,row);
-
-            }
-         }
-      }
-
-        }
-        double res = 1;
-
-   for(int i = 0; i < n; ++i) {
-      res *= this->element[i][i];
-   }
-   return res;
-
-    }
-    else
-            return 0;
-    }
+	
+	for(i = 0; i < m; i++)
+	{
+		temp *= a.element[i][i];
+	}
+	
+	
+	if(counti % 2 == 0)
+	{
+		return temp;;
+	}
+	else
+	{
+		return -1*temp ;
+	}
+		}
+		else return 0;
+	
+}
+		//--------------------------------------------------------------------------
     void getInverse(matrix &x)
     {
 	matrix z;
