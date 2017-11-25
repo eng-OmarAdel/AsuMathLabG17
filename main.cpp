@@ -529,7 +529,7 @@ void removeSpaces(string &str)
 {
     for(int i=0; i<str.length(); i++)
      {
-         if(str[i] == ' ') {str.erase(i);i--;}//replaced erase fn with =''
+         if(str[i] == ' ') {str.erase(i,1);i--;}//replaced erase fn with =''
 
      }
 }
