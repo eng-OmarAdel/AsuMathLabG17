@@ -2,7 +2,6 @@
 #include <string>
 #include <sstream>
 #include <fstream>
-
 using namespace std;
 
 double StringToDouble(const string &text)
@@ -42,7 +41,7 @@ class matrix
     {
         return element;
     }*/
-	
+
 
     matrix()
     {
@@ -245,13 +244,13 @@ class matrix
 
 	temp = 1.0;
 
-	
+
 	for(i = 0; i < m; i++)
 	{
 		temp *= a.element[i][i];
 	}
-	
-	
+
+
 	if(counti % 2 == 0)
 	{
 		return temp;;
@@ -262,7 +261,7 @@ class matrix
 	}
 		}
 		else return 0;
-	
+
 }
 		//--------------------------------------------------------------------------
     void getInverse(matrix &x)
@@ -598,9 +597,9 @@ void input_checker(string input) // assignment or operation
 		}
 		else
 		{
-			
+
 		}
-        
+
 
 
     }
@@ -763,9 +762,13 @@ void input_checker(string input) // assignment or operation
 
 
 }
+#define endl '\n'
 
 int main(int argv,char* argc[])
 {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+
 	if (argv>1)
 	{
 		ifstream infile(argc[1]);
@@ -805,5 +808,6 @@ for(int z=0;z<memoryPointer;z++)
    }
 cout<<endl<<"--------------------------"<<endl;
    */ }
+
     return 0;
 }
