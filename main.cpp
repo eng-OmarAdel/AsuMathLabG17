@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include<vector>
 #include <sstream>
 #include <fstream>
 
@@ -96,11 +95,10 @@ class matrix
         return this->element[elementRow, elementColumn];
     }
 
-    void initialling(string matrix_name,string matrix) // give me string wana azzabat isa
+    void initialising(string mName,string mString) // give me string wana azzabat isa
     {
-        mName=matrix_name;
-        string matrix2 = matrix.substr(1,matrix.length()-2); // to remove curly brackets
-        stringstream ss(matrix2);
+        this->mName=mName;
+        stringstream ss(mString);
         string token;
         while(getline(ss, token, ';'))
         {
@@ -120,7 +118,7 @@ class matrix
         for(int i = 0; i < rows; ++i)
         element[i] = new double[columns];
         int p=0, q=0;
-        stringstream ss3(matrix2);
+        stringstream ss3(mString);
         string token1;
         while(getline(ss3, token1, ';'))
         {
@@ -135,7 +133,7 @@ class matrix
             p++;
         }
     }
-    void update(string matrix_name,string matrix)
+    void update(string mName,string mString)
     {
 
         setRows(0);
@@ -145,11 +143,11 @@ class matrix
 			delete[] element[i];
 		}
 		delete[] element;
-		initialling(matrix_name,matrix);
+		initialising(mName,mString);
 
     }
 
-    void initialling(int rows1, int columns1)//give rows and columns wana azzabat isa
+    void initialising(int rows1, int columns1)//give rows and columns wana azzabat isa
     {
         this->columns = columns1;
         this->rows = rows1;
@@ -166,7 +164,7 @@ class matrix
      void getTranspose(matrix &x)
     {
 
-        this->initialling(x.columns, x.rows);
+        this->initialising(x.columns, x.rows);
         for(int m=0 ; m<(this->getRows()) ; m++)
         {
             for(int n=0 ; n<(this->getColumns()) ; n++)
@@ -179,7 +177,7 @@ class matrix
 
     void subMatrix(matrix& x,int elementRow, int elementColumn)
     {
-        this->initialling((x.rows)-1, (x.columns)-1);
+        this->initialising((x.rows)-1, (x.columns)-1);
         for(int i=0,m=0 ; i<x.rows,m<(this->getRows()) ; i++)
         {
             if(i == elementRow) continue;
@@ -200,81 +198,79 @@ class matrix
 
     }
 
-    void swapRows(int ft,int sc)
-        {
-            double *temp=this->element[ft];
-            this->element[ft]=this->element[sc];
-            this->element[sc]=temp;
+    //--------------------------------------------------------------------
+	double getDeterminant() {
+		if(rows==columns){
+		int i, j, k;
+		double factor;
+		double temp;
+		matrix a(*this) ;
+		int counti=0;
+			int m=this->rows ;
+	for(i = 0; i < m - 1; i++)
+	{
+		/* Elementary Row Operation I */
+		if(a.element[i][i] == 0)
+		{
+			for(k = i; k < m; k++)
+			{
+				if(a.element[k][i] != 0)
+				{
+					for(j = 0; j < m; j++)
+					{
+						temp = a.element[i][j];
+						a.element[i][j] = a.element[k][j];
+						a.element[k][j] = temp;
+					}
+				k = m;
+				}
+			}
+			counti++;
+		}
+		/* Elementary Row Operation III */
+		if(a.element[i][i] != 0)
+		{
+			for(k = i + 1; k < m; k++)
+			{
+				factor = -1.0 * a.element[k][i] /  a.element[i][i];
+				for(j = i; j < m; j++)
+				{
+					a.element[k][j] = a.element[k][j] + (factor * a.element[i][j]);
+				}
+			}
+		}
+	}
 
-        }
-     double getDeterminant()
-    {
+	/* Display upper triangular matrix */
 
-        if(this->columns==this->rows)
-        {
-            int n= this->rows;
+	temp = 1.0;
 
-            for(int col = 0; col < n; ++col) {
-
-
-      bool found = false;
-      for(int row = col; row < n; ++row) {
-         if(this->element[row][col]) {
-                    if ( row != col )
-            {
-               this->swapRows( row, col);
-
-            }
-            else
-            {
-
-            }
-            found = true;
-            break;
-         }
-      }
-      if(!found) {
-
-         return 0;
-      }
-
-      for(int row = col + 1; row < n; ++row) {
-         while(true) {
-            int del = this->element[row][col] / this->element[col][col];
-
-            for (int j = col; j < n; ++j) {
-               this->element[row][j] -= del * this->element[col][j];
-            }
-            if (this->element[row][col] == 0)
-            {
-               break;
-            }
-            else
-            {
-               this->swapRows(col,row);
-
-            }
-         }
-      }
-
-        }
-        double res = 1;
-
-   for(int i = 0; i < n; ++i) {
-      res *= this->element[i][i];
-   }
-   return res;
-
-    }
-    else
-            return 0;
-    }
+	
+	for(i = 0; i < m; i++)
+	{
+		temp *= a.element[i][i];
+	}
+	
+	
+	if(counti % 2 == 0)
+	{
+		return temp;;
+	}
+	else
+	{
+		return -1*temp ;
+	}
+		}
+		else return 0;
+	
+}
+		//--------------------------------------------------------------------------
     void getInverse(matrix &x)
     {
 	matrix z;
         double detObj = x.getDeterminant();
-        this->initialling(x.rows, x.columns);
-	z.initialling(x.rows, x.columns);
+        this->initialising(x.rows, x.columns);
+	z.initialising(x.rows, x.columns);
 	matrix sub;
 	int nozero=0;
         for(int i=0 ; i<x.rows ; i++)
@@ -303,7 +299,7 @@ class matrix
     }
 	void inversePerElement(matrix &x)
 	{
-		this->initialling(x.rows, x.columns);
+		this->initialising(x.rows, x.columns);
 		for (int m = 0; m<(this->getRows()); m++)
 		{
 			for (int n = 0; n<(this->getColumns()); n++)
@@ -320,7 +316,7 @@ class matrix
     {
 
          if(old==0)
-        this->initialling(x.rows, x.columns);
+        this->initialising(x.rows, x.columns);
         for(int i=0 ; i< (this->rows) ; i++)
         {
             for(int j=0 ; j< (this->columns) ; j++)
@@ -334,7 +330,7 @@ class matrix
      void sub(matrix& x, matrix& y,int old=0)
     {
         if(old==0)
-        this->initialling(x.rows, x.columns);
+        this->initialising(x.rows, x.columns);
         for(int i=0 ; i< (this->rows) ; i++)
         {
             for(int j=0 ; j< (this->columns) ; j++)
@@ -349,7 +345,7 @@ class matrix
 	{
 		//declaration the output(returned) matrix
 		if(asg==0)
-        this->initialling(x.rows, y.columns);//use constructor instead
+        this->initialising(x.rows, y.columns);//use constructor instead
         double** temp;
         if(asg==1)
         {
@@ -396,7 +392,7 @@ class matrix
 	{
 	    matrix inverseDenom;
         inverseDenom.getInverse(y);
-        this->initialling(x.rows, inverseDenom.getColumns());
+        this->initialising(x.rows, inverseDenom.getColumns());
         this->mult(x,inverseDenom);
 
 
@@ -428,70 +424,66 @@ class matrix
 			delete[] element[i];
 		}
 		delete[] element;
+		element = NULL;
 
 	}
 
 };
-class ram
+class mDynArr
 {
-    int mSize;
-    int used;
+    int arraySize;
+    int usedSlots;
 public:
     matrix *p;
 
-    ram()
+    mDynArr()
     {
         p=new matrix[1];
-        used=0;
+        usedSlots=0;
     }
-    ram(int s)
+    mDynArr(int s)
     {
-        mSize=s;
-        if(mSize<=0)
-            mSize=1;
-        p=new matrix[mSize];
-        used=0;
+        arraySize=s;
+        if(arraySize<=0)
+            arraySize=1;
+        p=new matrix[arraySize];
+        usedSlots=0;
     }
-    int size()
+    int getArraysize()
     {
-        return mSize;
+        return arraySize;
     }
-    int getUsed()
+    int getUsedSlots()
     {
-        return used;
+        return usedSlots;
     }
-
-    matrix get(int i)
+	matrix operator [] (int i)
+	{
+		return p[i];
+	}
+    void create(string name)
     {
-        return p[i];
-    }
-    matrix operator [] (int i)
-    {
-        return get(i);
-    }
-    void creat(string name)
-    {
-        p[used].setName(name);
+        p[usedSlots].setName(name);
         refresh();
     }
-    void creat(string name,string matrix)
+    void create(string name,string mString)
     {
-        p[used].initialling(name,matrix);
+        p[usedSlots].initialising(name,mString);
         refresh();
     }
-    void update(int num,string name,string matrix)
+    void update(int num,string name,string mString)
     {
-        p[num].update(name,matrix);
+        p[num].update(name,mString);
     }
     void refresh()
     {
-        used++;
-        if(used==mSize)
+        usedSlots++;
+        if(usedSlots==arraySize)
         {
 
-            mSize+=10;
-            matrix *t=new matrix [mSize];
-            for(int i=0;i<used;i++)
+            arraySize+=10;
+            matrix *t=new matrix [arraySize];
+            for(int i=0;i<usedSlots;i++)
             {
                 t[i].setRows(p[i].getRows());
                 t[i].setColumns(p[i].getColumns());
@@ -529,44 +521,44 @@ public:
 
 
 //matrix* memory =new matrix[20];
-ram memory (10);
-int memory_arrow=0;
-int exit1=0;
+mDynArr memory (10);
+int memoryPointer=0;
+int exit1=0; //exit is ambiguos to VS so i added the 1 (it's meaningless)
 
 void removeSpaces(string &str)
 {
     for(int i=0; i<str.length(); i++)
      {
-         if(str[i] == ' ') {str.erase(i,1);i--;}
+         if(str[i] == ' ') {str.erase(i);i--;}//replaced erase fn with =''
 
      }
 }
 
 
-int memory_check(string matrix_name)
+int memoryCheck(string mName)
 {
-    for(int i=0;i<memory_arrow;i++)
+    for(int i=0;i<memoryPointer;i++)
     {
-        if(memory[i].getName()==matrix_name)
+        if(memory[i].getName()==mName)
             return i;
     }
     return -1;
 
 }
-void memorize_matrix(int index, string matrix,string matrix_name)
+void memorizeMatrix(int mIndex, string mString,string mName)
 {
-    if(index==-1)
+    if(mIndex==-1)
     {
-        // cout<<"mwmory"<<memory_arrow;
-        memory.creat(matrix_name,matrix);
-        memory.p[memory_arrow].print();
-        memory_arrow++;
+        // cout<<"mwmory"<<memoryPointer;
+        memory.create(mName,mString);
+        memory.p[memoryPointer].print();
+        memoryPointer++;
     }
 
     else
     {
-        memory.update(index,matrix_name,matrix);
-        memory.p[index].print();
+        memory.update(mIndex,mName,mString);
+        memory.p[mIndex].print();
     }
 }
 void cut(string &variable1,string &variable2,int &index1,int &index2,char op,string operation)
@@ -574,51 +566,55 @@ void cut(string &variable1,string &variable2,int &index1,int &index2,char op,str
     variable1= operation.substr(0,operation.find(op)) ;
     variable2= operation.substr(operation.find(op)+1,(operation.length()-operation.find(op))-1);
 
-    index1=memory_check(variable1);
-    index2=memory_check(variable2);
+    index1=memoryCheck(variable1);
+    index2=memoryCheck(variable2);
 }
 void cut(string &variable1, int &index1, char op, string operation)
 {
 	variable1 = operation.substr(operation.find(op) + 1, (operation.length() - operation.find(op)) - 1);
-	index1 = memory_check(variable1);
+	index1 = memoryCheck(variable1);
 }
 void input_checker(string input) // assignment or operation
 {
 
-	int flag=0;
-	int asg=0;
+	short asg=0;
+	//FOB=First Open Bracket, FCB=First Close Bracker, EQ=EQual
+	short FOBPos = input.find('['), FCBPos = input.find(']'), LCBPos = input.rfind(']'), EQPos = input.find('='), plusPos = input.find('+')
+		,minusPos= input.find('-'),elemWiseInvPos= input.find("./"),divPos= input.find('/'),multPos= input.find("*")
+		,transPos= input.find("'");
+    string mName=input.substr(0, EQPos);
+	removeSpaces(mName);
 
-    string matrix_name;
-	matrix_name=input.substr(0,input.find('='));
-	removeSpaces(matrix_name);
 
-
-    int index = memory_check(matrix_name);
-
-    if((input.find('[')!=-1)&&(input.find(']')!=-1))
+    int index = memoryCheck(mName);
+	bool assignmentOP = (FOBPos != -1) && (FCBPos != -1);
+	bool mathOP = (plusPos != -1) || (minusPos != -1) || (divPos != -1) || (multPos != -1) || (transPos != -1);
+    if(assignmentOP)
     {
-
-        flag=0;
-        string matrix;
-	    matrix=input.substr(input.find('['),(input.find(']')-input.find('[')+1));
-        memorize_matrix(index,matrix,matrix_name);
+		string mString = input.substr(FOBPos+1, (LCBPos - 2 - FOBPos + 1));//FOB+1 & LCB-2 to remove braces
+		if (!mathOP && mString.find("[")==-1 )//not complete yet. We need to check for letters
+		{
+			memorizeMatrix(index, mString, mName); //I think we may handle sin() & 1X1 matrix inside this func
+		}
+		else
+		{
+			
+		}
+        
 
 
     }
 
-    else if((input.find("+")!=-1)||
-    (input.find("-")!=-1)||(input.find("/")!=-1)||(input.find("*")!=-1)||(input.find("'")!=-1))
+    else if(mathOP)
     {
-		    string operation;
-		    operation=input.substr(input.find('=')+1,(input.length()-input.find('=')+1));
+		    string operation = input.substr(EQPos +1,(input.length()- EQPos +1));
             removeSpaces(operation);
             string variable1,variable2;
             int index1,index2;
 
-			flag=1;
 
 				//memory.push_back(temp);
-			if(operation.find("+")!=-1)
+			if(plusPos !=-1)
 			{
 			    cut(variable1,variable2,index1,index2,'+',operation);
 
@@ -632,14 +628,14 @@ void input_checker(string input) // assignment or operation
 
                 else
                 {
-                memory.creat(matrix_name);
-                memory.p[memory_arrow].add(memory.p[index1],(memory.p[index2])) ;
-                memory.p[memory_arrow].print();
-                memory_arrow++;
+                memory.create(mName);
+                memory.p[memoryPointer].add(memory.p[index1],(memory.p[index2])) ;
+                memory.p[memoryPointer].print();
+                memoryPointer++;
                 }
             }
 
-			else if(input.find("-")!=-1)
+			else if(minusPos !=-1)
 			{
 			    cut(variable1,variable2,index1,index2,'-',operation);
 
@@ -653,15 +649,15 @@ void input_checker(string input) // assignment or operation
 
                 else
                 {
-                memory.creat(matrix_name);
-                memory.p[memory_arrow].sub(memory.p[index1],(memory.p[index2])) ;
-                memory.p[memory_arrow].print();
-                memory_arrow++;
+                memory.create(mName);
+                memory.p[memoryPointer].sub(memory.p[index1],(memory.p[index2])) ;
+                memory.p[memoryPointer].print();
+                memoryPointer++;
                 }
 
 
 			}
-			else if(input.find("*")!=-1)
+			else if(multPos !=-1)
 			{
 			    cut(variable1,variable2,index1,index2,'*',operation);
 
@@ -675,13 +671,13 @@ void input_checker(string input) // assignment or operation
 
                 else
                 {
-                memory.creat(matrix_name);
-                memory.p[memory_arrow].mult(memory.p[index1],(memory.p[index2])) ;
-                memory.p[memory_arrow].print();
-                memory_arrow++;
+                memory.create(mName);
+                memory.p[memoryPointer].mult(memory.p[index1],(memory.p[index2])) ;
+                memory.p[memoryPointer].print();
+                memoryPointer++;
                 }
 			}
-			else if (input.find("./") != -1)
+			else if (elemWiseInvPos != -1)
 			{
 				cut(variable1, index1, './', operation);
 				if (index != -1)
@@ -692,13 +688,13 @@ void input_checker(string input) // assignment or operation
 
 				else
 				{
-					memory.creat(matrix_name);
-					memory.p[memory_arrow].inversePerElement(memory.p[index1]);
-					memory.p[memory_arrow].print();
-					memory_arrow++;
+					memory.create(mName);
+					memory.p[memoryPointer].inversePerElement(memory.p[index1]);
+					memory.p[memoryPointer].print();
+					memoryPointer++;
 				}
 			}
-			else if(input.find("/")!=-1)
+			else if(divPos !=-1)
 			{
 			    cut(variable1,variable2,index1,index2,'/',operation);
 //cout<<memory.p[index2].getDeterminant()<<endl;
@@ -716,18 +712,18 @@ void input_checker(string input) // assignment or operation
 
                 else
                 {
-                memory.creat(matrix_name);
-                memory.p[memory_arrow].div(memory.p[index1],(memory.p[index2])) ;
-                memory.p[memory_arrow].print();
-                memory_arrow++;
+                memory.create(mName);
+                memory.p[memoryPointer].div(memory.p[index1],(memory.p[index2])) ;
+                memory.p[memoryPointer].print();
+                memoryPointer++;
                 }
             }
-			else if(operation.find("'")!=-1)
+			else if(transPos !=-1)
 			{
 			    string var;
 			    int ind;
-			    var= operation.substr(0,operation.find("'")) ;
-                ind=memory_check(var);
+			    var= operation.substr(0, operation.find("'")) ;
+                ind=memoryCheck(var);
 
 
                 if(index!=-1)
@@ -738,10 +734,10 @@ void input_checker(string input) // assignment or operation
 
                 else
                 {
-                memory.creat(matrix_name);
-                memory.p[memory_arrow].getTranspose(memory.p[ind]) ;
-                memory.p[memory_arrow].print();
-                memory_arrow++;
+                memory.create(mName);
+                memory.p[memoryPointer].getTranspose(memory.p[ind]) ;
+                memory.p[memoryPointer].print();
+                memoryPointer++;
                 }
 			}
 
@@ -751,10 +747,10 @@ void input_checker(string input) // assignment or operation
 		else
         {
             removeSpaces(input);
-             if((memory_check(input)!=-1) &&
-                 memory_check(input)<memory_arrow)
+             if((memoryCheck(input)!=-1) &&
+                 memoryCheck(input)<memoryPointer)
              {
-                 memory.p[memory_check(input)].print();
+                 memory.p[memoryCheck(input)].print();
              }
              else if(input=="exit")
              {
@@ -801,7 +797,7 @@ int main(int argv,char* argc[])
 
 /*
 cout<<endl<<"memory----------------"<<endl;
-for(int z=0;z<memory_arrow;z++)
+for(int z=0;z<memoryPointer;z++)
    {
     cout<<memory[z].getName()<<" "<<memory[z].getRows()<<" "<<memory[z].getColumns()<<endl;
     memory[z].print();
