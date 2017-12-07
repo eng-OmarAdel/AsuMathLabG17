@@ -765,6 +765,32 @@ void input_checker(string input) // assignment or operation
 //==========================================================================
 struct size { int rows,columns; };   //structure has the number of rows&columns for any string matrix
 //===========================================================================
+vector<string> separate(string inputString) 
+{
+    vector<string> separatedString;
+    int flag=0;
+    int beginPostion=0;
+    for(int i=0;i<inputString.length();i++)
+    {
+        if(inputString[i]==';'&&flag==0)
+        {
+            cout<<inputString.substr(beginPostion,i-beginPostion)<<endl;
+            separatedString.push_back(inputString.substr(beginPostion,i-beginPostion));
+            beginPostion=i+1;
+        }
+        else if(i==inputString.length()-1)
+        {
+            cout<<inputString.substr(beginPostion,inputString.length()-beginPostion);
+            separatedString.push_back(inputString.substr(beginPostion,inputString.length()-beginPostion));
+        }
+        else if(inputString[i]=='[')
+            flag++;
+        else if(inputString[i]==']')
+            flag--;
+    }
+    return separatedString;
+}
+//===========================================================================
 size compare(size m1, size m2)     //get the total size of 2 concatenated matrices 
 {
     size m;
