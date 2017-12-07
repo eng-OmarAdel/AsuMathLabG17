@@ -762,6 +762,26 @@ void input_checker(string input) // assignment or operation
 
 
 }
+//==========================================================================
+struct size { int rows,columns; };   //structure has the number of rows&columns for any string matrix
+//===========================================================================
+size compare(size m1, size m2)     //get the total size of 2 concatenated matrices 
+{
+    size m;
+    if(m1.rows==m2.rows)   //if the rows of matrix1 = rows of matrix2 whatever the columns are equal or not
+    {                      
+        m.rows=m1.rows;
+        m.columns=m1.columns+m2.columns;
+        return m;
+    }
+    else if(m1.columns==m2.columns&&m1.rows!=m2.rows)  //if thr columns of matrix1= columns of matrix2 and the rows aren't equal
+    {
+        m.columns=m1.columns;
+        m.rows=m1.rows+m2.rows;
+        return m;
+    }
+}
+//=============================================================================
 #define endl '\n'
 
 int main(int argv,char* argc[])
