@@ -808,6 +808,21 @@ size compare(size m1, size m2)     //get the total size of 2 concatenated matric
     }
 }
 //=============================================================================
+size sizing(string matrix)  //take any string but without brackets and retur a structure which has the number of rows and columns
+{                               // for example    22 45 sin(90)+1;1 cos(0) 5    size will be 2x3
+	size n; n.rows=0;  n.columns=0;
+	 stringstream ss(matrix);
+     string token;
+     while(getline(ss, token, ';'))
+		 n.rows++;
+	 getline(ss, token, ';');
+	 stringstream sn(token);
+	 string in;
+     while( sn >> in)
+		 n.columns++;
+	 return n;
+}
+//=================================================================================
 #define endl '\n'
 
 int main(int argv,char* argc[])
