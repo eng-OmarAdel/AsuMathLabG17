@@ -14,6 +14,135 @@ double StringToDouble(const string &text)
 	double result;
 	return ss >> result ? result : 0;
 }
+//trigonometric functions for doubles NOT matrices 
+// sin functions --> sind , asind 
+double sind(double x)
+{
+	return sin((PI / 180)*x);
+}
+double asind(double x)
+{
+	return ((180.0 / PI)*asin(x));
+}
+//cos functions --> cosd , acosd
+double cosd(double x)
+{
+	return cos((PI / 180)*x);
+}
+double acosd(double x)
+{
+	return ((180.0 / PI)*acos(x));
+}
+//tan functions --> tand , atand ,atan2 , atan2d 
+double tand(double x)
+{
+	return tan((PI / 180)*x);
+}
+double atand(double x)
+{
+	return ((180.0 / PI)*atan(x));
+}
+double atan2(double x,double y)
+{
+	return atan(x/y);
+}
+double atan2d(double x,double y)
+{
+	return ((180.0 / PI)*atan(x/y));
+}
+// csc functions --> csc , cscd ,acsc ,acscd ,csch ,acsch
+double csc(double x)
+{
+	return ( 1.0 / sin(x) );
+}
+double cscd(double x)
+{
+	return ( 1.0 / sind(x) );
+}
+double acsc(double x) // error handling
+{
+	return asin(1.0 / x);
+}
+double acscd(double x)
+{
+	return asind(1.0 / x);
+}
+double csch(double x)
+{
+	return (1.0 / sinh(x));
+}
+double acsch(double x)
+{
+	return asinh(1.0 / x);
+}
+//sec functions --> sec ,secd ,asec, asecd ,sech ,asech
+double sec(double x)
+{
+	return (1.0 / cos(x));
+}
+double secd(double x)
+{
+	return (1.0 / cosd(x));
+}
+double asec(double x) // error handling
+{
+	return acos(1.0 / x);
+}
+double asecd(double x)
+{
+	return acosd(1.0 / x);
+}
+double sech(double x)
+{
+	return (1.0 / cosh(x));
+}
+double asech(double x)
+{
+	return acosh(1.0 / x);
+}
+// cot functions cot , cotd , acot ,acotd ,coth ,acoth
+double cot(double x)
+{
+	return (1.0 / tan(x));
+}
+double cotd(double x)
+{
+	return (1.0 / tand(x));
+}
+double acot(double x) // error handling
+{
+	return atan(1.0 / x);
+}
+double acotd(double x)
+{
+	return atand(1.0 / x);
+}
+double coth(double x)
+{
+	return (1.0 / tanh(x));
+}
+double acoth(double x)
+{
+	return atanh(1.0 / x);
+}
+// Square root of sum of squares (hypotenuse) function
+double hypot(double x, double y) // error handling underflow and overflow
+{
+	return sqrt(abs(x)*abs(x)+abs(y)*abs(y));
+}
+// angle convertion functions
+double deg2rad(double x)
+{
+	return x * (PI / 180.0);
+}
+double rad2deg(double x)
+{
+	return x * (180.0 / PI);
+}
+
+
+
+
 
 class matrix
 {
@@ -403,6 +532,411 @@ public:
 
 
 	}
+	//trigonometric functions , any trigonometric function for a matrix is started with 'M' 
+	//sin functions --> sin , sind , asin , asind , sinh , asinh 
+	void Msin(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, sin(x.element[m][n]));
+			}
+		}
+	}
+	void Msind(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, sind(x.element[m][n]));
+			}
+		}
+	}
+	void Masin(matrix &x)  // error handling 
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, asin(x.element[m][n]));
+			}
+		}
+	}
+	void Masind(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, (asind(x.element[m][n])));
+			}
+		}
+	}
+	void Msinh(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, sinh(x.element[m][n]));
+			}
+		}
+	}
+	void Masinh(matrix &x)  // error handling 
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, asinh(x.element[m][n]));
+			}
+		}
+	}
+	//cos functions --> cos , cosd, acos , acosd ,cosh, acosh
+	void Mcos(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, cos(x.element[m][n]));
+			}
+		}
+	}
+	void Mcosd(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, cosd(x.element[m][n]));
+			}
+		}
+	}
+	void Macos(matrix &x)  // error handling 
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, acos(x.element[m][n]));
+			}
+		}
+	}
+	void Macosd(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, (acosd(x.element[m][n])));
+			}
+		}
+	}
+	void Mcosh(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, cosh(x.element[m][n]));
+			}
+		}
+	}
+	void Macosh(matrix &x)  // error handling 
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, acosh(x.element[m][n]));
+			}
+		}
+	}
+	// tan functions --> tan,tand,atan,atand,tanh,atanh
+	void Mtan(matrix &x) //error handling
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, tan(x.element[m][n]));
+			}
+		}
+	}
+	void Mtand(matrix &x)//error handling
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, tand(x.element[m][n]));
+			}
+		}
+	}
+	void Matan(matrix &x)  // error handling 
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, atan(x.element[m][n]));
+			}
+		}
+	}
+	void Matand(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, (atand(x.element[m][n])));
+			}
+		}
+	}
+	void Mtanh(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, tanh(x.element[m][n]));
+			}
+		}
+	}
+	void Matanh(matrix &x)  // error handling 
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, atanh(x.element[m][n]));
+			}
+		}
+	}
+	// csc functions --> csc , cscd ,acsc ,acscd ,csch ,acsch
+	void Mcsc(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, csc(x.element[m][n]));
+			}
+		}
+	}
+	void Mcscd(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, cscd(x.element[m][n]));
+			}
+		}
+	}
+	void Macsc(matrix &x)  // error handling 
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, acsc(x.element[m][n]));
+			}
+		}
+	}
+	void Macscd(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, (acscd(x.element[m][n])));
+			}
+		}
+	}
+	void Mcsch(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, csch(x.element[m][n]));
+			}
+		}
+	}
+	void Macsch(matrix &x)  // error handling 
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, acsch(x.element[m][n]));
+			}
+		}
+	}
+	//sec functions --> sec ,secd ,asec, asecd ,sech ,asech
+	void Msec(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, sec(x.element[m][n]));
+			}
+		}
+	}
+	void Msecd(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, secd(x.element[m][n]));
+			}
+		}
+	}
+	void Masec(matrix &x)  // error handling 
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, asec(x.element[m][n]));
+			}
+		}
+	}
+	void Masecd(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, (asecd(x.element[m][n])));
+			}
+		}
+	}
+	void Msech(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, sech(x.element[m][n]));
+			}
+		}
+	}
+	void Masech(matrix &x)  // error handling 
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, asech(x.element[m][n]));
+			}
+		}
+	}
+	// cot functions cot , cotd , acot ,acotd ,coth ,acoth
+	void Mcot(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, cot(x.element[m][n]));
+			}
+		}
+	}
+	void Mcotd(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, cotd(x.element[m][n]));
+			}
+		}
+	}
+	void Macot(matrix &x)  // error handling 
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, acot(x.element[m][n]));
+			}
+		}
+	}
+	void Macotd(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, (acotd(x.element[m][n])));
+			}
+		}
+	}
+	void Mcoth(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, coth(x.element[m][n]));
+			}
+		}
+	}
+	void Macoth(matrix &x)  // error handling 
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, acoth(x.element[m][n]));
+			}
+		}
+	}
+
+	//end trignometric functions
 	void print()
 	{
 		if (errorHandler == "Error There's a zero element in the matrix" || errorHandler == "Error The determinant of this matrix is eual to zero")
@@ -584,7 +1118,8 @@ void cut(string &variable1, int &index1, char op, string operation)
 	variable1 = operation.substr(operation.find(op) + 1, (operation.length() - operation.find(op)) - 1);
 	index1 = memory_check(variable1);
 }
-void inputCheckerTrigonometry(string input)
+// this function is just a model for sin strings
+void inputCheckerTrigonometry(string input) // this is just a model for sin strings
 {
 	int flag = 0;
 	int asg = 0;
@@ -756,7 +1291,7 @@ void input_checker(string input) // assignment or operation
 
 
 	int index = memory_check(matrix_name);
-	inputCheckerTrigonometry(input);
+	//inputCheckerTrigonometry(input);
 
 	if ((input.find('[') != -1) && (input.find(']') != -1))
 	{
