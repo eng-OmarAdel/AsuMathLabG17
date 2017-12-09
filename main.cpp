@@ -764,7 +764,24 @@ void input_checker(string input) // assignment or operation
 }
 //==========================================================================
 struct sizeValue {int rows,columns;};
-
+//=========================================================================
+sizeValue compare(sizeValue m1, sizeValue m2)
+{
+    sizeValue m;
+    if(m1.rows==m2.rows)
+    {
+        m.rows=m1.rows;
+        m.columns=m1.columns+m2.columns;
+        return m;
+    }
+    else if(m1.columns==m2.columns&&m1.rows!=m2.rows)
+    {
+        m.columns=m1.columns;
+        m.rows=m1.rows+m2.rows;
+        return m;
+    }
+}
+//===============================================================================
 sizeValue compare(sizeValue m1, sizeValue m2)
 {
     sizeValue m;
