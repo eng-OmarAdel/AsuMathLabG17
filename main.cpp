@@ -793,39 +793,118 @@ void separate(string inputString)
         else if(inputString[i]==']')
             flag--;
     }
-    //return separatedString;
 }
 
-sizeValue compare(sizeValue m1, sizeValue m2)     //get the total size of 2 concatenated matrices
+//==================================================================
+sizeValue get_sizeValue (string s)  //s is a string without spaces or ;   ex:   123  or  10*sin(A)
 {
-    sizeValue m;
-    if(m1.rows==m2.rows)   //if the rows of matrix1 = rows of matrix2 whatever the columns are equal or not
+	sizeValue n;
+    int flag=0;
+    int index;
+    for(int i=0;i<s.length();i++)
     {
-        m.rows=m1.rows;
-        m.columns=m1.columns+m2.columns;
-        return m;
-    }
-    else if(m1.columns==m2.columns&&m1.rows!=m2.rows)  //if thr columns of matrix1= columns of matrix2 and the rows aren't equal
-    {
-        m.columns=m1.columns;
-        m.rows=m1.rows+m2.rows;
-        return m;
-    }
+        if((s[i]>64&&s[i]<91)||(s[i]>96&&s[i]<123))
+        {
+			flag=1;
+            if(s[i]=='s'&&s[i+1]=='i'&&s[i+2]=='n')    //if sin
+			{
+                index=memoryCheck(s.substr(i+4,s.find(')')-i-4));
+				if(index==-1)
+				{
+					n.rows=1;  n.columns=1;
+					return n;
+				}
+				n.columns=memory.p[index].getColumns();
+				n.rows=memory.p[index].getRows();
+				return n;
+			}
+            else if(s[i]=='c'&&s[i+1]=='o'&&s[i+2]=='s')  // if cos
+            {   
+		        index=memoryCheck(s.substr(i+4,s.find(')')-i-4));
+				if(index==-1)
+				{
+					n.rows=1;  n.columns=1;
+					return n;
+				}
+				n.columns=memory.p[index].getColumns();
+				n.rows=memory.p[index].getRows();
+				return n;
+			}
+            else if(s[i]=='t'&&s[i+1]=='a'&&s[i+2]=='n')   //  if tan
+			{
+                index=memoryCheck(s.substr(i+4,s.find(')')-i-4));
+				if(index==-1)
+                {
+					n.rows=1;  n.columns=1;
+					return n;
+				}
+				n.columns=memory.p[index].getColumns();
+				n.rows=memory.p[index].getRows();
+				return n;
+			}
+            else if(s[i]=='r'&&s[i+1]=='a'&&s[i+2]=='n'&&s[i+3]=='d')   // if rand(55,100)
+			{
+				n.columns=stoi(s.substr(s.find(',')+1,s.find(')')-s.find(',')-1));
+				n.rows=stoi(s.substr(s.find('(')+1,s.find(',')-s.find(',')-1));
+                return n;  //return numbers of columns 100 & rows 55
+			}
+            else if(s[i]=='e'&&s[i+1]=='y'&&s[i+2]=='e')     //if eye(55,100)
+            {
+				n.columns=stoi(s.substr(s.find(',')+1,s.find(')')-s.find(',')-1));
+				n.rows=stoi(s.substr(s.find('(')+1,s.find(',')-s.find(',')-1));
+                return n;  //return numbers of columns 100 & rows 55
+			}
+            else if(s[i]=='z'&&s[i+1]=='e'&&s[i+2]=='r'&&s[i+3]=='o'&&s[i+4]=='s')   // if zeros(55,100)
+            {
+				n.columns=stoi(s.substr(s.find(',')+1,s.find(')')-s.find(',')-1));
+				n.rows=stoi(s.substr(s.find('(')+1,s.find(',')-s.find(',')-1));
+                return n;  //return numbers of columns 100 & rows 55
+			}
+            else if(s[i]=='o'&&s[i+1]=='n'&&s[i+2]=='e'&&s[i+3]=='s')  // if ones(55,100)
+            {
+				n.columns=stoi(s.substr(s.find(',')+1,s.find(')')-s.find(',')-1));
+				n.rows=stoi(s.substr(s.find('(')+1,s.find(',')-s.find(',')-1));
+                return n;  //return numbers of columns 100 & rows 55
+			}
+            else
+			{
+				index=memoryCheck(s.substr(i,1));
+				n.columns=memory.p[index].getColumns();
+				n.rows=memory.p[index].getRows();
+				return n;
+			}
+        }
+	}
+	if (flag==0)
+	{
+		n.rows=1;  n.columns=1;
+		return n;
+	}
 }
-//=============================================================================
-sizeValue sizing(string matrix)  //take any string but without brackets and retur a structure which has the number of rows and columns
-{                               // for example    22 45 sin(90)+1;1 cos(0) 5    size will be 2x3
-	sizeValue n; n.rows=0;  n.columns=0;
-	 stringstream ss(matrix);
-     string token;
-     while(getline(ss, token, ';'))
-		 n.rows++;
-	 getline(ss, token, ';');
-	 stringstream sn(token);
-	 string in;
-     while( sn >> in)
-		 n.columns++;
-	 return n;
+//======================================================================================================
+
+sizeValue sizing (string matrix)
+{
+    sizeValue n; n.rows=0;  n.columns=0;
+    stringstream sMatrix(matrix);
+    string token;
+    getline(sMatrix,token,';');
+    stringstream sn(token);
+    string element;
+    while(sn>>element)
+    {
+		n.columns+=get_sizeValue(element).columns;
+    }
+	//-----------------------------------
+	stringstream ssMatrix(matrix);
+	while(getline(ssMatrix,token,';'))
+	{
+		stringstream sn(token);
+        string element;
+		sn>>element;
+		n.rows+=get_sizeValue(element).rows;
+	}
+	return n;
 }
 //=============================Concatenation==================================================
 sizeValue conc(string s)
