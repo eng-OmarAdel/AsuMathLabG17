@@ -813,8 +813,8 @@ void sFill(matrix mSoph, string mString)
 	int lastPos = 0;
 	string temp;
 	matrix tempM;
-	int flag = 0, OBFlag = 0, CBFlag = 0;
-	int OBColumnCounter = 0, OBRowCounter = 0;
+	int flag = 0, OBCounter = 0, CBFlag = 0;
+	int OBColumnCounter[100] = { 0 }, OBRowCounter[100] = { 0 }, OBColumnReset = 0, OBRowReset = 0;
 	for (int r = 0; r < mSoph.rows; r++)
 	{
 		for (int c = 0; c < mSoph.columns; c++)
@@ -836,7 +836,7 @@ void sFill(matrix mSoph, string mString)
 						for (int cs = 0; cs < memory.p[index].columns; cs++)
 						{
 							mSoph.element[r + rs][c + cs].value = memory.p[index].element[rs][cs].value;
-							mSoph.element[r + rs][c + cs].isFilled == 1;
+							mSoph.element[r + rs][c + cs].isFilled = 1;
 						}
 					}
 					lastPos += 1;
@@ -933,19 +933,19 @@ void sFill(matrix mSoph, string mString)
 			//if [ 1 2 3]
 			else if (temp[0] == '[')
 			{
-				OBFlag += 1;
+				OBCounter ++;
 			}
 			else if (temp[0] == ']')
 			{
-				OBFlag--;
-				if (OBFlag == 0)
+				OBCounter--;
+			/*	if (OBCounter == 0)
 				{
-					OBColumnCounter = 0;
-					OBRowCounter = 0;
-				}
+					OBColumnCounter[OBCounter] = 0;
+					OBRowCounter[OBCounter] = 0;
+				}*/
 			}
 			//if 2.3
-			else if ((int(temp[0]) <= 39) && (int(temp[0]) >= 30))
+			else if ((int(temp[0]) <= 57) && (int(temp[0]) >= 48))
 			{
 
 				int spacePos = mString.find(' ', lastPos)
@@ -964,48 +964,46 @@ void sFill(matrix mSoph, string mString)
 				{
 					temp = mString.substr(lastPos, CBPos - lastPos);
 				}
-				char* tempC = new char[10];
 
-				for (int i = 0; i < temp.length(); i++)
-				{
-					tempC[i] = temp[i];
-				}
-
-				mSoph.element[r + OBRowCounter][c + OBColumnCounter].value == atof(tempC);
-				mSoph.element[r + OBRowCounter][c + OBColumnCounter].isFilled == 1;
+				stringstream ss;
+				ss << temp;
+				double value;
+				ss >> value;
+				mSoph.element[r+OBRowCounter[OBCounter]][c+ OBColumnCounter[OBCounter]].value = value;
+				mSoph.element[r+OBRowCounter[OBCounter]][c+ OBColumnCounter[OBCounter]].isFilled = 1;
 
 				if ((spacePos < semicolumnPos) && (spacePos < CBPos))
 				{
-					if (OBFlag != 0)
+					if (OBCounter != 0)
 					{
-						OBColumnCounter++;
+						OBColumnCounter[OBCounter]++;//walking through the inner matrix
+						c--;//freezing c as it will increase by one the next loop
 					}
-					lastPos += spacePos + 1;
+					lastPos = spacePos + 1;
 				}
 				else if ((semicolumnPos < spacePos) && (semicolumnPos < CBPos))
 				{
-					if (OBFlag != 0)
+					if (OBCounter != 0)
 					{
-						OBRowCounter++;
-						OBColumnCounter = 0;
+						OBRowCounter[OBCounter]++;//walking through the inner matrix
+						OBColumnCounter[OBCounter] = 0;//reseting column to start position
 					}
 
-					lastPos += semicolumnPos + 1;
+					lastPos = semicolumnPos + 1;
 				}
-				else
+				else// ]
 				{
-					if (OBFlag != 0)
+					if (OBCounter != 0)
 					{
-						OBColumnCounter = 0;
-						OBRowCounter = 0;
+						OBColumnCounter[OBCounter] = 0;//reseting both dimensions to the start position
+						OBRowCounter[OBCounter] = 0;
 					}
 
-					lastPos += CBPos;//I want to start from the ]
+					lastPos = CBPos;//I want to start from the ]
 				}
-				delete[] tempC;
 				flag = 1;
 			}
-			if (flag == 0)
+			if (flag == 0)//if the character im on now is rubish ( space , etc...)
 			{
 				lastPos += 1;
 				c--;
@@ -1042,7 +1040,7 @@ void input_checker(string input) // assignment or operation
     int index = memoryCheck(mName);
 	if (sAssignmentOP)
 	{
-		string mString = input.substr(FOBPos, (LCBPos - 1 - FOBPos + 1));// Entering with []
+		string mString = input.substr(FOBPos+1, (LCBPos - 2 - FOBPos + 1));// Entering with []
 		//call concatenation function to calculate the rows and the columns of the matrix and to create it
 		separate(mString);
 		sizeValue mSize = calcSize(separatedString);
