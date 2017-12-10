@@ -2,6 +2,8 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <cstdlib>
+#include <cmath>
 using namespace std;
 
 double StringToDouble(const string &text)
@@ -396,10 +398,206 @@ class matrix
 
 
 	}
+
+    void multforpower(matrix &x,matrix &y)           //multiplication for square matrices and assigning the result in the first matrix
+	{
+
+        this->initialising(x.rows, x.columns);
+
+		for(int i=0;i<rows;i++)
+			for(int j=0; j<columns ; j++)
+				element[i][j]=0;
+		for (int i = 0; i < x.rows; i++)
+		{
+			for (int j = 0; j < x.columns; j++)
+			{
+				for (int k = 0; k < x.rows; k++)
+				{
+
+                    element[i][j] += x.element[i][k] * y.element[k][j];
+				}
+			}
+		}
+		for (int i = 0; i < x.rows; i++)
+            for (int j = 0; j < y.columns; j++)
+                x.element[i][j] = element[i][j];
+
+	}
+	void identityMatrix()                                      //identity matrix I
+	{
+
+		for(int i=0;i<rows;i++)
+			for(int j=0; j<columns ; j++)
+				element[i][j]= (i == j);
+	}
+
+	void power(matrix &x, double power)                  //matrix power
+	{
+	    if(x.rows == x.columns)                          //must be square matrix
+        {
+            int mod = power*10;                          //To check if power is fractional
+            if(power == 0)                               //produce identity matrix if power = 0
+            {
+                this->initialising(x.rows,x.columns);
+                this->identityMatrix();
+            }
+            else if(mod % 10 != 0)                       //To check if power is fractional
+            {
+                if(x.rows == 1)                          //Support fractional power for 1*1 matrix only
+                {
+                    double y = pow(x.element[0][0], power);
+                    this->initialising(1,1);
+                    element[0][0] = y;
+                }
+                else
+                    errorHandler = "Error: Fraction power is supported in 1*1 matrix only.";
+            }
+            else
+            {
+                int intPower;
+                if(power < 0)
+                  intPower = (int)abs(power);
+                else
+                    intPower = (int)power;
+                matrix y;                                         //Two matrices to be used in calculation
+                y.initialising(x.rows, x.columns);
+                matrix temp;
+                temp.initialising(x.rows,x.columns);
+                for(int i=0;i<temp.rows;i++)
+                        for(int j=0; j<temp.columns ; j++)
+                            temp.element[i][j] = x.element[i][j];
+                y.identityMatrix();
+                while (intPower > 0)                             //matrix power by exponentiation by squaring algorithm
+                {
+                    if (intPower % 2 == 1)
+                    {
+                    this->multforpower(y,temp);
+                    }
+
+                    this->multforpower(temp, temp);
+                    intPower /= 2;
+
+
+                }
+                this->initialising(y.rows,y.columns);              //Get inverse if  power is negative
+                if(power < 0)
+                {
+                    this->getInverse(y);
+
+                }
+                else
+                {
+                    for(int i=0;i<rows;i++)
+                        for(int j=0; j<columns ; j++)
+                            element[i][j] = y.element[i][j];
+                }
+
+            }
+        }
+
+            else
+                errorHandler = "Error: for A^x, A must be a square matrix.";
+
+	}
+	void elementWisePower(matrix &x, double power)                  //matrix power
+	{
+            int mod = power*10;                          //To check if power is fractional
+            if(power == 0)                               //produce identity matrix if power = 0
+            {
+                this->initialising(x.rows,x.columns);
+                 for(int i=0;i<rows;i++)
+                        for(int j=0; j<columns ; j++)
+                            element[i][j] = 1;
+            }
+            else if(mod % 10 != 0)                       //To check if power is fractional
+            {
+                this->initialising(x.rows,x.columns);
+                 for(int i=0;i<rows;i++)
+                        for(int j=0; j<columns ; j++)
+                            element[i][j] = pow(x.element[i][j],power);
+            }
+            else
+            {
+                int intPower;
+                if(power < 0)
+                  intPower = (int)abs(power);
+                else
+                  intPower = (int)power;
+                matrix y;                                         //Two matrices to be used in calculation
+                y.initialising(x.rows, x.columns);
+                for(int i=0;i<y.rows;i++)
+                        for(int j=0; j<y.columns ; j++)
+                            y.element[i][j] = 1;
+                matrix temp;
+                temp.initialising(x.rows,x.columns);
+                for(int i=0;i<temp.rows;i++)
+                        for(int j=0; j<temp.columns ; j++)
+                            temp.element[i][j] = x.element[i][j];
+
+                while (intPower > 0)                             //matrix power by exponentiation by squaring algorithm
+                {
+                    if (intPower % 2 == 1)
+                    {
+                    for(int i=0;i<temp.rows;i++)
+                        for(int j=0; j<temp.columns ; j++)
+                            y.element[i][j] = y.element[i][j]*temp.element[i][j];
+                    }
+
+                    for(int i=0;i<temp.rows;i++)
+                        for(int j=0; j<temp.columns ; j++)
+                            temp.element[i][j] = temp.element[i][j]*temp.element[i][j];
+                    intPower /= 2;
+
+
+                }
+                this->initialising(y.rows,y.columns);              //Get inverse if  power is negative
+                if(power < 0)
+                {
+                    this->inversePerElement(y);
+
+                }
+                else
+                {
+                    for(int i=0;i<rows;i++)
+                        for(int j=0; j<columns ; j++)
+                            element[i][j] = y.element[i][j];
+                }
+
+            }
+
+	}
+	void logMatrix(matrix &x)
+	{
+	    this->initialising(x.rows,x.columns);
+	    for(int i=0;i<rows;i++)
+                        for(int j=0; j<columns ; j++)
+                            element[i][j] = log(x.element[i][j]);
+	}
+	void log10Matrix(matrix &x)
+	{
+	    this->initialising(x.rows,x.columns);
+	    for(int i=0;i<rows;i++)
+                        for(int j=0; j<columns ; j++)
+                            element[i][j] = log10(x.element[i][j]);
+	}
+	void sqrtMatrix(matrix &x)
+	{
+	    this->initialising(x.rows,x.columns);
+	    for(int i=0;i<rows;i++)
+                        for(int j=0; j<columns ; j++)
+                            element[i][j] = sqrt(x.element[i][j]);
+	}
+	void expMatrix(matrix &x)
+	{
+	    this->initialising(x.rows,x.columns);
+	    for(int i=0;i<rows;i++)
+                        for(int j=0; j<columns ; j++)
+                            element[i][j] = exp(x.element[i][j]);
+	}
 	void print()
 	{
-		if(errorHandler=="Error There's a zero element in the matrix" || errorHandler=="Error The determinant of this matrix is eual to zero")
-			cout<<errorHandler;
+		if(errorHandler=="Error: Fraction power is supported in 1*1 matrix only." || errorHandler=="Error There's a zero element in the matrix" ||  errorHandler == "Error: for A^x, A must be a square matrix." || errorHandler == "Error The determinant of this matrix is equal to zero")
+			cout<<errorHandler;                  //Added two error handler strings for power function
 		else
 		{
 			cout << endl;
@@ -568,6 +766,28 @@ void cut(string &variable1,string &variable2,int &index1,int &index2,char op,str
     index1=memoryCheck(variable1);
     index2=memoryCheck(variable2);
 }
+void cut2(string &variable1,int &index1,char op,string operation)                             //For functions(log,exp,sqrt)
+{
+    variable1= operation.substr(operation.find(op)+1,(operation.length()-operation.find(op))-2);
+
+    index1=memoryCheck(variable1);
+}
+void cut(string &variable1,double &variable3,int &index1,char op,string operation)          //cut function used in power
+{
+    variable1= operation.substr(0,operation.find(op)) ;
+    string strvariable2= operation.substr(operation.find(op)+1,(operation.length()-operation.find(op))-1);
+    stringstream(strvariable2) >> variable3;                                               //getting power in double
+    index1=memoryCheck(variable1);
+
+}
+void cut2(string &variable1,double &variable3,int &index1,char op,string operation)          //cut function used in power
+{
+    variable1= operation.substr(0,operation.find(op)) ;
+    string strvariable2= operation.substr(operation.find(op)+2,(operation.length()-operation.find(op)));
+    stringstream(strvariable2) >> variable3;                                               //getting power in double
+    index1=memoryCheck(variable1);
+
+}
 void cut(string &variable1, int &index1, char op, string operation)
 {
 	variable1 = operation.substr(operation.find(op) + 1, (operation.length() - operation.find(op)) - 1);
@@ -580,16 +800,17 @@ void input_checker(string input) // assignment or operation
 	//FOB=First Open Bracket, FCB=First Close Bracker, EQ=EQual
 	short FOBPos = input.find('['), FCBPos = input.find(']'), LCBPos = input.rfind(']'), EQPos = input.find('='), plusPos = input.find('+')
 		,minusPos= input.find('-'),elemWiseInvPos= input.find("./"),divPos= input.find('/'),multPos= input.find("*")
-		,transPos= input.find("'");
+		,transPos= input.find("'"),powerPos = input.find('^'), elementWisepowerPos = input.find(".^"), logPos = input.find("log("), log10Pos = input.find("log10("),expPos = input.find("exp("),sqrtPos = input.find("sqrt(") ;
     string mName=input.substr(0, EQPos);
 	removeSpaces(mName);
 
 
     int index = memoryCheck(mName);
 	bool assignmentOP = (FOBPos != -1) && (FCBPos != -1);
-	bool mathOP = (plusPos != -1) || (minusPos != -1) || (divPos != -1) || (multPos != -1) || (transPos != -1);
+	bool mathOP = (plusPos != -1) || (minusPos != -1) || (divPos != -1) || (elementWisepowerPos != -1) || (powerPos != -1) || (multPos != -1) || (logPos != -1) || (log10Pos != -1) || (expPos != -1) || (sqrtPos != -1);
     if(assignmentOP)
     {
+
 		string mString = input.substr(FOBPos+1, (LCBPos - 2 - FOBPos + 1));//FOB+1 & LCB-2 to remove braces
 		if (!mathOP && mString.find("[")==-1 )//not complete yet. We need to check for letters
 		{
@@ -610,6 +831,7 @@ void input_checker(string input) // assignment or operation
             removeSpaces(operation);
             string variable1,variable2;
             int index1,index2;
+            double variable3;
 
 
 				//memory.push_back(temp);
@@ -633,7 +855,109 @@ void input_checker(string input) // assignment or operation
                 memoryPointer++;
                 }
             }
+            else if(elementWisepowerPos !=-1)                                         //must be before minus to avoid conflict with negative powers
+			{
+			    cut2(variable1,variable3,index1,'.',operation);
+                if(index!=-1)
+                {
+                memory.p[index].elementWisePower(memory.p[index1],variable3) ;
+                memory.p[index].print();
+                }
 
+                else
+                {
+                memory.create(mName);
+                memory.p[memoryPointer].elementWisePower(memory.p[index1],variable3) ;
+                memory.p[memoryPointer].print();
+                memoryPointer++;
+                }
+            }
+            else if(powerPos !=-1)                                         //must be before minus to avoid conflict with negative powers
+			{
+			    cut(variable1,variable3,index1,'^',operation);
+                if(index!=-1)
+                {
+                memory.p[index].power(memory.p[index1],variable3) ;
+                memory.p[index].print();
+                }
+
+                else
+                {
+                memory.create(mName);
+                memory.p[memoryPointer].power(memory.p[index1],variable3) ;
+                memory.p[memoryPointer].print();
+                memoryPointer++;
+                }
+            }
+            else if(logPos !=-1)
+			{
+
+			    cut2(variable1,index1,'(',operation);
+                if(index!=-1)
+                {
+                memory.p[index].logMatrix(memory.p[index1]) ;
+                memory.p[index].print();
+                }
+
+                else
+                {
+                memory.create(mName);
+                memory.p[memoryPointer].logMatrix(memory.p[index1]) ;
+                memory.p[memoryPointer].print();
+                memoryPointer++;
+                }
+            }
+            else if(log10Pos !=-1)
+			{
+			    cut2(variable1,index1,'(',operation);
+                if(index!=-1)
+                {
+                memory.p[index].log10Matrix(memory.p[index1]) ;
+                memory.p[index].print();
+                }
+
+                else
+                {
+                memory.create(mName);
+                memory.p[memoryPointer].log10Matrix(memory.p[index1]) ;
+                memory.p[memoryPointer].print();
+                memoryPointer++;
+                }
+            }
+            else if(expPos !=-1)
+			{
+			    cut2(variable1,index1,'(',operation);
+                if(index!=-1)
+                {
+                memory.p[index].expMatrix(memory.p[index1]) ;
+                memory.p[index].print();
+                }
+
+                else
+                {
+                memory.create(mName);
+                memory.p[memoryPointer].expMatrix(memory.p[index1]) ;
+                memory.p[memoryPointer].print();
+                memoryPointer++;
+                }
+            }
+            else if(sqrtPos !=-1)
+			{
+			    cut2(variable1,index1,'(',operation);
+                if(index!=-1)
+                {
+                memory.p[index].sqrtMatrix(memory.p[index1]) ;
+                memory.p[index].print();
+                }
+
+                else
+                {
+                memory.create(mName);
+                memory.p[memoryPointer].sqrtMatrix(memory.p[index1]) ;
+                memory.p[memoryPointer].print();
+                memoryPointer++;
+                }
+            }
 			else if(minusPos !=-1)
 			{
 			    cut(variable1,variable2,index1,index2,'-',operation);
@@ -717,6 +1041,7 @@ void input_checker(string input) // assignment or operation
                 memoryPointer++;
                 }
             }
+
 			else if(transPos !=-1)
 			{
 			    string var;
@@ -739,7 +1064,6 @@ void input_checker(string input) // assignment or operation
                 memoryPointer++;
                 }
 			}
-
 
 }
 
@@ -769,7 +1093,7 @@ int main(int argv,char* argc[])
     ios_base::sync_with_stdio(false);
     cin.tie(0);
 
-	if (argv>1)
+	if (argv > 1)
 	{
 		ifstream infile(argc[1]);
 		string sFile, temp;
@@ -778,7 +1102,7 @@ int main(int argv,char* argc[])
 			if(temp.find("\r")!=-1)
 				temp.replace(temp.find("\r"),2,"");
 			sFile += temp;
-			if (sFile.find("]") != -1 || sFile.find("];") != -1 || sFile.find("+") != -1 || sFile.find("*") != -1 || sFile.find("/") != -1 || sFile.find("'") != -1 || sFile.find("./") != -1 || (sFile.find("-") != -1 && sFile.length() <= 10))
+			if (sFile.find("(") != -1 || sFile.find("]") != -1 ||sFile.find("^") != -1 || sFile.find("];") != -1 || sFile.find("+") != -1 || sFile.find("*") != -1 || sFile.find("/") != -1 || sFile.find("'") != -1 || sFile.find("./") != -1 || (sFile.find("-") != -1 && sFile.length() <= 10))
 			{
 				input_checker(sFile);
 				sFile = "";
