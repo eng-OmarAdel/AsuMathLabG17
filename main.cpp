@@ -917,6 +917,8 @@ sizeValue get_sizeValue (string s)  //s is a string without spaces or ;   ex:   
 sizeValue sizing (string matrix)
 {
     sizeValue n; n.rows=0;  n.columns=0;
+	if(matrix[0]=='[')
+		matrix=matrix.substr(1,matrix.length()-2);
     stringstream sMatrix(matrix);
     string token;
     getline(sMatrix,token,';');
