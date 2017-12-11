@@ -937,6 +937,76 @@ public:
 	}
 
 	//end trignometric functions
+
+	//element wise operators
+	void addEL(matrix &x, double y)//EL stands for Element Wise  A+2 or A+1   
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, (x.element[m][n])+y);
+			}
+		}
+	}
+	void subEL(matrix &x, double y)//EL stands for Element Wise  A-2 or A-1  
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, (x.element[m][n])-y);
+			}
+		}
+	}
+	
+	void multEL(matrix &x, double y)//EL stands for Element Wise  A.*2 or A.*1  same as A*2 or A*1 
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n,(x.element[m][n])*y);
+			}
+		}
+	}
+	void divEL(matrix &x, double y)//EL stands for Element Wise A./2 or A./1  same as A/2 or A/1
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, (x.element[m][n])/y);
+			}
+		}
+	}
+	void multEL(matrix &x, matrix& y)//EL stands for Element Wise A.*B  or  A.* c etc..
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, (x.element[m][n])*(y.element[m][n]));
+			}
+		}
+	}
+	void divEL(matrix &x, matrix& y)//EL stands for Element Wise A./B  or  A./c etc..
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, (x.element[m][n])/(y.element[m][n]));
+			}
+		}
+	}
+	//end element wise operators
 	void print()
 	{
 		if (errorHandler == "Error There's a zero element in the matrix" || errorHandler == "Error The determinant of this matrix is eual to zero")
