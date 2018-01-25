@@ -1,7 +1,14 @@
 #include <iostream>
-#include <string>
+#include <stdio.h>
 #include <sstream>
+#include <stdlib.h>
+#include <time.h>
+#include<string>
+#include<math.h>
 #include <fstream>
+#include<vector>
+#include<math.h>
+#define PI 3.14159265359
 using namespace std;
 
 double StringToDouble(const string &text)
@@ -9,6 +16,131 @@ double StringToDouble(const string &text)
 	stringstream ss(text);
 	double result;
 	return ss >> result ? result : 0;
+}
+//trigonometric functions for doubles NOT matrices
+// sin functions --> sind , asind
+double sind(double x)
+{
+	return sin((PI / 180)*x);
+}
+double asind(double x)
+{
+	return ((180.0 / PI)*asin(x));
+}
+//cos functions --> cosd , acosd
+double cosd(double x)
+{
+	return cos((PI / 180)*x);
+}
+double acosd(double x)
+{
+	return ((180.0 / PI)*acos(x));
+}
+//tan functions --> tand , atand ,atan2 , atan2d
+double tand(double x)
+{
+	return tan((PI / 180)*x);
+}
+double atand(double x)
+{
+	return ((180.0 / PI)*atan(x));
+}
+double atan2(double x,double y)
+{
+	return atan(x/y);
+}
+double atan2d(double x,double y)
+{
+	return ((180.0 / PI)*atan(x/y));
+}
+// csc functions --> csc , cscd ,acsc ,acscd ,csch ,acsch
+double csc(double x)
+{
+	return ( 1.0 / sin(x) );
+}
+double cscd(double x)
+{
+	return ( 1.0 / sind(x) );
+}
+double acsc(double x) // error handling
+{
+	return asin(1.0 / x);
+}
+double acscd(double x)
+{
+	return asind(1.0 / x);
+}
+double csch(double x)
+{
+	return (1.0 / sinh(x));
+}
+double acsch(double x)
+{
+	return asinh(1.0 / x);
+}
+//sec functions --> sec ,secd ,asec, asecd ,sech ,asech
+double sec(double x)
+{
+	return (1.0 / cos(x));
+}
+double secd(double x)
+{
+	return (1.0 / cosd(x));
+}
+double asec(double x) // error handling
+{
+	return acos(1.0 / x);
+}
+double asecd(double x)
+{
+	return acosd(1.0 / x);
+}
+double sech(double x)
+{
+	return (1.0 / cosh(x));
+}
+double asech(double x)
+{
+	return acosh(1.0 / x);
+}
+// cot functions cot , cotd , acot ,acotd ,coth ,acoth
+double cot(double x)
+{
+	return (1.0 / tan(x));
+}
+double cotd(double x)
+{
+	return (1.0 / tand(x));
+}
+double acot(double x) // error handling
+{
+	return atan(1.0 / x);
+}
+double acotd(double x)
+{
+	return atand(1.0 / x);
+}
+double coth(double x)
+{
+	return (1.0 / tanh(x));
+}
+double acoth(double x)
+{
+	return atanh(1.0 / x);
+}
+// Square root of sum of squares (hypotenuse) function
+double hypot(double x, double y) // error handling underflow and overflow
+{
+	return sqrt(abs(x)*abs(x)+abs(y)*abs(y));
+}
+// angle convertion functions
+double deg2rad(double x)
+{
+	return x * (PI / 180.0);
+}
+double rad2deg(double x)
+{
+	return x * (180.0 / PI);
 }
 
 class matrix
@@ -86,15 +218,12 @@ class matrix
     {
         return mName;
     }
-
-
-
     double* getElement(int elementRow, int elementColumn)
     {
         return this->element[elementRow, elementColumn];
     }
 
-    void initialising(string mName,string mString) // give me string wana azzabat isa
+    void initialling(string mName,string mString) // give me string wana azzabat isa
     {
         this->mName=mName;
         stringstream ss(mString);
@@ -142,11 +271,11 @@ class matrix
 			delete[] element[i];
 		}
 		delete[] element;
-		initialising(mName,mString);
+		initialling(mName,mString);
 
     }
 
-    void initialising(int rows1, int columns1)//give rows and columns wana azzabat isa
+    void initialling(int rows1, int columns1)//give rows and columns wana azzabat isa
     {
         this->columns = columns1;
         this->rows = rows1;
@@ -163,7 +292,7 @@ class matrix
      void getTranspose(matrix &x)
     {
 
-        this->initialising(x.columns, x.rows);
+        this->initialling(x.columns, x.rows);
         for(int m=0 ; m<(this->getRows()) ; m++)
         {
             for(int n=0 ; n<(this->getColumns()) ; n++)
@@ -176,7 +305,7 @@ class matrix
 
     void subMatrix(matrix& x,int elementRow, int elementColumn)
     {
-        this->initialising((x.rows)-1, (x.columns)-1);
+        this->initialling((x.rows)-1, (x.columns)-1);
         for(int i=0,m=0 ; i<x.rows,m<(this->getRows()) ; i++)
         {
             if(i == elementRow) continue;
@@ -268,8 +397,8 @@ class matrix
     {
 	matrix z;
         double detObj = x.getDeterminant();
-        this->initialising(x.rows, x.columns);
-	z.initialising(x.rows, x.columns);
+        this->initialling(x.rows, x.columns);
+	z.initialling(x.rows, x.columns);
 	matrix sub;
 	int nozero=0;
         for(int i=0 ; i<x.rows ; i++)
@@ -298,7 +427,7 @@ class matrix
     }
 	void inversePerElement(matrix &x)
 	{
-		this->initialising(x.rows, x.columns);
+		this->initialling(x.rows, x.columns);
 		for (int m = 0; m<(this->getRows()); m++)
 		{
 			for (int n = 0; n<(this->getColumns()); n++)
@@ -315,7 +444,7 @@ class matrix
     {
 
          if(old==0)
-        this->initialising(x.rows, x.columns);
+        this->initialling(x.rows, x.columns);
         for(int i=0 ; i< (this->rows) ; i++)
         {
             for(int j=0 ; j< (this->columns) ; j++)
@@ -329,7 +458,7 @@ class matrix
      void sub(matrix& x, matrix& y,int old=0)
     {
         if(old==0)
-        this->initialising(x.rows, x.columns);
+        this->initialling(x.rows, x.columns);
         for(int i=0 ; i< (this->rows) ; i++)
         {
             for(int j=0 ; j< (this->columns) ; j++)
@@ -344,7 +473,7 @@ class matrix
 	{
 		//declaration the output(returned) matrix
 		if(asg==0)
-        this->initialising(x.rows, y.columns);//use constructor instead
+        this->initialling(x.rows, y.columns);//use constructor instead
         double** temp;
         if(asg==1)
         {
@@ -391,18 +520,498 @@ class matrix
 	{
 	    matrix inverseDenom;
         inverseDenom.getInverse(y);
-        this->initialising(x.rows, inverseDenom.getColumns());
+        this->initialling(x.rows, inverseDenom.getColumns());
         this->mult(x,inverseDenom);
 
 
 	}
+	//trigonometric functions , any trigonometric function for a matrix is started with 'M'
+	//sin functions --> sin , sind , asin , asind , sinh , asinh
+	void Msin(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, sin(x.element[m][n]));
+			}
+		}
+	}
+	void Msind(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, sind(x.element[m][n]));
+			}
+		}
+	}
+	void Masin(matrix &x)  // error handling
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, asin(x.element[m][n]));
+			}
+		}
+	}
+	void Masind(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, (asind(x.element[m][n])));
+			}
+		}
+	}
+	void Msinh(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, sinh(x.element[m][n]));
+			}
+		}
+	}
+	void Masinh(matrix &x)  // error handling
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, asinh(x.element[m][n]));
+			}
+		}
+	}
+	//cos functions --> cos , cosd, acos , acosd ,cosh, acosh
+	void Mcos(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, cos(x.element[m][n]));
+			}
+		}
+	}
+	void Mcosd(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, cosd(x.element[m][n]));
+			}
+		}
+	}
+	void Macos(matrix &x)  // error handling
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, acos(x.element[m][n]));
+			}
+		}
+	}
+	void Macosd(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, (acosd(x.element[m][n])));
+			}
+		}
+	}
+	void Mcosh(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, cosh(x.element[m][n]));
+			}
+		}
+	}
+	void Macosh(matrix &x)  // error handling
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, acosh(x.element[m][n]));
+			}
+		}
+	}
+	// tan functions --> tan,tand,atan,atand,tanh,atanh
+	void Mtan(matrix &x) //error handling
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, tan(x.element[m][n]));
+			}
+		}
+	}
+	void Mtand(matrix &x)//error handling
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, tand(x.element[m][n]));
+			}
+		}
+	}
+	void Matan(matrix &x)  // error handling
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, atan(x.element[m][n]));
+			}
+		}
+	}
+	void Matand(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, (atand(x.element[m][n])));
+			}
+		}
+	}
+	void Mtanh(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, tanh(x.element[m][n]));
+			}
+		}
+	}
+	void Matanh(matrix &x)  // error handling
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, atanh(x.element[m][n]));
+			}
+		}
+	}
+	// csc functions --> csc , cscd ,acsc ,acscd ,csch ,acsch
+	void Mcsc(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, csc(x.element[m][n]));
+			}
+		}
+	}
+	void Mcscd(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, cscd(x.element[m][n]));
+			}
+		}
+	}
+	void Macsc(matrix &x)  // error handling
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, acsc(x.element[m][n]));
+			}
+		}
+	}
+	void Macscd(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, (acscd(x.element[m][n])));
+			}
+		}
+	}
+	void Mcsch(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, csch(x.element[m][n]));
+			}
+		}
+	}
+	void Macsch(matrix &x)  // error handling
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, acsch(x.element[m][n]));
+			}
+		}
+	}
+	//sec functions --> sec ,secd ,asec, asecd ,sech ,asech
+	void Msec(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, sec(x.element[m][n]));
+			}
+		}
+	}
+	void Msecd(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, secd(x.element[m][n]));
+			}
+		}
+	}
+	void Masec(matrix &x)  // error handling
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, asec(x.element[m][n]));
+			}
+		}
+	}
+	void Masecd(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, (asecd(x.element[m][n])));
+			}
+		}
+	}
+	void Msech(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, sech(x.element[m][n]));
+			}
+		}
+	}
+	void Masech(matrix &x)  // error handling
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, asech(x.element[m][n]));
+			}
+		}
+	}
+	// cot functions cot , cotd , acot ,acotd ,coth ,acoth
+	void Mcot(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, cot(x.element[m][n]));
+			}
+		}
+	}
+	void Mcotd(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, cotd(x.element[m][n]));
+			}
+		}
+	}
+	void Macot(matrix &x)  // error handling
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, acot(x.element[m][n]));
+			}
+		}
+	}
+	void Macotd(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, (acotd(x.element[m][n])));
+			}
+		}
+	}
+	void Mcoth(matrix &x)
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, coth(x.element[m][n]));
+			}
+		}
+	}
+	void Macoth(matrix &x)  // error handling
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, acoth(x.element[m][n]));
+			}
+		}
+	}
+
+	//end trignometric functions
+
+
+	//element wise operators
+	void addEL(matrix &x, double y)//EL stands for Element Wise  A+2 or A+1
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, (x.element[m][n])+y);
+			}
+		}
+	}
+	void subEL(matrix &x, double y)//EL stands for Element Wise  A-2 or A-1
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, (x.element[m][n])-y);
+			}
+		}
+	}
+
+	void multEL(matrix &x, double y)//EL stands for Element Wise  A.*2 or A.*1  same as A*2 or A*1
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n,(x.element[m][n])*y);
+			}
+		}
+	}
+	void divEL(matrix &x, double y)//EL stands for Element Wise A./2 or A./1  same as A/2 or A/1
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, (x.element[m][n])/y);
+			}
+		}
+	}
+	void multEL(matrix &x, matrix& y)//EL stands for Element Wise A.*B  or  A.* c etc..
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, (x.element[m][n])*(y.element[m][n]));
+			}
+		}
+	}
+	void divEL(matrix &x, matrix& y)//EL stands for Element Wise A./B  or  A./c etc..
+	{
+		this->initialling(x.rows, x.columns);
+		for (int m = 0; m<(this->getRows()); m++)
+		{
+			for (int n = 0; n<(this->getColumns()); n++)
+			{
+				this->setElement(m, n, (x.element[m][n])/(y.element[m][n]));
+			}
+		}
+	}
+	//end element wise operators
 	void print()
 	{
-		if(errorHandler=="Error There's a zero element in the matrix" || errorHandler=="Error The determinant of this matrix is eual to zero")
+		if(errorHandler=="Error There's a zero element in the matrix" ||
+     errorHandler=="Error The determinant of this matrix is eual to zero")
 			cout<<errorHandler;
 		else
 		{
-			cout << endl;
+		    if(mName[0]!='@' && mName[0]!='@' &&
+          mName[0]!='#' && mName[0]!='_' )
+          {
+             cout << endl;
 			cout << mName << " = " << endl;
 			for (int i = 0; i<rows; i++)
 			{
@@ -412,6 +1021,8 @@ class matrix
 				}
 				cout << endl;
 			}
+          }
+
 		}
 		cout<<endl;
 	}
@@ -467,7 +1078,7 @@ public:
     }
     void create(string name,string mString)
     {
-        p[usedSlots].initialising(name,mString);
+        p[usedSlots].initialling(name,mString);
         refresh();
     }
     void update(int num,string name,string mString)
@@ -520,6 +1131,7 @@ public:
 
 
 //matrix* memory =new matrix[20];
+int tcntr=0;
 mDynArr memory (10);
 int memoryPointer=0;
 int exit1=0; //exit is ambiguos to VS so i added the 1 (it's meaningless)
@@ -548,7 +1160,7 @@ void memorizeMatrix(int mIndex, string mString,string mName)
 {
     if(mIndex==-1)
     {
-        // cout<<"mwmory"<<memoryPointer;
+        //cout<<"mwmory"<<memoryPointer;
         memory.create(mName,mString);
         memory.p[memoryPointer].print();
         memoryPointer++;
@@ -584,7 +1196,6 @@ void input_checker(string input) // assignment or operation
     string mName=input.substr(0, EQPos);
 	removeSpaces(mName);
 
-
     int index = memoryCheck(mName);
 	bool assignmentOP = (FOBPos != -1) && (FCBPos != -1);
 	bool mathOP = (plusPos != -1) || (minusPos != -1) || (divPos != -1) || (multPos != -1) || (transPos != -1);
@@ -599,9 +1210,6 @@ void input_checker(string input) // assignment or operation
 		{
 
 		}
-
-
-
     }
 
     else if(mathOP)
@@ -638,7 +1246,6 @@ void input_checker(string input) // assignment or operation
 			{
 			    cut(variable1,variable2,index1,index2,'-',operation);
 
-
                 if(index!=-1)
                 {
                 asg=(index1==index || index2==index);
@@ -653,8 +1260,6 @@ void input_checker(string input) // assignment or operation
                 memory.p[memoryPointer].print();
                 memoryPointer++;
                 }
-
-
 			}
 			else if(multPos !=-1)
 			{
@@ -739,8 +1344,6 @@ void input_checker(string input) // assignment or operation
                 memoryPointer++;
                 }
 			}
-
-
 }
 
 		else
@@ -762,11 +1365,1533 @@ void input_checker(string input) // assignment or operation
 
 
 }
-#define endl '\n'
-
-int main(int argv,char* argc[])
+//==========================================================================
+struct size { int rows,columns; };   //structure has the number of rows&columns for any string matrix
+//===========================================================================
+vector<string> separate(string inputString)
 {
-    ios_base::sync_with_stdio(false);
+    vector<string> separatedString;
+    int flag=0;
+    int beginPostion=0;
+    for(int i=0;i<inputString.length();i++)
+    {
+        if(inputString[i]==';'&&flag==0)
+        {
+            cout<<inputString.substr(beginPostion,i-beginPostion)<<endl;
+            separatedString.push_back(inputString.substr(beginPostion,i-beginPostion));
+            beginPostion=i+1;
+        }
+        else if(i==inputString.length()-1)
+        {
+            cout<<inputString.substr(beginPostion,inputString.length()-beginPostion);
+            separatedString.push_back(inputString.substr(beginPostion,inputString.length()-beginPostion));
+        }
+        else if(inputString[i]=='[')
+            flag++;
+        else if(inputString[i]==']')
+            flag--;
+    }
+    return separatedString;
+}
+//===========================================================================
+size compare(size m1, size m2)     //get the total size of 2 concatenated matrices
+{
+    size m;
+    if(m1.rows==m2.rows)   //if the rows of matrix1 = rows of matrix2 whatever the columns are equal or not
+    {
+        m.rows=m1.rows;
+        m.columns=m1.columns+m2.columns;
+        return m;
+    }
+    else if(m1.columns==m2.columns&&m1.rows!=m2.rows)  //if thr columns of matrix1= columns of matrix2 and the rows aren't equal
+    {
+        m.columns=m1.columns;
+        m.rows=m1.rows+m2.rows;
+        return m;
+    }
+}
+//=============================================================================
+size sizing(string matrix)  //take any string but without brackets and retur a structure which has the number of rows and columns
+{                               // for example    22 45 sin(90)+1;1 cos(0) 5    size will be 2x3
+	size n; n.rows=0;  n.columns=0;
+	 stringstream ss(matrix);
+     string token;
+     while(getline(ss, token, ';'))
+		 n.rows++;
+	 getline(ss, token, ';');
+	 stringstream sn(token);
+	 string in;
+     while( sn >> in)
+		 n.columns++;
+	 return n;
+}
+//=================================================================================
+#define endl '\n'
+/* Omar Yasser */
+
+bool Is_operation(char character) {
+	if(character=='('||character==')'||character=='^'||character=='*'||character=='/'||character=='+'||character=='-')
+		return 1;
+	else return 0;
+}
+
+string alphanum =
+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+string symb="@#$_";
+int stringLength = sizeof(alphanum) - 1;
+int Mctr=0;
+string genRandom()  // Random string generator function.
+{
+    if(Mctr>=stringLength)
+    {
+        symb.erase(0,1);
+    }
+    string ranS="_a";
+    srand (time(NULL));
+    ranS[1]=alphanum[0];
+    ranS[0]=symb[0];
+    alphanum.erase(0,1);
+    Mctr++;
+    return ranS;
+}
+void calcAndRep(int i, int j,string  &fullOp,char ch_op){
+
+
+	//cout<<i<<" "<<j << " "<<fullOp<<" "<<ch_op<<endl ;
+    int opOnNum=1;
+	 int pos1=i,pos2=j;
+    double op1=0,op2=0 ,res=0;
+
+    string s_op1,s_op2;
+
+     stringstream strm,strm2;
+     stringstream strm3;
+     string result;
+    string op=fullOp.substr(pos1,pos2-pos1+1);
+
+    s_op1=op.substr(0,op.find(ch_op,1));
+    s_op2=op.substr(op.find(ch_op,1)+1,pos2-op.find(ch_op,1)+1);
+
+
+
+    //cout<<op<<" opers "<<s_op1<<" "<<s_op2<<endl;
+    if(op.find("sqrt")==0)
+    {
+       s_op1=op.substr(4,op.length()-4);
+       strm<<s_op1;
+       strm>> op1;
+       res=sqrt(op1);
+      // cout<<s_op1<<endl;
+    }
+    else if(op.find("sinh")==0)
+    {
+       s_op1=op.substr(4,op.length()-4);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Msinh(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       strm<<s_op1;
+       strm>> op1;
+       res=sinh(op1);
+    }
+    else if(op.find("sind")==0)
+    {
+       s_op1=op.substr(4,op.length()-4);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Msind(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       strm<<s_op1;
+       strm>> op1;
+       res=sind(op1);
+    }
+    else if(op.find("sin")==0)
+    {
+       s_op1=op.substr(3,op.length()-3);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Msin(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       {
+         strm<<s_op1;
+         strm>> op1;
+           res=sin(op1);
+       }
+    }
+
+	else if(op.find("asind")==0)
+    {
+       s_op1=op.substr(5,op.length()-5);
+      if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Masind(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+         strm<<s_op1;
+         strm>> op1;
+           res=sin(op1);
+       }
+    }
+	else if(op.find("asinh")==0)
+    {
+       s_op1=op.substr(5,op.length()-5);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Masinh(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+         strm<<s_op1;
+         strm>> op1;
+           res=sin(op1);
+       }
+    }
+    else if(op.find("asin")==0)
+    {
+
+       s_op1=op.substr(4,op.length()-4);
+       if(memoryCheck(s_op1)!=-1)
+       {
+
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Masin(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+         strm<<s_op1;
+         strm>> op1;
+           res=sin(op1);
+       }
+    }
+
+	else if(op.find("cosd")==0)
+    {
+       s_op1=op.substr(4,op.length()-4);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Mcosd(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+         strm<<s_op1;
+         strm>> op1;
+           res=sin(op1);
+       }
+    }
+	else if(op.find("cosh")==0)
+    {
+       s_op1=op.substr(4,op.length()-4);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Mcosh(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+         strm<<s_op1;
+         strm>> op1;
+           res=sin(op1);
+       }
+    }
+     else if(op.find("cos")==0)
+    {
+       s_op1=op.substr(3,op.length()-3);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Mcos(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+         strm<<s_op1;
+         strm>> op1;
+           res=sin(op1);
+       }
+    }
+
+	else if(op.find("acosd")==0)
+    {
+       s_op1=op.substr(5,op.length()-5);
+       strm<<s_op1;
+       strm>> op1;
+       res=acosd(op1);
+       cout<<s_op1<<endl;
+    }
+	else if(op.find("acosh")==0)
+    {
+       s_op1=op.substr(5,op.length()-5);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Macosh(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+         strm<<s_op1;
+         strm>> op1;
+           res=sin(op1);
+       }
+    }
+    else if(op.find("acos")==0)
+    {
+       s_op1=op.substr(4,op.length()-4);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Macos(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+         strm<<s_op1;
+         strm>> op1;
+           res=sin(op1);
+       }
+    }
+
+   else if(op.find("tand")==0)
+    {
+       s_op1=op.substr(4,op.length()-4);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Mtand(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+         strm<<s_op1;
+         strm>> op1;
+           res=sin(op1);
+       }
+    }
+	else if(op.find("tanh")==0)
+    {
+       s_op1=op.substr(4,op.length()-4);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Mtanh(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+         strm<<s_op1;
+         strm>> op1;
+           res=sin(op1);
+       }
+    }
+    else if(op.find("tan")==0)
+    {
+       s_op1=op.substr(3,op.length()-3);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Mtan(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+         strm<<s_op1;
+         strm>> op1;
+           res=sin(op1);
+       }
+    }
+
+	else if(op.find("atand")==0)
+    {
+       s_op1=op.substr(5,op.length()-5);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Matand(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+         strm<<s_op1;
+         strm>> op1;
+           res=sin(op1);
+       }
+    }
+	else if(op.find("atanh")==0)
+    {
+       s_op1=op.substr(5,op.length()-5);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Matanh(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+         strm<<s_op1;
+         strm>> op1;
+           res=sin(op1);
+       }
+    }
+
+	else if(op.find("atan2d")==0) //need some work
+    {
+       s_op1=op.substr(6,op.length()-6);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Matand(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+       strm<<s_op1;
+       strm>> op1;
+       res=atanh(op1);
+       }
+    }
+    else if(op.find("atan2")==0) //need some work
+    {
+       s_op1=op.substr(5,op.length()-5);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Matanh(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+       strm<<s_op1;
+       strm>> op1;
+       res=atanh(op1);
+       }
+    }
+    else if(op.find("atan")==0)
+    {
+       s_op1=op.substr(4,op.length()-4);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Matan(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+       strm<<s_op1;
+       strm>> op1;
+       res=atan(op1);
+       }
+    }
+
+	else if(op.find("cscd")==0)
+    {
+       s_op1=op.substr(4,op.length()-4);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Mcscd(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+       strm<<s_op1;
+       strm>> op1;
+       res=cscd(op1);
+       }
+    }
+	else if(op.find("csch")==0)
+    {
+       s_op1=op.substr(4,op.length()-4);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Mcsch(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+       strm<<s_op1;
+       strm>> op1;
+       res=csch(op1);
+       }
+    }
+    else if(op.find("csc")==0)
+    {
+       s_op1=op.substr(3,op.length()-3);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Mcsc(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+       strm<<s_op1;
+       strm>> op1;
+       res=csc(op1);
+       }
+    }
+
+	else if(op.find("acscd")==0)
+    {
+       s_op1=op.substr(5,op.length()-5);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Macscd(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+       strm<<s_op1;
+       strm>> op1;
+       res=acscd(op1);
+       }
+    }
+	else if(op.find("acsch")==0)
+    {
+       s_op1=op.substr(5,op.length()-5);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Macsch(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+       strm<<s_op1;
+       strm>> op1;
+       res=acsch(op1);
+       }
+    }
+    else if(op.find("acsc")==0)
+    {
+       s_op1=op.substr(4,op.length()-4);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Macsc(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+       strm<<s_op1;
+       strm>> op1;
+       res=acsc(op1);
+       }
+    }
+
+	else if(op.find("secd")==0)
+    {
+       s_op1=op.substr(4,op.length()-4);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Msecd(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+       strm<<s_op1;
+       strm>> op1;
+       res=secd(op1);
+       }
+    }
+	else if(op.find("sech")==0)
+    {
+       s_op1=op.substr(4,op.length()-4);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Msech(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+       strm<<s_op1;
+       strm>> op1;
+       res=sech(op1);
+       }
+    }
+    else if(op.find("sec")==0)
+    {
+       s_op1=op.substr(3,op.length()-3);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Msec(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+       strm<<s_op1;
+       strm>> op1;
+       res=sec(op1);
+       }
+    }
+
+	else if(op.find("asecd")==0)
+    {
+       s_op1=op.substr(5,op.length()-5);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Masecd(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+       strm<<s_op1;
+       strm>> op1;
+       res=asecd(op1);
+       }
+    }
+	else if(op.find("asech")==0)
+    {
+       s_op1=op.substr(5,op.length()-5);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Masech(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+       strm<<s_op1;
+       strm>> op1;
+       res=asech(op1);
+       }
+    }
+    else if(op.find("asec")==0)
+    {
+       s_op1=op.substr(4,op.length()-4);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].Masec(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       else
+       {
+       strm<<s_op1;
+       strm>> op1;
+       res=asec(op1);
+      // cout<<"GLLLLLLL"<<" "<<s_op1<< " "<< res<<endl;
+       }
+    }
+	else if(op.find("hypot")==0) //need some work
+    {
+       s_op1=op.substr(5,op.length()-5);
+       strm<<s_op1;
+       strm>> op1;
+       res=atanh(op1);
+       cout<<s_op1<<endl;
+    }
+	else if(op.find("deg2rad")==0) //need some work
+    {
+       s_op1=op.substr(5,op.length()-5);
+       strm<<s_op1;
+       strm>> op1;
+       res=atanh(op1);
+       cout<<s_op1<<endl;
+    }
+	else if(op.find("rad2deg")==0) //need some work
+    {
+       s_op1=op.substr(5,op.length()-5);
+       strm<<s_op1;
+       strm>> op1;
+       res=atanh(op1);
+       cout<<s_op1<<endl;
+    }
+    else
+    {
+    strm << op;
+    strm >> op1 ;
+    op=op.substr(op.find(ch_op,1),op.length()-op.find(ch_op,1));
+    ch_op=op[0];
+    op.erase(0,1);
+    strm2 << op;
+    strm2 >> op2;
+    //cout << op1 <<"/-/ "<<op2 <<endl<<op<<endl;
+    switch (ch_op)
+       {
+       case '^':
+      res = pow(op1,op2);
+      break;
+  case '+':
+    if(memoryCheck(s_op1)!=-1 && memoryCheck(s_op2)!=-1)
+    {
+
+        string nMat=genRandom();
+         memory.create(nMat);
+           memory.p[memoryPointer].add(memory.p[memoryCheck(s_op1)],
+                                memory.p[memoryCheck(s_op2)]);
+           opOnNum=0;
+           memoryPointer++;
+        result=nMat;
+    }
+    else
+  res = op1 + op2;
+  break;
+case '-':
+    if(memoryCheck(s_op1)!=-1 && memoryCheck(s_op2)!=-1)
+    {
+        string nMat=genRandom();
+         memory.create(nMat);
+           memory.p[memoryPointer].sub(memory.p[memoryCheck(s_op1)],
+                                memory.p[memoryCheck(s_op2)]);
+           opOnNum=0;
+           memoryPointer++;
+        result=nMat;
+    }
+    else
+  res = op1 - op2;
+  break;
+case '*':
+        if(memoryCheck(s_op1)!=-1 && memoryCheck(s_op2)!=-1)
+    {
+        string nMat=genRandom();
+         memory.create(nMat);
+           memory.p[memoryPointer].mult(memory.p[memoryCheck(s_op1)],
+                                memory.p[memoryCheck(s_op2)]);
+           opOnNum=0;
+           memoryPointer++;
+        result=nMat;
+    }
+    else
+  res = op1 * op2;
+  break;
+  case '/':
+   if(memoryCheck(s_op1)!=-1 && memoryCheck(s_op2)!=-1)
+     {
+        string nMat=genRandom();
+         memory.create(nMat);
+           memory.p[memoryPointer].div(memory.p[memoryCheck(s_op1)],
+                                memory.p[memoryCheck(s_op2)]);
+           opOnNum=0;
+           memoryPointer++;
+        result=nMat;
+     }
+    else
+  res = op1 / op2;
+  break;
+}
+    }
+//if((abs(res-round(res))<=0.00001 && abs(res-round(res))>=-0.00001)||
+  //     (abs(round(res)-res )<=0.00001 && abs(round(res) -res)>=-0.00001) )
+    //    res=round(res);
+if(opOnNum)
+{
+    strm3 << res;
+    strm3 >> result;
+}
+
+fullOp.replace(pos1,pos2-pos1+1,result);
+//cout<<fullOp<<endl;
+}
+
+void Operation_solver(string &operation){
+	removeSpaces(operation) ;
+	for(int i=operation.length()-1 ; i>=0 ; i--){
+		if(operation[i]=='('){
+			int j=0;
+
+			for(j=i ; j<operation.length(); j++)
+				if(operation[j]==')')
+			break;
+
+			string temp=operation.substr(i+1,j-i-1);
+			//cout<<"Temp "<<temp<<endl;
+                Operation_solver(temp);
+		    	operation.replace(i,j-i+1,temp);
+                Operation_solver(operation) ;
+
+			break;
+		 }
+		}
+
+		for(int i=operation.length()-1 ; i>=0 ; i--){ //sqrt
+			if(operation[i]=='s'&&operation[i+1]=='q'&&operation[i+2]=='r'
+                &&operation[i+3]=='t'){
+				int end=0 ;
+				for( end=i+4 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+                //cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+
+		for(int i=operation.length()-1 ; i>=0 ; i--){ //asind
+			if(operation[i]=='a'&&operation[i+1]=='s'&&operation[i+2]=='i'
+                &&operation[i+3]=='n'&&operation[i+4]=='d'){
+				int end=0 ;
+				for( end=i+5 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){ //asinh
+			if(operation[i]=='a'&&operation[i+1]=='s'&&operation[i+2]=='i'
+                &&operation[i+3]=='n'&&operation[i+4]=='h'){
+				int end=0 ;
+				for( end=i+5 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+               // cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){ //asin
+			if(operation[i]=='a'&&operation[i+1]=='s'&&operation[i+2]=='i'
+                &&operation[i+3]=='n'){
+				int end=0 ;
+				for( end=i+4 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+
+				calcAndRep(i,end,operation,operation[i]);
+               // cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){ //sinh
+			if(operation[i]=='s'&&operation[i+1]=='i'&&operation[i+2]=='n'
+                &&operation[i+3]=='h'){
+				int end=0 ;
+				for( end=i+4 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+               // cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){ //sind
+			if(operation[i]=='s'&&operation[i+1]=='i'&&operation[i+2]=='n'
+                &&operation[i+3]=='d'){
+				int end=0 ;
+				for( end=i+4 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+               // cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){ //sin
+			if(operation[i]=='s'&&operation[i+1]=='i'&&operation[i+2]=='n'){
+				int end=0 ;
+				for( end=i+3 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+              //  cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+
+		for(int i=operation.length()-1 ; i>=0 ; i--){ //acosd
+			if(operation[i]=='a'&&operation[i+1]=='c'&&operation[i+2]=='o'
+                &&operation[i+3]=='s'&&operation[i+4]=='d'){
+				int end=0 ;
+				for( end=i+5 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+                //cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){ //acosh
+			if(operation[i]=='a'&&operation[i+1]=='c'&&operation[i+2]=='o'
+                &&operation[i+3]=='s'&&operation[i+4]=='h'){
+				int end=0 ;
+				for( end=i+5 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+                //cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){//acos
+			if(operation[i]=='a'&&operation[i+1]=='c'&&operation[i+2]=='o'
+                &&operation[i+3]=='s'){
+				int end=0 ;
+				for( end=i+4 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+               // cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		  }
+		  for(int i=operation.length()-1 ; i>=0 ; i--){ //cosh
+			if(operation[i]=='c'&&operation[i+1]=='o'&&operation[i+2]=='s'
+                &&operation[i+3]=='h'){
+				int end=0 ;
+				for( end=i+4 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+                //cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){ //cosd
+			if(operation[i]=='c'&&operation[i+1]=='o'&&operation[i+2]=='s'
+                &&operation[i+3]=='d'){
+				int end=0 ;
+				for( end=i+4 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+               // cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		   for(int i=operation.length()-1 ; i>=0 ; i--){ //cos
+			if(operation[i]=='c'&&operation[i+1]=='o'&&operation[i+2]=='s'){
+				int end=0 ;
+				for( end=i+3 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+               // cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+
+
+
+		for(int i=operation.length()-1 ; i>=0 ; i--){ //atand
+			if(operation[i]=='a'&&operation[i+1]=='t'&&operation[i+2]=='a'
+                &&operation[i+3]=='n'&&operation[i+4]=='d'){
+				int end=0 ;
+				for( end=i+5 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+               // cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){ //atanh
+			if(operation[i]=='a'&&operation[i+1]=='t'&&operation[i+2]=='a'
+                &&operation[i+3]=='n'&&operation[i+4]=='h'){
+				int end=0 ;
+				for( end=i+5 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+               // cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){ //atan2
+			if(operation[i]=='a'&&operation[i+1]=='t'&&operation[i+2]=='a'
+                &&operation[i+3]=='n'&&operation[i+4]=='2'){
+				int end=0 ;
+				for( end=i+5 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+                //cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){ //atand
+			if(operation[i]=='a'&&operation[i+1]=='t'&&operation[i+2]=='a'
+                &&operation[i+3]=='n'&&operation[i+4]=='2'&&operation[i+4]=='d'){
+				int end=0 ;
+				for( end=i+6 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+               // cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){ //atan
+			if(operation[i]=='a'&&operation[i+1]=='t'&&operation[i+2]=='a'
+                &&operation[i+3]=='n'){
+				int end=0 ;
+				for( end=i+4 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+                //cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+
+			for(int i=operation.length()-1 ; i>=0 ; i--){ //tanh
+			if(operation[i]=='t'&&operation[i+1]=='a'&&operation[i+2]=='n'
+                &&operation[i+3]=='h'){
+				int end=0 ;
+				for( end=i+4 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+                //cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+       for(int i=operation.length()-1 ; i>=0 ; i--){ //tand
+			if(operation[i]=='t'&&operation[i+1]=='a'&&operation[i+2]=='n'
+                &&operation[i+3]=='d'){
+				int end=0 ;
+				for( end=i+4 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+                //cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){ //tan
+			if(operation[i]=='t'&&operation[i+1]=='a'&&operation[i+2]=='n'){
+				int end=0 ;
+				for( end=i+3 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+               // cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+
+
+for(int i=operation.length()-1 ; i>=0 ; i--){ //acscd
+			if(operation[i]=='a'&&operation[i+1]=='c'&&operation[i+2]=='s'
+                &&operation[i+3]=='c'&&operation[i+4]=='d'){
+				int end=0 ;
+				for( end=i+5 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+                //cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+for(int i=operation.length()-1 ; i>=0 ; i--){ //acsch
+			if(operation[i]=='a'&&operation[i+1]=='c'&&operation[i+2]=='s'
+                &&operation[i+3]=='c'&&operation[i+4]=='h'){
+				int end=0 ;
+				for( end=i+5 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+               // cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+			for(int i=operation.length()-1 ; i>=0 ; i--){ //acsc
+			if(operation[i]=='a'&&operation[i+1]=='c'&&operation[i+2]=='s'
+                &&operation[i+3]=='c'){
+				int end=0 ;
+				for( end=i+4 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+                //cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+
+		for(int i=operation.length()-1 ; i>=0 ; i--){ //csch
+			if(operation[i]=='c'&&operation[i+1]=='s'&&operation[i+2]=='c'
+                &&operation[i+3]=='h'){
+				int end=0 ;
+				for( end=i+4 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+               // cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+	for(int i=operation.length()-1 ; i>=0 ; i--){ //cscd
+			if(operation[i]=='c'&&operation[i+1]=='s'&&operation[i+2]=='c'
+                &&operation[i+3]=='d'){
+				int end=0 ;
+				for( end=i+4 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+                //cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){ //csc
+			if(operation[i]=='c'&&operation[i+1]=='s'&&operation[i+2]=='c'){
+				int end=0 ;
+				for( end=i+3 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+               // cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+
+
+
+for(int i=operation.length()-1 ; i>=0 ; i--){  //asecd
+			if(operation[i]=='a'&&operation[i+1]=='s'&&operation[i+2]=='e'
+                &&operation[i+3]=='c'&&operation[i+4]=='d'){
+				int end=0 ;
+				for( end=i+5 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+                //cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+for(int i=operation.length()-1 ; i>=0 ; i--){  //asech
+			if(operation[i]=='a'&&operation[i+1]=='s'&&operation[i+2]=='e'
+                &&operation[i+3]=='c'&&operation[i+4]=='h'){
+				int end=0 ;
+				for( end=i+5 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+                //cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+
+		for(int i=operation.length()-1 ; i>=0 ; i--){  //asec
+			if(operation[i]=='a'&&operation[i+1]=='s'&&operation[i+2]=='e'
+                &&operation[i+3]=='c'){
+				int end=0 ;
+				for( end=i+4 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+               // cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){ //sech
+			if(operation[i]=='s'&&operation[i+1]=='e'&&operation[i+2]=='c'
+                &&operation[i+3]=='h'){
+				int end=0 ;
+				for( end=i+4 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+                //cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+	for(int i=operation.length()-1 ; i>=0 ; i--){ //secd
+			if(operation[i]=='s'&&operation[i+1]=='e'&&operation[i+2]=='c'
+                &&operation[i+3]=='d'){
+				int end=0 ;
+				for( end=i+4 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+                //cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){ //sec
+			if(operation[i]=='s'&&operation[i+1]=='e'&&operation[i+2]=='c'){
+				int end=0 ;
+				for( end=i+3 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+               // cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+
+for(int i=operation.length()-1 ; i>=0 ; i--){  //acotd
+			if(operation[i]=='a'&&operation[i+1]=='c'&&operation[i+2]=='o'
+                &&operation[i+3]=='t'&&operation[i+4]=='d'){
+				int end=0 ;
+				for( end=i+5 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+                //cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+for(int i=operation.length()-1 ; i>=0 ; i--){// acoth
+			if(operation[i]=='a'&&operation[i+1]=='c'&&operation[i+2]=='o'
+                &&operation[i+3]=='t'&&operation[i+4]=='h'){
+				int end=0 ;
+				for( end=i+5 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+               // cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){ //acot
+			if(operation[i]=='a'&&operation[i+1]=='c'&&operation[i+2]=='o'
+                &&operation[i+3]=='t'){
+				int end=0 ;
+				for( end=i+4 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+               // cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){ //cot
+			if(operation[i]=='c'&&operation[i+1]=='o'&&operation[i+2]=='t'){
+				int end=0 ;
+				for( end=i+3 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+               // cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+for(int i=operation.length()-1 ; i>=0 ; i--){ //hypot
+			if(operation[i]=='h'&&operation[i+1]=='y'&&operation[i+2]=='p'
+                &&operation[i+3]=='o'&&operation[i+4]=='t'){
+				int end=0 ;
+				for( end=i+5 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+               // cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+for(int i=operation.length()-1 ; i>=0 ; i--){ //deg2rad
+			if(operation[i]=='d'&&operation[i+1]=='e'&&operation[i+2]=='g'
+                &&operation[i+3]=='2'&&operation[i+4]=='r'&&operation[i+5]=='a'&&operation[i+6]=='d'){
+				int end=0 ;
+				for( end=i+7 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+               // cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+for(int i=operation.length()-1 ; i>=0 ; i--){ //rad2deg
+			if(operation[i]=='r'&&operation[i+1]=='a'&&operation[i+2]=='d'
+                &&operation[i+3]=='2'&&operation[i+4]=='d'&&operation[i+5]=='e'&&operation[i+6]=='g'){
+				int end=0 ;
+				for( end=i+7 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+               // cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='^'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+1 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(start,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+
+for(int i=0;  i<operation.length()-1 ; i++){
+			if(operation[i]=='*'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+1 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(start,end,operation,operation[i]);
+                //cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+
+
+		for(int i=0;  i<operation.length()-1 ; i++){
+			if(operation[i]=='/'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+1 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(start,end,operation,operation[i]);
+                //cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+			for(int i=0 ; i<operation.length() ; i++){
+			if(operation[i]=='-' && i!=0){
+            int end=0;
+
+				for( end=i+1 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+						if(Is_operation(operation[i-1]))
+                            i--;
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+
+				calcAndRep(start,end,operation,operation[i]);
+                //cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+
+			for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='+'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+
+				int end=0;
+
+				for( end=i+1 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(start,end,operation,operation[i]);
+                //cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+
+
+
+	}
+
+	string mul_ope_solver(string &ope)
+	{
+	    Operation_solver(ope);
+
+	    if(memoryCheck(ope)==-1 )
+         {
+              string temp2,tName;
+             tName=genRandom();
+              temp2=tName+"=["+ope+"]";
+              input_checker(temp2);
+              cout<<"operatin is"<<ope<<endl;
+              return tName;
+           }
+        return ope;
+
+	}
+
+/*End Here*/
+int main(int argv, char* argc[])
+{
+   /* matrix a; a.initialling("a","1 2 3");
+    matrix b; b.initialling("b","1 2 3");
+    b.Msind(a);
+    b.print();*/
+
+   /* string ts;
+    string inp="A=[180 3 2]";
+    input_checker(inp);
+    inp="B=[4 5 6]";
+    input_checker(inp);
+      inp="C=[4 5 6]";
+    input_checker(inp);
+  ts="sin(A)+cos(B)";
+*/
+//ts="(4+1)*2^3+1";
+//ts="((1+1)-2^2^2)+1";
+
+   /* cout<<endl<<"----******--"<<endl;
+   string mainRes=mul_ope_solver(ts);
+    cout<<mainRes<<endl;
+    cout<<"--******--"<<endl;
+*/
+   /* ios_base::sync_with_stdio(false);
     cin.tie(0);
 
 	if (argv>1)
@@ -797,7 +2922,7 @@ int main(int argv,char* argc[])
      input_checker(ins);
      if(exit1==1)
         break;
-
+*/
 /*
 cout<<endl<<"memory----------------"<<endl;
 for(int z=0;z<memoryPointer;z++)
@@ -807,7 +2932,8 @@ for(int z=0;z<memoryPointer;z++)
     cout<<"#############"<<endl;
    }
 cout<<endl<<"--------------------------"<<endl;
-   */ }
+*/
+//}
 
     return 0;
 }
