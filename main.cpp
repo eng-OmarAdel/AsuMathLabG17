@@ -34,7 +34,7 @@ double acosd(double x)
 	return ((180.0 / PI)*acos(x));
 }
 //tan functions --> tand , atand ,atan2 , atan2d 
-double tand(double x)
+double tand(double x)//if(x==90)return inf;
 {
 	return tan((PI / 180)*x);
 }
@@ -51,11 +51,11 @@ double atan2d(double x,double y)
 	return ((180.0 / PI)*atan(x/y));
 }
 // csc functions --> csc , cscd ,acsc ,acscd ,csch ,acsch
-double csc(double x)
+double csc(double x)//if(sin(x)==0)error
 {
 	return ( 1.0 / sin(x) );
 }
-double cscd(double x)
+double cscd(double x)//if(sind(x)==0)error
 {
 	return ( 1.0 / sind(x) );
 }
@@ -67,7 +67,7 @@ double acscd(double x)
 {
 	return asind(1.0 / x);
 }
-double csch(double x)
+double csch(double x)//if(sinh(x)==0)error
 {
 	return (1.0 / sinh(x));
 }
@@ -76,11 +76,11 @@ double acsch(double x)
 	return asinh(1.0 / x);
 }
 //sec functions --> sec ,secd ,asec, asecd ,sech ,asech
-double sec(double x)
+double sec(double x)//if(cos(x)==0)error
 {
 	return (1.0 / cos(x));
 }
-double secd(double x)
+double secd(double x)//if(cosd(x)==0)error
 {
 	return (1.0 / cosd(x));
 }
@@ -92,7 +92,7 @@ double asecd(double x)
 {
 	return acosd(1.0 / x);
 }
-double sech(double x)
+double sech(double x)//if(cosh(x)==0)error
 {
 	return (1.0 / cosh(x));
 }
@@ -101,11 +101,11 @@ double asech(double x)
 	return acosh(1.0 / x);
 }
 // cot functions cot , cotd , acot ,acotd ,coth ,acoth
-double cot(double x)
+double cot(double x)//if(tan(x)==0)error
 {
 	return (1.0 / tan(x));
 }
-double cotd(double x)
+double cotd(double x)//if(tand(x)==0)error
 {
 	return (1.0 / tand(x));
 }
@@ -117,11 +117,11 @@ double acotd(double x)
 {
 	return atand(1.0 / x);
 }
-double coth(double x)
+double coth(double x)//if(tanh(x)==0)error
 {
 	return (1.0 / tanh(x));
 }
-double acoth(double x)
+double acoth(double x)//if(x==0)
 {
 	return atanh(1.0 / x);
 }
