@@ -32,6 +32,7 @@ double cosd(double x)
 {
 	return cos((PI / 180)*x);
 }
+
 double acosd(double x)
 {
 	return ((180.0 / PI)*acos(x));
