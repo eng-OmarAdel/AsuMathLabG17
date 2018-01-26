@@ -233,6 +233,7 @@ class matrix
       rows=0;
       columns=0;
 	  mName="NULL" ;
+	  element = NULL;
     }
 
     //copy constructor
@@ -628,13 +629,15 @@ class matrix
 
 	~matrix()
 	{
-		for(int i=0;i<rows;i++)
+		if (element)
 		{
-			delete[] element[i];
+			for (int i = 0; i<rows; i++)
+			{
+				delete[] element[i];
+			}
+			delete[] element;
+			element = NULL;
 		}
-		delete[] element;
-		element = NULL;
-
 	}
 
 };
@@ -785,14 +788,12 @@ void memorizeMatrix(int mIndex, int rows,int columns, string mName)//0 for all p
 	{
 		// cout<<"mwmory"<<memoryPointer;
 		memory.create(mName, rows,columns);
-		memory.p[memoryPointer].print();
 		memoryPointer++;
 	}
 
 	else
 	{
 		memory.update(mIndex, mName, rows,columns);
-		memory.p[mIndex].print();
 	}
 }
 void cut(string &variable1,string &variable2,int &index1,int &index2,char op,string operation)
@@ -808,19 +809,22 @@ void cut(string &variable1, int &index1, char op, string operation)
 	variable1 = operation.substr(operation.find(op) + 1, (operation.length() - operation.find(op)) - 1);
 	index1 = memoryCheck(variable1);
 }
-void sFill(matrix mSoph, string mString)
+void sFill(matrix &mSoph, string mString)
 {
 	int lastPos = 0;
 	string temp;
 	matrix tempM;
-	int flag = 0, OBCounter = 0, CBFlag = 0;
+	int flag = 0, OBCounter = 0, CBFlag = 0,continued=0;
 	int OBColumnCounter[100] = { 0 }, OBRowCounter[100] = { 0 }, OBColumnReset = 0, OBRowReset = 0;
 	for (int r = 0; r < mSoph.rows; r++)
 	{
 		for (int c = 0; c < mSoph.columns; c++)
 		{
-			if (mSoph.element[r][c].isFilled == 1) continue;
-
+			if (mSoph.element[r+ OBRowCounter[OBCounter]][c+OBColumnCounter[OBCounter]].isFilled == 1)
+			{
+				continued = 1;
+				continue;
+			}
 			temp = mString.substr(lastPos, 1);
 			//If character is found
 			if ((int(temp[0]) >= 65 && int(temp[0]) <= 90) || (int(temp[0]) >= 97 && int(temp[0]) <= 122))
@@ -933,16 +937,16 @@ void sFill(matrix mSoph, string mString)
 			//if [ 1 2 3]
 			else if (temp[0] == '[')
 			{
-				OBCounter ++;
+				OBCounter++;
 			}
 			else if (temp[0] == ']')
 			{
 				OBCounter--;
-			/*	if (OBCounter == 0)
+					if (OBCounter == 0)
 				{
-					OBColumnCounter[OBCounter] = 0;
-					OBRowCounter[OBCounter] = 0;
-				}*/
+				OBColumnCounter[OBCounter] = 0;
+				OBRowCounter[OBCounter] = 0;
+				}
 			}
 			//if 2.3
 			else if ((int(temp[0]) <= 57) && (int(temp[0]) >= 48))
@@ -951,6 +955,8 @@ void sFill(matrix mSoph, string mString)
 				int spacePos = mString.find(' ', lastPos)
 					, semicolumnPos = mString.find(';', lastPos)
 					, CBPos = mString.find(']', lastPos);
+				if (spacePos == -1) spacePos = 999999;
+				if (semicolumnPos == -1) semicolumnPos = 999999;
 				//Because the separators inside [] are numerous
 				if ((spacePos < semicolumnPos) && (spacePos < CBPos))
 				{
@@ -969,8 +975,8 @@ void sFill(matrix mSoph, string mString)
 				ss << temp;
 				double value;
 				ss >> value;
-				mSoph.element[r+OBRowCounter[OBCounter]][c+ OBColumnCounter[OBCounter]].value = value;
-				mSoph.element[r+OBRowCounter[OBCounter]][c+ OBColumnCounter[OBCounter]].isFilled = 1;
+				mSoph.element[r + OBRowCounter[OBCounter]][c + OBColumnCounter[OBCounter]].value = value;
+				mSoph.element[r + OBRowCounter[OBCounter]][c + OBColumnCounter[OBCounter]].isFilled = 1;
 
 				if ((spacePos < semicolumnPos) && (spacePos < CBPos))
 				{
@@ -987,6 +993,7 @@ void sFill(matrix mSoph, string mString)
 					{
 						OBRowCounter[OBCounter]++;//walking through the inner matrix
 						OBColumnCounter[OBCounter] = 0;//reseting column to start position
+						c--;
 					}
 
 					lastPos = semicolumnPos + 1;
@@ -1009,6 +1016,7 @@ void sFill(matrix mSoph, string mString)
 				c--;
 			}
 			flag = 0;
+			continued = 0;
 		}
 	}
 }
