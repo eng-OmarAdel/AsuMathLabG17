@@ -2746,6 +2746,101 @@ for(int i=operation.length()-1 ; i>=0 ; i--){ //rad2deg
 			}
 		}
 		for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='.'&&operation[i+1]=='^'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+2 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(start,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='.'&&operation[i+1]=='*'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+2 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(start,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='.'&&operation[i+1]=='/'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+2 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(start,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='.'&&operation[i+1]=='+'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+2 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(start,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='.'&&operation[i+1]=='-'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+2 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(start,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){
 			if(operation[i]=='^'){
 				int start=0;
 
