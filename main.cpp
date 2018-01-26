@@ -2762,7 +2762,7 @@ for(int i=operation.length()-1 ; i>=0 ; i--){ //rad2deg
 				for( end=i+4 ; end<operation.length()-1; end++)
 					if(Is_operation(operation[end+1])  )
 						break;
-				calcAndRep(start,end,operation,operation[i]);
+				calcAndRep(i,end,operation,operation[i]);
 
                 cout<<operation<<endl;
 				Operation_solver(operation) ;
@@ -2781,7 +2781,7 @@ for(int i=operation.length()-1 ; i>=0 ; i--){ //rad2deg
 				for( end=i+3 ; end<operation.length()-1; end++)
 					if(Is_operation(operation[end+1])  )
 						break;
-				calcAndRep(start,end,operation,operation[i]);
+				calcAndRep(i,end,operation,operation[i]);
 
                 cout<<operation<<endl;
 				Operation_solver(operation) ;
@@ -2800,7 +2800,7 @@ for(int i=operation.length()-1 ; i>=0 ; i--){ //rad2deg
 				for( end=i+5 ; end<operation.length()-1; end++)
 					if(Is_operation(operation[end+1])  )
 						break;
-				calcAndRep(start,end,operation,operation[i]);
+				calcAndRep(i,end,operation,operation[i]);
 
                 cout<<operation<<endl;
 				Operation_solver(operation) ;
@@ -2819,7 +2819,7 @@ for(int i=operation.length()-1 ; i>=0 ; i--){
 				for( end=i+4 ; end<operation.length()-1; end++)
 					if(Is_operation(operation[end+1])  )
 						break;
-				calcAndRep(start,end,operation,operation[i]);
+				calcAndRep(i,end,operation,operation[i]);
 
                 cout<<operation<<endl;
 				Operation_solver(operation) ;
@@ -2839,7 +2839,7 @@ for(int i=operation.length()-1 ; i>=0 ; i--){
 				for( end=i+5 ; end<operation.length()-1; end++)
 					if(Is_operation(operation[end+1])  )
 						break;
-				calcAndRep(start,end,operation,operation[i]);
+				calcAndRep(i,end,operation,operation[i]);
 
                 cout<<operation<<endl;
 				Operation_solver(operation) ;
@@ -2858,7 +2858,7 @@ for(int i=operation.length()-1 ; i>=0 ; i--){
 				for( end=i+3 ; end<operation.length()-1; end++)
 					if(Is_operation(operation[end+1])  )
 						break;
-				calcAndRep(start,end,operation,operation[i]);
+				calcAndRep(i,end,operation,operation[i]);
 
                 cout<<operation<<endl;
 				Operation_solver(operation) ;
@@ -2877,7 +2877,7 @@ for(int i=operation.length()-1 ; i>=0 ; i--){
 				for( end=i+3 ; end<operation.length()-1; end++)
 					if(Is_operation(operation[end+1])  )
 						break;
-				calcAndRep(start,end,operation,operation[i]);
+				calcAndRep(i,end,operation,operation[i]);
 
                 cout<<operation<<endl;
 				Operation_solver(operation) ;
@@ -3112,7 +3112,7 @@ int main(int argv, char* argc[])
     string inp="A=[2 1 1]";
     input_checker(inp);
     inp="B=[2 2 2]";
-    input_checker(inp); 
+    input_checker(inp);
       inp="C=[4 5 6]";
     input_checker(inp);
   ts="A+B";
