@@ -2200,6 +2200,11 @@ fullOp.replace(pos1,pos2-pos1+1,result);
 
 void Operation_solver(string &operation){
 	removeSpaces(operation) ;
+	if(operation.find("log10")!=-1){
+        int rep= operation.find("log10");
+        operation[rep]='t' ;
+	}
+
 	for(int i=operation.length()-1 ; i>=0 ; i--){
 		if(operation[i]=='('){
 			int j=0;
@@ -2747,6 +2752,140 @@ for(int i=operation.length()-1 ; i>=0 ; i--){ //rad2deg
 			}
 		}
 		for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='r'&&operation[i+1]=='a'&&operation[i+2]=='n'&&operation[i+3]=='d'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+4 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(start,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='e'&&operation[i+1]=='y'&&operation[i+2]=='e'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+3 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(start,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='z'&&operation[i+1]=='e'&&operation[i+2]=='r'&&operation[i+3]=='o'&&operation[i+4]=='s'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+5 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(start,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='o'&&operation[i+1]=='n'&&operation[i+2]=='e'&&operation[i+3]=='s'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+ ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(start,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+
+		for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='t'&&operation[i+1]=='o'&&operation[i+2]=='g'&&operation[i+3]=='1'&&operation[i+4]=='0'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+5 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(start,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='l'&&operation[i+1]=='o'&&operation[i+2]=='g'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+3 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(start,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='e'&&operation[i+1]=='x'&&operation[i+2]=='p'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+3 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(start,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){
 			if(operation[i]=='.'&&operation[i+1]=='^'){
 				int start=0;
 
@@ -2944,6 +3083,7 @@ for(int i=0;  i<operation.length()-1 ; i++){
 
 
 	}
+
 
 	string mul_ope_solver(string &ope)
 	{
