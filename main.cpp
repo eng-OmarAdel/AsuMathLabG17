@@ -999,6 +999,9 @@ sizeValue conc(string s)
         k = 1;
     }
     }
+	int temp=Vstack[0].rows;               //these 3 lines are because the function reverse rows with columns
+	Vstack[0].rows=Vstack[0].columns;      // so i exchang them
+	Vstack[0].columns=temp;
     return Vstack[0];
 }
 //===============================================================================================
