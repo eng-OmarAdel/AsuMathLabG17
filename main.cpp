@@ -1001,6 +1001,203 @@ class matrix
 		}
 	}
 	//end element wise operators
+	///// farouk
+	    void multforpower(matrix &x,matrix &y)           //multiplication for square matrices and assigning the result in the first matrix
+	{
+
+        this->initialling(x.rows, x.columns);
+
+		for(int i=0;i<rows;i++)
+			for(int j=0; j<columns ; j++)
+				element[i][j]=0;
+		for (int i = 0; i < x.rows; i++)
+		{
+			for (int j = 0; j < x.columns; j++)
+			{
+				for (int k = 0; k < x.rows; k++)
+				{
+
+                    element[i][j] += x.element[i][k] * y.element[k][j];
+				}
+			}
+		}
+		for (int i = 0; i < x.rows; i++)
+            for (int j = 0; j < y.columns; j++)
+                x.element[i][j] = element[i][j];
+
+	}
+	void identityMatrix()                                      //identity matrix I
+	{
+
+		for(int i=0;i<rows;i++)
+			for(int j=0; j<columns ; j++)
+				element[i][j]= (i == j);
+	}
+
+    void power(matrix &x, double power)                  //matrix power
+	{
+	    if(x.rows == x.columns)                          //must be square matrix
+        {
+            int mod = power*10;                          //To check if power is fractional
+            if(power == 0)                               //produce identity matrix if power = 0
+            {
+                this->initialling(x.rows,x.columns);
+                this->identityMatrix();
+            }
+            else if(mod % 10 != 0)                       //To check if power is fractional
+            {
+                if(x.rows == 1)                          //Support fractional power for 1*1 matrix only
+                {
+                    double y = pow(x.element[0][0], power);
+                    this->initialling(1,1);
+                    element[0][0] = y;
+                }
+                else
+                    errorHandler = "Error: Fraction power is supported in 1*1 matrix only.";
+            }
+            else
+            {
+                int intPower;
+                if(power < 0)
+                  intPower = (int)abs(power);
+                else
+                    intPower = (int)power;
+                matrix y;                                         //Two matrices to be used in calculation
+                y.initialling(x.rows, x.columns);
+                matrix temp;
+                temp.initialling(x.rows,x.columns);
+                for(int i=0;i<temp.rows;i++)
+                        for(int j=0; j<temp.columns ; j++)
+                            temp.element[i][j] = x.element[i][j];
+                y.identityMatrix();
+                while (intPower > 0)                             //matrix power by exponentiation by squaring algorithm
+                {
+                    if (intPower % 2 == 1)
+                    {
+                    this->multforpower(y,temp);
+                    }
+
+                    this->multforpower(temp, temp);
+                    intPower /= 2;
+
+
+                }
+                this->initialling(y.rows,y.columns);              //Get inverse if  power is negative
+                if(power < 0)
+                {
+                    this->getInverse(y);
+
+                }
+                else
+                {
+                    for(int i=0;i<rows;i++)
+                        for(int j=0; j<columns ; j++)
+                            element[i][j] = y.element[i][j];
+                }
+
+            }
+        }
+
+            else
+                errorHandler = "Error: for A^x, A must be a square matrix.";
+
+	}
+	void elementWisePower(matrix &x, double power)                  //matrix power
+	{
+            int mod = power*10;                          //To check if power is fractional
+            if(power == 0)                               //produce identity matrix if power = 0
+            {
+                this->initialling(x.rows,x.columns);
+                 for(int i=0;i<rows;i++)
+                        for(int j=0; j<columns ; j++)
+                            element[i][j] = 1;
+            }
+            else if(mod % 10 != 0)                       //To check if power is fractional
+            {
+                this->initialling(x.rows,x.columns);
+                 for(int i=0;i<rows;i++)
+                        for(int j=0; j<columns ; j++)
+                            element[i][j] = pow(x.element[i][j],power);
+            }
+            else
+            {
+                int intPower;
+                if(power < 0)
+                  intPower = (int)abs(power);
+                else
+                  intPower = (int)power;
+                matrix y;                                         //Two matrices to be used in calculation
+                y.initialling(x.rows, x.columns);
+                for(int i=0;i<y.rows;i++)
+                        for(int j=0; j<y.columns ; j++)
+                            y.element[i][j] = 1;
+                matrix temp;
+                temp.initialling(x.rows,x.columns);
+                for(int i=0;i<temp.rows;i++)
+                        for(int j=0; j<temp.columns ; j++)
+                            temp.element[i][j] = x.element[i][j];
+
+                while (intPower > 0)                             //matrix power by exponentiation by squaring algorithm
+                {
+                    if (intPower % 2 == 1)
+                    {
+                    for(int i=0;i<temp.rows;i++)
+                        for(int j=0; j<temp.columns ; j++)
+                            y.element[i][j] = y.element[i][j]*temp.element[i][j];
+                    }
+
+                    for(int i=0;i<temp.rows;i++)
+                        for(int j=0; j<temp.columns ; j++)
+                            temp.element[i][j] = temp.element[i][j]*temp.element[i][j];
+                    intPower /= 2;
+
+
+                }
+                this->initialling(y.rows,y.columns);              //Get inverse if  power is negative
+                if(power < 0)
+                {
+                    this->inversePerElement(y);
+
+                }
+                else
+                {
+                    for(int i=0;i<rows;i++)
+                        for(int j=0; j<columns ; j++)
+                            element[i][j] = y.element[i][j];
+                }
+
+            }
+
+	}
+	void logMatrix(matrix &x)
+	{
+	    this->initialling(x.rows,x.columns);
+	    for(int i=0;i<rows;i++)
+                        for(int j=0; j<columns ; j++)
+                            element[i][j] = log(x.element[i][j]);
+	}
+	void log10Matrix(matrix &x)
+	{
+	    this->initialling(x.rows,x.columns);
+	    for(int i=0;i<rows;i++)
+                        for(int j=0; j<columns ; j++)
+                            element[i][j] = log10(x.element[i][j]);
+	}
+	void sqrtMatrix(matrix &x)
+	{
+	    this->initialling(x.rows,x.columns);
+	    for(int i=0;i<rows;i++)
+                        for(int j=0; j<columns ; j++)
+                            element[i][j] = sqrt(x.element[i][j]);
+	}
+	void expMatrix(matrix &x)
+	{
+	    this->initialling(x.rows,x.columns);
+	    for(int i=0;i<rows;i++)
+                        for(int j=0; j<columns ; j++)
+                            element[i][j] = exp(x.element[i][j]);
+	}
+	//////
 	void print()
 	{
 		if(errorHandler=="Error There's a zero element in the matrix" ||
@@ -1008,8 +1205,8 @@ class matrix
 			cout<<errorHandler;
 		else
 		{
-		    if(mName[0]!='@' && mName[0]!='@' &&
-          mName[0]!='#' && mName[0]!='_' )
+		   /* if(mName[0]!='@' && mName[0]!='&' &&
+          mName[0]!='#' && mName[0]!='_' )*/
           {
              cout << endl;
 			cout << mName << " = " << endl;
@@ -1455,9 +1652,8 @@ string genRandom()  // Random string generator function.
     return ranS;
 }
 void calcAndRep(int i, int j,string  &fullOp,char ch_op){
+	cout<<i<<" "<<j << " "<<fullOp<<" "<<ch_op<<endl ;
 
-
-	//cout<<i<<" "<<j << " "<<fullOp<<" "<<ch_op<<endl ;
     int opOnNum=1;
 	 int pos1=i,pos2=j;
     double op1=0,op2=0 ,res=0;
@@ -1467,21 +1663,235 @@ void calcAndRep(int i, int j,string  &fullOp,char ch_op){
      stringstream strm,strm2;
      stringstream strm3;
      string result;
+cout<<"cheeeeeeeeeeeeeeeeeeeeck "<<fullOp<<endl;
     string op=fullOp.substr(pos1,pos2-pos1+1);
+
 
     s_op1=op.substr(0,op.find(ch_op,1));
     s_op2=op.substr(op.find(ch_op,1)+1,pos2-op.find(ch_op,1)+1);
-
-
-
-    //cout<<op<<" opers "<<s_op1<<" "<<s_op2<<endl;
+    if(ch_op=='.')
+        s_op2.erase(0,1);
+    cout<<op<<" opers "<<s_op1<<" "<<s_op2<<endl;
     if(op.find("sqrt")==0)
     {
        s_op1=op.substr(4,op.length()-4);
+        if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].sqrtMatrix(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
        strm<<s_op1;
        strm>> op1;
        res=sqrt(op1);
       // cout<<s_op1<<endl;
+    }
+     else if(op.find(".+")<op.length())
+    {
+        if(memoryCheck(s_op2)!=-1)
+        {
+
+            strm<<s_op1;
+            strm>> op1;
+            string nMat=genRandom();
+           memory.create(nMat);
+
+           memory.p[memoryPointer].addEL(memory.p[memoryCheck(s_op2)],op1);
+           opOnNum=0;
+           memoryPointer++;
+          result=nMat;
+        }
+        if(memoryCheck(s_op1)!=-1)
+        {
+            strm<<s_op2;
+            strm>> op2;
+            string nMat=genRandom();
+           memory.create(nMat);
+
+           memory.p[memoryPointer].addEL(memory.p[memoryCheck(s_op1)],op2);
+           opOnNum=0;
+           memoryPointer++;
+          result=nMat;
+        }
+    }
+     else if(op.find(".-")<op.length())
+    {
+        if(memoryCheck(s_op2)!=-1)
+        {
+
+            strm<<s_op1;
+            strm>> op1;
+            string nMat=genRandom();
+           memory.create(nMat);
+
+           memory.p[memoryPointer].subEL(memory.p[memoryCheck(s_op2)],op1);
+           opOnNum=0;
+           memoryPointer++;
+          result=nMat;
+        }
+        if(memoryCheck(s_op1)!=-1)
+        {
+            strm<<s_op2;
+            strm>> op2;
+            string nMat=genRandom();
+           memory.create(nMat);
+
+           memory.p[memoryPointer].subEL(memory.p[memoryCheck(s_op1)],op2);
+           opOnNum=0;
+           memoryPointer++;
+          result=nMat;
+        }
+    }
+         else if(op.find("./")<op.length())
+    {
+        if((memoryCheck(s_op1)!=-1) && memoryCheck(s_op2)!=-1)
+        {
+            string nMat=genRandom();
+           memory.create(nMat);
+
+           memory.p[memoryPointer].divEL(memory.p[memoryCheck(s_op1)],
+                                         memory.p[memoryCheck(s_op2)]);
+           opOnNum=0;
+           memoryPointer++;
+          result=nMat;
+        }
+        else if(memoryCheck(s_op2)!=-1)
+        {
+            strm<<s_op1;
+            strm>> op1;
+            string nMat=genRandom();
+           memory.create(nMat);
+
+           memory.p[memoryPointer].divEL(memory.p[memoryCheck(s_op2)],op1);
+           opOnNum=0;
+           memoryPointer++;
+          result=nMat;
+        }
+        else if(memoryCheck(s_op1)!=-1)
+        {
+            strm<<s_op2;
+            strm>> op2;
+            string nMat=genRandom();
+           memory.create(nMat);
+
+           memory.p[memoryPointer].divEL(memory.p[memoryCheck(s_op1)],op2);
+           opOnNum=0;
+           memoryPointer++;
+          result=nMat;
+        }
+    }
+    else if(op.find(".*")<op.length())
+    {
+         if((memoryCheck(s_op1)!=-1) && memoryCheck(s_op2)!=-1)
+        {
+            string nMat=genRandom();
+           memory.create(nMat);
+
+           memory.p[memoryPointer].multEL(memory.p[memoryCheck(s_op1)],
+                                         memory.p[memoryCheck(s_op2)]);
+           opOnNum=0;
+           memoryPointer++;
+          result=nMat;
+        }
+       else if(memoryCheck(s_op2)!=-1)
+        {
+
+            strm<<s_op1;
+            strm>> op1;
+            string nMat=genRandom();
+           memory.create(nMat);
+
+           memory.p[memoryPointer].multEL(memory.p[memoryCheck(s_op2)],op1);
+           opOnNum=0;
+           memoryPointer++;
+          result=nMat;
+        }
+        else if(memoryCheck(s_op1)!=-1)
+        {
+            strm<<s_op2;
+            strm>> op2;
+            string nMat=genRandom();
+           memory.create(nMat);
+
+           memory.p[memoryPointer].multEL(memory.p[memoryCheck(s_op1)],op2);
+           opOnNum=0;
+           memoryPointer++;
+          result=nMat;
+        }
+    }
+        else if(op.find(".^")<op.length())
+    {
+
+        if(memoryCheck(s_op1)!=-1)
+        {
+            strm<<s_op2;
+            strm>> op2;
+            string nMat=genRandom();
+           memory.create(nMat);
+
+           memory.p[memoryPointer].elementWisePower(memory.p[memoryCheck(s_op1)],op2);
+           opOnNum=0;
+           memoryPointer++;
+          result=nMat;
+        }
+    }
+     else if(op.find("exp")==0)
+    {
+       s_op1=op.substr(3,op.length()-3);
+       if(memoryCheck(s_op1)!=-1)
+       {
+
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].expMatrix(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       {
+         strm<<s_op1;
+         strm>> op1;
+           res=exp(op1);
+       }
+    }
+    else if(op.find("log")==0)
+    {
+       s_op1=op.substr(3,op.length()-3);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].logMatrix(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       {
+         strm<<s_op1;
+         strm>> op1;
+           res=log(op1);
+       }
+    }
+    else if(op.find("tog10")==0)
+    {
+       s_op1=op.substr(5,op.length()-5);
+       if(memoryCheck(s_op1)!=-1)
+       {
+           string nMat=genRandom();
+           memory.create(nMat);
+           memory.p[memoryPointer].log10Matrix(memory.p[memoryCheck(s_op1)]);
+           opOnNum=0;
+           memoryPointer++;
+           result=nMat;
+       }
+       {
+         strm<<s_op1;
+         strm>> op1;
+           res=log10(op1);
+       }
     }
     else if(op.find("sinh")==0)
     {
@@ -2120,6 +2530,7 @@ void calcAndRep(int i, int j,string  &fullOp,char ch_op){
     strm2 << op;
     strm2 >> op2;
     //cout << op1 <<"/-/ "<<op2 <<endl<<op<<endl;
+
     switch (ch_op)
        {
        case '^':
@@ -2199,6 +2610,11 @@ fullOp.replace(pos1,pos2-pos1+1,result);
 
 void Operation_solver(string &operation){
 	removeSpaces(operation) ;
+	if(operation.find("log10")!=-1){
+        int rep= operation.find("log10");
+        operation[rep]='t' ;
+	}
+
 	for(int i=operation.length()-1 ; i>=0 ; i--){
 		if(operation[i]=='('){
 			int j=0;
@@ -2746,6 +3162,235 @@ for(int i=operation.length()-1 ; i>=0 ; i--){ //rad2deg
 			}
 		}
 		for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='r'&&operation[i+1]=='a'&&operation[i+2]=='n'&&operation[i+3]=='d'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+4 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='e'&&operation[i+1]=='y'&&operation[i+2]=='e'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+3 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='z'&&operation[i+1]=='e'&&operation[i+2]=='r'&&operation[i+3]=='o'&&operation[i+4]=='s'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+5 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='o'&&operation[i+1]=='n'&&operation[i+2]=='e'&&operation[i+3]=='s'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+4 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+
+		for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='t'&&operation[i+1]=='o'&&operation[i+2]=='g'&&operation[i+3]=='1'&&operation[i+4]=='0'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+5 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='l'&&operation[i+1]=='o'&&operation[i+2]=='g'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+3 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='e'&&operation[i+1]=='x'&&operation[i+2]=='p'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+3 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(i,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='.'&&operation[i+1]=='^'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+2 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(start,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='.'&&operation[i+1]=='*'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+2 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(start,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='.'&&operation[i+1]=='/'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+2 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(start,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='.'&&operation[i+1]=='+'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+2 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(start,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='.'&&operation[i+1]=='-'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+2 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				calcAndRep(start,end,operation,operation[i]);
+
+                cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=operation.length()-1 ; i>=0 ; i--){
 			if(operation[i]=='^'){
 				int start=0;
 
@@ -2848,8 +3493,7 @@ for(int i=0;  i<operation.length()-1 ; i++){
 
 
 	}
-
-	string mul_ope_solver(string &ope)
+string mul_ope_solver(string &ope)
 	{
 	    Operation_solver(ope);
 
@@ -2859,7 +3503,7 @@ for(int i=0;  i<operation.length()-1 ; i++){
              tName=genRandom();
               temp2=tName+"=["+ope+"]";
               input_checker(temp2);
-              cout<<"operatin is"<<ope<<endl;
+              //cout<<"operatin is"<<ope<<endl;
               return tName;
            }
         return ope;
@@ -2869,28 +3513,29 @@ for(int i=0;  i<operation.length()-1 ; i++){
 /*End Here*/
 int main(int argv, char* argc[])
 {
-   /* matrix a; a.initialling("a","1 2 3");
+/*    matrix a; a.initialling("a","1 2 3");
     matrix b; b.initialling("b","1 2 3");
-    b.Msind(a);
-    b.print();*/
-
-   /* string ts;
-    string inp="A=[180 3 2]";
+    b.addEL(b,4);
+    b.print();
+*/
+    string ts;
+    string inp="A=[180 4 25]";
     input_checker(inp);
     inp="B=[4 5 6]";
     input_checker(inp);
       inp="C=[4 5 6]";
     input_checker(inp);
-  ts="sin(A)+cos(B)";
-*/
+  ts="log(A)";
+
 //ts="(4+1)*2^3+1";
 //ts="((1+1)-2^2^2)+1";
 
-   /* cout<<endl<<"----******--"<<endl;
+    cout<<endl<<"----******--"<<endl;
    string mainRes=mul_ope_solver(ts);
+
     cout<<mainRes<<endl;
     cout<<"--******--"<<endl;
-*/
+
    /* ios_base::sync_with_stdio(false);
     cin.tie(0);
 
@@ -2923,7 +3568,7 @@ int main(int argv, char* argc[])
      if(exit1==1)
         break;
 */
-/*
+
 cout<<endl<<"memory----------------"<<endl;
 for(int z=0;z<memoryPointer;z++)
    {
@@ -2932,7 +3577,7 @@ for(int z=0;z<memoryPointer;z++)
     cout<<"#############"<<endl;
    }
 cout<<endl<<"--------------------------"<<endl;
-*/
+
 //}
 
     return 0;
