@@ -32,7 +32,6 @@ double cosd(double x)
 {
 	return cos((PI / 180)*x);
 }
-
 double acosd(double x)
 {
 	return ((180.0 / PI)*acos(x));
@@ -1009,8 +1008,8 @@ class matrix
 			cout<<errorHandler;
 		else
 		{
-		    if(mName[0]!='@' && mName[0]!='@' &&
-          mName[0]!='#' && mName[0]!='_' )
+		   // if(mName[0]!='@' && mName[0]!='&' &&
+    //mName[0]!='#' && mName[0]!='_' )
           {
              cout << endl;
 			cout << mName << " = " << endl;
@@ -2817,7 +2816,7 @@ for(int i=operation.length()-1 ; i>=0 ; i--){
 						break;
 				int end=0;
 
-				for( end=i+ ; end<operation.length()-1; end++)
+				for( end=i+4 ; end<operation.length()-1; end++)
 					if(Is_operation(operation[end+1])  )
 						break;
 				calcAndRep(start,end,operation,operation[i]);
@@ -3084,7 +3083,6 @@ for(int i=0;  i<operation.length()-1 ; i++){
 
 	}
 
-
 	string mul_ope_solver(string &ope)
 	{
 	    Operation_solver(ope);
@@ -3110,26 +3108,25 @@ int main(int argv, char* argc[])
     b.Msind(a);
     b.print();*/
 
-   /* string ts;
-    string inp="A=[180 3 2]";
+    string ts;
+    string inp="A=[2 1 1]";
     input_checker(inp);
-    inp="B=[4 5 6]";
-    input_checker(inp);
+    inp="B=[2 2 2]";
+    input_checker(inp); 
       inp="C=[4 5 6]";
     input_checker(inp);
-  ts="sin(A)+cos(B)";
-*/
+  ts="A+B";
+
 //ts="(4+1)*2^3+1";
 //ts="((1+1)-2^2^2)+1";
 
-   /* cout<<endl<<"----******--"<<endl;
+   cout<<endl<<"----******--"<<endl;
    string mainRes=mul_ope_solver(ts);
     cout<<mainRes<<endl;
     cout<<"--******--"<<endl;
-*/
+
    /* ios_base::sync_with_stdio(false);
     cin.tie(0);
-
 	if (argv>1)
 	{
 		ifstream infile(argc[1]);
@@ -3150,7 +3147,6 @@ int main(int argv, char* argc[])
     while(1){
             exit1=0;
             cout<<">> ";
-
      string ins;
      getline (cin,ins);
      if(ins.find("\r")!=-1)
@@ -3159,7 +3155,7 @@ int main(int argv, char* argc[])
      if(exit1==1)
         break;
 */
-/*
+
 cout<<endl<<"memory----------------"<<endl;
 for(int z=0;z<memoryPointer;z++)
    {
@@ -3168,7 +3164,7 @@ for(int z=0;z<memoryPointer;z++)
     cout<<"#############"<<endl;
    }
 cout<<endl<<"--------------------------"<<endl;
-*/
+
 //}
 
     return 0;
