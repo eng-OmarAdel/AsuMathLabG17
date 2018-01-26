@@ -1004,6 +1004,7 @@ sizeValue conc(string s)
 //===============================================================================================
 sizeValue calcSize(vector<string>& separatedString)
 {
+	cout<<separatedString.size() <<endl;
     vector <sizeValue> finStack;
     int k=0;
     for(int i=0 ; i<separatedString.size() ; i++)
@@ -1014,12 +1015,13 @@ sizeValue calcSize(vector<string>& separatedString)
             finStack.push_back(conc(separatedString[i]));
         k++;
     }
-    if(finStack.size() == 1) return finStack[0];
+    if(finStack.size() == 1) separatedString.clear(); return finStack[0];
     sizeValue sum = compare(finStack[0], finStack[1]);
     for(int i=2 ; i<finStack.size() ; i++)
     {
         sum = compare(sum, finStack[i]);
     }
+	separatedString.clear();
     return sum;
 }
 //=================================================================================
