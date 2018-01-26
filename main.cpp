@@ -1007,7 +1007,6 @@ sizeValue conc(string s)
 //===============================================================================================
 sizeValue calcSize(vector<string>& separatedString)
 {
-	cout<<separatedString.size() <<endl;
     vector <sizeValue> finStack;
     int k=0;
     for(int i=0 ; i<separatedString.size() ; i++)
