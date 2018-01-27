@@ -22,6 +22,7 @@ double sind(double x)
 }
 double asind(double x)
 {
+	if(x>1||x<-1)errorHandler("cannot solve in Real Domain");
 	return ((180.0 / PI)*asin(x));
 }
 //cos functions --> cosd , acosd
@@ -31,32 +32,36 @@ double cosd(double x)
 }
 double acosd(double x)
 {
+	if(x>1||x<-1)errorHandler("cannot solve in Real Domain");
 	return ((180.0 / PI)*acos(x));
 }
 //tan functions --> tand , atand ,atan2 , atan2d 
-double tand(double x)//if(x==90)return inf;
+double tand(double x)//if(x==90*(2n+1))return Inf;
 {
+	
 	return tan((PI / 180)*x);
 }
-double atand(double x)
+double atand(double x)//may need overload this function wit argument string to handle atand(Inf)
 {
 	return ((180.0 / PI)*atan(x));
 }
-double atan2(double x,double y)
+double atan2(double x,double y)//handling Inf is not working
 {
 	return atan(x/y);
 }
-double atan2d(double x,double y)
+double atan2d(double x,double y)//handling Inf is not working
 {
 	return ((180.0 / PI)*atan(x/y));
 }
 // csc functions --> csc , cscd ,acsc ,acscd ,csch ,acsch
-double csc(double x)//if(sin(x)==0)error
+double csc(double x)//if(sin(x)==0)Inf
 {
+	if(sin(x)==0)errorHandler("Inf");
 	return ( 1.0 / sin(x) );
 }
 double cscd(double x)//if(sind(x)==0)error
 {
+	if(sind(x)==0)errorHandler("Inf");
 	return ( 1.0 / sind(x) );
 }
 double acsc(double x) // error handling
