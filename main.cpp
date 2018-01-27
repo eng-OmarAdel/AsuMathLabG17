@@ -8,6 +8,8 @@
 #define PI 3.14159265359
 using namespace std;
 
+int errorFlag;
+
 double StringToDouble(const string &text)
 {
 	stringstream ss(text);
@@ -233,6 +235,7 @@ public:
 	void initialising(string mName, string mString) // give me string wana azzabat isa
 	{
 		this->mName = mName;
+		int nColumnsOtherRows = 0;
 		stringstream ss(mString);
 		string token;
 		while (getline(ss, token, ';'))
@@ -241,14 +244,24 @@ public:
 			stringstream sn;
 			sn << token;
 			double in;
+			nColumnsOtherRows=0;
 			while (sn >> in)
 			{
 				if (rows == 1)
 					this->columns++;
+				else if(rows > 1)
+                		{
+                    			nColumnsOtherRows++;
+                		}	
 			}
-
+			if((nColumnsOtherRows != this->columns) && (nColumnsOtherRows != 0))
+            		{
+                		cout << "Dimensions of matrices being concatenated are not consistent.";
+                		errorFlag = 1;
+                		break;
+            		}
 		}
-		//----------------------------------------------------
+		if(errorFlag != 1){
 		element = new SElement*[rows];
 		for (int i = 0; i < rows; ++i)
 			element[i] = new SElement[columns];
@@ -266,7 +279,7 @@ public:
 			}
 			q = 0;
 			p++;
-		}
+		}}
 	}
 	void update(string mName, string mString)
 	{
@@ -4040,6 +4053,11 @@ int main(int argv, char* argc[])
 			if (sFile.find("]") != -1 || sFile.find("];") != -1 || sFile.find("+") != -1 || sFile.find("*") != -1 || sFile.find("/") != -1 || sFile.find("'") != -1 || sFile.find("./") != -1 || (sFile.find("-") != -1 && sFile.length() <= 10))
 			{
 				input_checker(sFile);
+				if(errorFlag == 1)
+     				{
+         				cout << endl;
+         				continue;
+     				}
 				sFile = "";
 			}
 		}
@@ -4055,6 +4073,11 @@ int main(int argv, char* argc[])
 			if (ins.find("\r") != -1)
 				ins.replace(ins.find("\r"), 2, "");
 			input_checker(ins);
+			if(errorFlag == 1)
+     			{
+         			cout << endl;
+         			continue;
+     			}
 			if (exit1 == 1)
 				break;
 
