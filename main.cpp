@@ -6,7 +6,11 @@
 #include <math.h>
 #define PI 3.14159265359
 using namespace std;
-
+void removeSpaces2(string &str)
+{
+	while(str[str.length()-1] ==' ')
+		str.erase(str.length()-1,1);
+}
 struct sizeValue
 {
 	int rows;
@@ -75,120 +79,122 @@ sizeValue sizing(string matrix)  //take any string but without brackets and retu
 
 sizeValue conc(string s)
 {
-	int i = 0, j = 0, k = 0;
-	string miniMatrix;
-	sizeValue Vstack[2]; //sizeValue Vstack[2]; supposed
-	Vstack[1].rows = 0;
-	Vstack[1].columns = 0;
-	while (1)
-	{
-		i = s.rfind('['); //if not found returns -1
-		if (i == -1)
+    int i=0, j=0, k=0;
+    string miniMatrix;
+    sizeValue Vstack[2]; //sizeValue Vstack[2]; supposed
+    Vstack[1].rows = 0;
+    Vstack[1].columns = 0;
+    while(1)
+    {
+    i = s.rfind('['); //if not found returns -1
+	if(i == -1)
+	{   
+		int flag=0;
+		for(int y=0 ; y<s.length() ; y++)
 		{
-			int flag = 0;
-			for (int y = 0; y<s.length(); y++)
+			if(s[y] != ',' && s[y] != '[' && s[y] != ']')
 			{
-				if (s[y] != ',' && s[y] != '[' && s[y] != ']')
-				{
-					flag = 1;
-				}
-			}
-			if (flag == 1)
-			{
-				Vstack[k] = sizing(s);
-				Vstack[0] = compare(Vstack[0], Vstack[1]);
-			}
-			break;
-		}
-		for (int o = i; o<s.length(); o++)
-		{
-			if (s[o] == ']')
-			{
-				j = o;
-				break;
+				flag = 1;
 			}
 		}
-		if (1)//i != -1 )//&& j != -1)
+		if(flag == 1)
 		{
-			miniMatrix = s.substr(i, j - i + 1);
-			Vstack[k] = sizing(miniMatrix);
-			if (Vstack[1].rows != 0)
-			{
-				Vstack[0] = compare(Vstack[0], Vstack[1]);
-				Vstack[1].rows = 0; //it can be overwritten
-				Vstack[1].columns = 0;
-			}
-			s.erase(i, j - i + 1);
-			if (s.rfind('[') == -1)
-			{
-				int flag = 0;
-				for (int y = 0; y<s.length(); y++)
-				{
-					if (s[y] != ',' && s[y] != '[' && s[y] != ']')
-					{
-						flag = 1;
-					}
-				}
-				if (flag == 1)
-				{
-					Vstack[1] = sizing(s);
-					Vstack[0] = compare(Vstack[0], Vstack[1]);
-				}
-				break;
-			}
-			for (int o = i; o<(s.length()); o++)
-			{
-				if ((s[o] == ']' && s[o - 1] == '[')
-					|| (s[o] == ']' && s[o - 1] == ',' && s[o - 2] == '[')
-					|| (s[o] == ']' && s[o - 1] == ',')
-					|| (s[o] == '[' && s[o - 1] == ',')
-					|| (s[o] == ',' && s[o - 1] == ']')
-					|| (s[o] == ',' && s[o - 1] == '[')
-					)
-				{
-					if ((s[o] == ']' && s[o - 1] == '['))
-						s.erase(o - 1, 2);
-					else if ((s[o] == ']' && s[o - 1] == ',' && s[o - 2] == '['))
-						s.erase(o - 2, 3);
-					else if ((s[o] == ']' && s[o - 1] == ','))
-						s.erase(o - 1, 2);
-					else if ((s[o] == '[' && s[o - 1] == ','))
-						s.erase(o - 1, 2);
-					else if ((s[o] == ',' && s[o - 1] == ']'))
-						s.erase(o - 1, 2);
-					else if ((s[o] == ',' && s[o - 1] == '['))
-						s.erase(o - 1, 2);
-				}
-			}
-			k = 1;
+			Vstack[k] = sizing(s);
+			Vstack[0] = compare(Vstack[0], Vstack[1]);
 		}
+		break;
 	}
-	int temp = Vstack[0].rows;               //these 3 lines are because the function reverse rows with columns
-	Vstack[0].rows = Vstack[0].columns;      // so i exchang them
-	Vstack[0].columns = temp;
-	return Vstack[0];
+    for(int o=i ; o<s.length() ; o++)
+    {
+        if(s[o] == ']')
+        {
+            j = o;
+            break;
+        }
+    }
+    if(1)//i != -1 )//&& j != -1)
+    {
+        miniMatrix = s.substr(i, j-i+1);
+        Vstack[k] = sizing(miniMatrix);
+		if(Vstack[1].rows != 0)
+        {
+            Vstack[0] = compare(Vstack[0], Vstack[1]);
+            Vstack[1].rows = 0; //it can be overwritten
+            Vstack[1].columns = 0;
+        }
+        s.erase(i, j-i+1);
+	    if(s.rfind('[') == -1)
+		{
+			int flag=0;
+		for(int y=0 ; y<s.length() ; y++)
+		{
+			if(s[y] != ',' && s[y] != '[' && s[y] != ']')
+			{
+				flag = 1;
+			}
+		}
+		if(flag == 1)
+		{
+			Vstack[1] = sizing(s);
+			Vstack[0] = compare(Vstack[0], Vstack[1]);
+		}
+		break;
+		}
+		removeSpaces2(s);
+		for(int o=i ; o<=(s.length()) ; o++)
+		{
+			if((s[o] == ']' && s[o-1] == '[')
+			|| (s[o] == ']' && s[o-1] == ',' && s[o-2] == '[')
+			|| (s[o] == ']' && s[o-1] == ',')
+			|| (s[o] == '[' && s[o-1] == ',')
+			|| (s[o] == ',' && s[o-1] == ']')
+			|| (s[o] == ',' && s[o-1] == '[')
+			)
+			{
+				if((s[o] == ']' && s[o-1] == '['))
+					s.erase(o-1, 2);
+				else if((s[o] == ']' && s[o-1] == ',' && s[o-2] == '['))
+					s.erase(o-2, 3);
+				else if((s[o] == ']' && s[o-1] == ','))
+					s.erase(o-1, 2);
+				else if((s[o] == '[' && s[o-1] == ','))
+					s.erase(o-1, 2);
+				else if((s[o] == ',' && s[o-1] == ']'))
+					s.erase(o-1, 2);
+				else if((s[o] == ',' && s[o-1] == '['))
+					s.erase(o-1, 2);
+			}
+		}
+        k = 1;
+    }
+    }
+    return Vstack[0];
 }
 
 sizeValue calcSize(vector<string>& separatedString)
 {
-	vector <sizeValue> finStack;
-	int k = 0;
-	for (int i = 0; i<separatedString.size(); i++)
-	{
-		if (separatedString[i].find('[') == -1)
-			finStack.push_back(sizing(separatedString[i]));
-		else
-			finStack.push_back(conc(separatedString[i]));
-		k++;
+    vector <sizeValue> finStack;
+    int k=0;
+    for(int i=0 ; i<separatedString.size() ; i++)
+    {
+        if(separatedString[i].find('[') == -1)
+            finStack.push_back(sizing(separatedString[i]));
+        else
+            finStack.push_back(conc(separatedString[i]));
+        k++;
+    }
+    if(finStack.size() == 1) 
+    {
+		separatedString.clear(); 
+	    return finStack[0];
 	}
-	if (finStack.size() == 1) separatedString.clear(); return finStack[0];
-	sizeValue sum = compare(finStack[0], finStack[1]);
-	for (int i = 2; i<finStack.size(); i++)
-	{
-		sum = compare(sum, finStack[i]);
-	}
+    sizeValue sum = compare(finStack[0], finStack[1]);
+    for(int i=2 ; i<finStack.size() ; i++)
+    {
+        sum = compare(sum, finStack[i]);
+    }
 	separatedString.clear();
-	return sum;
+    return sum;
 }
 
 double StringToDouble(const string &text)
