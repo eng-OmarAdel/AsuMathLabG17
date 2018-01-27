@@ -4,296 +4,9 @@
 #include <fstream>
 #include <vector>
 #include <math.h>
+#include <time.h>
 #define PI 3.14159265359
 using namespace std;
-void removeSpaces2(string &str)
-{
-	while(str[str.length()-1] ==' ')
-		str.erase(str.length()-1,1);
-}
-struct sizeValue
-{
-	int rows;
-	int columns;
-};
-
-vector <string> separatedString;
-
-void separate(string inputString)
-{
-	//vector<string> separatedString;
-	int flag = 0;
-	int beginPostion = 0;
-	for (int i = 0; i<inputString.length(); i++)
-	{
-		if (inputString[i] == ';'&&flag == 0)
-		{
-			//cout<<inputString.substr(beginPostion,i-beginPostion)<<endl;
-			separatedString.push_back(inputString.substr(beginPostion, i - beginPostion));
-			beginPostion = i + 1;
-		}
-		else if (i == inputString.length() - 1)
-		{
-			//cout<<inputString.substr(beginPostion,inputString.length()-beginPostion);
-			separatedString.push_back(inputString.substr(beginPostion, inputString.length() - beginPostion));
-		}
-		else if (inputString[i] == '[')
-			flag++;
-		else if (inputString[i] == ']')
-			flag--;
-	}
-	//return separatedString;
-}
-
-sizeValue compare(sizeValue m1, sizeValue m2)     //get the total size of 2 concatenated matrices
-{
-	sizeValue m;
-	if (m1.rows == m2.rows)   //if the rows of matrix1 = rows of matrix2 whatever the columns are equal or not
-	{
-		m.rows = m1.rows;
-		m.columns = m1.columns + m2.columns;
-		return m;
-	}
-	else if (m1.columns == m2.columns&&m1.rows != m2.rows)  //if thr columns of matrix1= columns of matrix2 and the rows aren't equal
-	{
-		m.columns = m1.columns;
-		m.rows = m1.rows + m2.rows;
-		return m;
-	}
-}
-//============================================================================
-sizeValue get_sizeValue (string s)  //s is a string without spaces or ;   ex:   123  or  10*sin(A)
-{
-	sizeValue n;
-    int flag=0;
-    int index;
-    for(int i=0;i<s.length();i++)
-    {
-        if((s[i]>64&&s[i]<91)||(s[i]>96&&s[i]<123))
-        {
-			flag=1;
-            if(s[i]=='s'&&s[i+1]=='i'&&s[i+2]=='n')    //if sin
-			{
-                index=memoryCheck(s.substr(i+4,s.find(')')-i-4));
-				if(index==-1)
-				{
-					n.rows=1;  n.columns=1;
-					return n;
-				}
-				n.columns=memory.p[index].getColumns();
-				n.rows=memory.p[index].getRows();
-				return n;
-			}
-            else if(s[i]=='c'&&s[i+1]=='o'&&s[i+2]=='s')  // if cos
-            {   
-		        index=memoryCheck(s.substr(i+4,s.find(')')-i-4));
-				if(index==-1)
-				{
-					n.rows=1;  n.columns=1;
-					return n;
-				}
-				n.columns=memory.p[index].getColumns();
-				n.rows=memory.p[index].getRows();
-				return n;
-			}
-            else if(s[i]=='t'&&s[i+1]=='a'&&s[i+2]=='n')   //  if tan
-			{
-                index=memoryCheck(s.substr(i+4,s.find(')')-i-4));
-				if(index==-1)
-                {
-					n.rows=1;  n.columns=1;
-					return n;
-				}
-				n.columns=memory.p[index].getColumns();
-				n.rows=memory.p[index].getRows();
-				return n;
-			}
-            else if(s[i]=='r'&&s[i+1]=='a'&&s[i+2]=='n'&&s[i+3]=='d')   // if rand(55,100)
-			{
-				n.columns=stoi(s.substr(s.find(',')+1,s.find(')')-s.find(',')-1));
-				n.rows=stoi(s.substr(s.find('(')+1,s.find(',')-s.find(',')-1));
-                return n;  //return numbers of columns 100 & rows 55
-			}
-            else if(s[i]=='e'&&s[i+1]=='y'&&s[i+2]=='e')     //if eye(55,100)
-            {
-				n.columns=stoi(s.substr(s.find(',')+1,s.find(')')-s.find(',')-1));
-				n.rows=stoi(s.substr(s.find('(')+1,s.find(',')-s.find(',')-1));
-                return n;  //return numbers of columns 100 & rows 55
-			}
-            else if(s[i]=='z'&&s[i+1]=='e'&&s[i+2]=='r'&&s[i+3]=='o'&&s[i+4]=='s')   // if zeros(55,100)
-            {
-				n.columns=stoi(s.substr(s.find(',')+1,s.find(')')-s.find(',')-1));
-				n.rows=stoi(s.substr(s.find('(')+1,s.find(',')-s.find(',')-1));
-                return n;  //return numbers of columns 100 & rows 55
-			}
-            else if(s[i]=='o'&&s[i+1]=='n'&&s[i+2]=='e'&&s[i+3]=='s')  // if ones(55,100)
-            {
-				n.columns=stoi(s.substr(s.find(',')+1,s.find(')')-s.find(',')-1));
-				n.rows=stoi(s.substr(s.find('(')+1,s.find(',')-s.find(',')-1));
-                return n;  //return numbers of columns 100 & rows 55
-			}
-            else
-			{
-				index=memoryCheck(s.substr(i,1));
-				n.columns=memory.p[index].getColumns();
-				n.rows=memory.p[index].getRows();
-				return n;
-			}
-        }
-	}
-	if (flag==0)
-	{
-		n.rows=1;  n.columns=1;
-		return n;
-	}
-}
-//=============================================================================
-sizeValue sizing (string matrix)
-{
-    sizeValue n; n.rows=0;  n.columns=0;
-	if(matrix[0]=='[')
-		matrix=matrix.substr(1,matrix.length()-2);
-    stringstream sMatrix(matrix);
-    string token;
-    getline(sMatrix,token,';');
-    stringstream sn(token);
-    string element;
-    while(sn>>element)
-    {
-		n.columns+=get_sizeValue(element).columns;
-    }
-	//-----------------------------------
-	stringstream ssMatrix(matrix);
-	while(getline(ssMatrix,token,';'))
-	{
-		stringstream sn(token);
-        string element;
-		sn>>element;
-		n.rows+=get_sizeValue(element).rows;
-	}
-	return n;
-}
-//================================================================================
-
-sizeValue conc(string s)
-{
-    int i=0, j=0, k=0;
-    string miniMatrix;
-    sizeValue Vstack[2]; //sizeValue Vstack[2]; supposed
-    Vstack[1].rows = 0;
-    Vstack[1].columns = 0;
-    while(1)
-    {
-    i = s.rfind('['); //if not found returns -1
-	if(i == -1)
-	{   
-		int flag=0;
-		for(int y=0 ; y<s.length() ; y++)
-		{
-			if(s[y] != ',' && s[y] != '[' && s[y] != ']')
-			{
-				flag = 1;
-			}
-		}
-		if(flag == 1)
-		{
-			Vstack[k] = sizing(s);
-			Vstack[0] = compare(Vstack[0], Vstack[1]);
-		}
-		break;
-	}
-    for(int o=i ; o<s.length() ; o++)
-    {
-        if(s[o] == ']')
-        {
-            j = o;
-            break;
-        }
-    }
-    if(1)//i != -1 )//&& j != -1)
-    {
-        miniMatrix = s.substr(i, j-i+1);
-        Vstack[k] = sizing(miniMatrix);
-		if(Vstack[1].rows != 0)
-        {
-            Vstack[0] = compare(Vstack[0], Vstack[1]);
-            Vstack[1].rows = 0; //it can be overwritten
-            Vstack[1].columns = 0;
-        }
-        s.erase(i, j-i+1);
-	    if(s.rfind('[') == -1)
-		{
-			int flag=0;
-		for(int y=0 ; y<s.length() ; y++)
-		{
-			if(s[y] != ',' && s[y] != '[' && s[y] != ']')
-			{
-				flag = 1;
-			}
-		}
-		if(flag == 1)
-		{
-			Vstack[1] = sizing(s);
-			Vstack[0] = compare(Vstack[0], Vstack[1]);
-		}
-		break;
-		}
-		removeSpaces2(s);
-		for(int o=i ; o<=(s.length()) ; o++)
-		{
-			if((s[o] == ']' && s[o-1] == '[')
-			|| (s[o] == ']' && s[o-1] == ',' && s[o-2] == '[')
-			|| (s[o] == ']' && s[o-1] == ',')
-			|| (s[o] == '[' && s[o-1] == ',')
-			|| (s[o] == ',' && s[o-1] == ']')
-			|| (s[o] == ',' && s[o-1] == '[')
-			)
-			{
-				if((s[o] == ']' && s[o-1] == '['))
-					s.erase(o-1, 2);
-				else if((s[o] == ']' && s[o-1] == ',' && s[o-2] == '['))
-					s.erase(o-2, 3);
-				else if((s[o] == ']' && s[o-1] == ','))
-					s.erase(o-1, 2);
-				else if((s[o] == '[' && s[o-1] == ','))
-					s.erase(o-1, 2);
-				else if((s[o] == ',' && s[o-1] == ']'))
-					s.erase(o-1, 2);
-				else if((s[o] == ',' && s[o-1] == '['))
-					s.erase(o-1, 2);
-			}
-		}
-        k = 1;
-    }
-    }
-    return Vstack[0];
-}
-
-sizeValue calcSize(vector<string>& separatedString)
-{
-    vector <sizeValue> finStack;
-    int k=0;
-    for(int i=0 ; i<separatedString.size() ; i++)
-    {
-        if(separatedString[i].find('[') == -1)
-            finStack.push_back(sizing(separatedString[i]));
-        else
-            finStack.push_back(conc(separatedString[i]));
-        k++;
-    }
-    if(finStack.size() == 1) 
-    {
-		separatedString.clear(); 
-	    return finStack[0];
-	}
-    sizeValue sum = compare(finStack[0], finStack[1]);
-    for(int i=2 ; i<finStack.size() ; i++)
-    {
-        sum = compare(sum, finStack[i]);
-    }
-	separatedString.clear();
-    return sum;
-}
 
 double StringToDouble(const string &text)
 {
@@ -1719,6 +1432,297 @@ void cut(string &variable1, int &index1, char op, string operation)
 	variable1 = operation.substr(operation.find(op) + 1, (operation.length() - operation.find(op)) - 1);
 	index1 = memoryCheck(variable1);
 }
+
+void removeSpaces2(string &str)
+{
+	while (str[str.length() - 1] == ' ')
+		str.erase(str.length() - 1, 1);
+}
+struct sizeValue
+{
+	int rows;
+	int columns;
+};
+
+vector <string> separatedString;
+
+void separate(string inputString)
+{
+	//vector<string> separatedString;
+	int flag = 0;
+	int beginPostion = 0;
+	for (int i = 0; i<inputString.length(); i++)
+	{
+		if (inputString[i] == ';'&&flag == 0)
+		{
+			//cout<<inputString.substr(beginPostion,i-beginPostion)<<endl;
+			separatedString.push_back(inputString.substr(beginPostion, i - beginPostion));
+			beginPostion = i + 1;
+		}
+		else if (i == inputString.length() - 1)
+		{
+			//cout<<inputString.substr(beginPostion,inputString.length()-beginPostion);
+			separatedString.push_back(inputString.substr(beginPostion, inputString.length() - beginPostion));
+		}
+		else if (inputString[i] == '[')
+			flag++;
+		else if (inputString[i] == ']')
+			flag--;
+	}
+	//return separatedString;
+}
+
+sizeValue compare(sizeValue m1, sizeValue m2)     //get the total size of 2 concatenated matrices
+{
+	sizeValue m;
+	if (m1.rows == m2.rows)   //if the rows of matrix1 = rows of matrix2 whatever the columns are equal or not
+	{
+		m.rows = m1.rows;
+		m.columns = m1.columns + m2.columns;
+		return m;
+	}
+	else if (m1.columns == m2.columns&&m1.rows != m2.rows)  //if thr columns of matrix1= columns of matrix2 and the rows aren't equal
+	{
+		m.columns = m1.columns;
+		m.rows = m1.rows + m2.rows;
+		return m;
+	}
+}
+//============================================================================
+sizeValue get_sizeValue(string s)  //s is a string without spaces or ;   ex:   123  or  10*sin(A)
+{
+	sizeValue n;
+	int flag = 0;
+	int index;
+	for (int i = 0; i<s.length(); i++)
+	{
+		if ((s[i]>64 && s[i]<91) || (s[i]>96 && s[i]<123))
+		{
+			flag = 1;
+			if (s[i] == 's'&&s[i + 1] == 'i'&&s[i + 2] == 'n')    //if sin
+			{
+				index = memoryCheck(s.substr(i + 4, s.find(')') - i - 4));
+				if (index == -1)
+				{
+					n.rows = 1;  n.columns = 1;
+					return n;
+				}
+				n.columns = memory.p[index].getColumns();
+				n.rows = memory.p[index].getRows();
+				return n;
+			}
+			else if (s[i] == 'c'&&s[i + 1] == 'o'&&s[i + 2] == 's')  // if cos
+			{
+				index = memoryCheck(s.substr(i + 4, s.find(')') - i - 4));
+				if (index == -1)
+				{
+					n.rows = 1;  n.columns = 1;
+					return n;
+				}
+				n.columns = memory.p[index].getColumns();
+				n.rows = memory.p[index].getRows();
+				return n;
+			}
+			else if (s[i] == 't'&&s[i + 1] == 'a'&&s[i + 2] == 'n')   //  if tan
+			{
+				index = memoryCheck(s.substr(i + 4, s.find(')') - i - 4));
+				if (index == -1)
+				{
+					n.rows = 1;  n.columns = 1;
+					return n;
+				}
+				n.columns = memory.p[index].getColumns();
+				n.rows = memory.p[index].getRows();
+				return n;
+			}
+			else if (s[i] == 'r'&&s[i + 1] == 'a'&&s[i + 2] == 'n'&&s[i + 3] == 'd')   // if rand(55,100)
+			{
+				n.columns = stoi(s.substr(s.find(',') + 1, s.find(')') - s.find(',') - 1));
+				n.rows = stoi(s.substr(s.find('(') + 1, s.find(',') - s.find(',') - 1));
+				return n;  //return numbers of columns 100 & rows 55
+			}
+			else if (s[i] == 'e'&&s[i + 1] == 'y'&&s[i + 2] == 'e')     //if eye(55,100)
+			{
+				n.columns = stoi(s.substr(s.find(',') + 1, s.find(')') - s.find(',') - 1));
+				n.rows = stoi(s.substr(s.find('(') + 1, s.find(',') - s.find(',') - 1));
+				return n;  //return numbers of columns 100 & rows 55
+			}
+			else if (s[i] == 'z'&&s[i + 1] == 'e'&&s[i + 2] == 'r'&&s[i + 3] == 'o'&&s[i + 4] == 's')   // if zeros(55,100)
+			{
+				n.columns = stoi(s.substr(s.find(',') + 1, s.find(')') - s.find(',') - 1));
+				n.rows = stoi(s.substr(s.find('(') + 1, s.find(',') - s.find(',') - 1));
+				return n;  //return numbers of columns 100 & rows 55
+			}
+			else if (s[i] == 'o'&&s[i + 1] == 'n'&&s[i + 2] == 'e'&&s[i + 3] == 's')  // if ones(55,100)
+			{
+				n.columns = stoi(s.substr(s.find(',') + 1, s.find(')') - s.find(',') - 1));
+				n.rows = stoi(s.substr(s.find('(') + 1, s.find(',') - s.find(',') - 1));
+				return n;  //return numbers of columns 100 & rows 55
+			}
+			else
+			{
+				index = memoryCheck(s.substr(i, 1));
+				n.columns = memory.p[index].getColumns();
+				n.rows = memory.p[index].getRows();
+				return n;
+			}
+		}
+	}
+	if (flag == 0)
+	{
+		n.rows = 1;  n.columns = 1;
+		return n;
+	}
+}
+//=============================================================================
+sizeValue sizing(string matrix)
+{
+	sizeValue n; n.rows = 0;  n.columns = 0;
+	if (matrix[0] == '[')
+		matrix = matrix.substr(1, matrix.length() - 2);
+	stringstream sMatrix(matrix);
+	string token;
+	getline(sMatrix, token, ';');
+	stringstream sn(token);
+	string element;
+	while (sn >> element)
+	{
+		n.columns += get_sizeValue(element).columns;
+	}
+	//-----------------------------------
+	stringstream ssMatrix(matrix);
+	while (getline(ssMatrix, token, ';'))
+	{
+		stringstream sn(token);
+		string element;
+		sn >> element;
+		n.rows += get_sizeValue(element).rows;
+	}
+	return n;
+}
+//================================================================================
+
+sizeValue conc(string s)
+{
+	int i = 0, j = 0, k = 0;
+	string miniMatrix;
+	sizeValue Vstack[2]; //sizeValue Vstack[2]; supposed
+	Vstack[1].rows = 0;
+	Vstack[1].columns = 0;
+	while (1)
+	{
+		i = s.rfind('['); //if not found returns -1
+		if (i == -1)
+		{
+			int flag = 0;
+			for (int y = 0; y<s.length(); y++)
+			{
+				if (s[y] != ',' && s[y] != '[' && s[y] != ']')
+				{
+					flag = 1;
+				}
+			}
+			if (flag == 1)
+			{
+				Vstack[k] = sizing(s);
+				Vstack[0] = compare(Vstack[0], Vstack[1]);
+			}
+			break;
+		}
+		for (int o = i; o<s.length(); o++)
+		{
+			if (s[o] == ']')
+			{
+				j = o;
+				break;
+			}
+		}
+		if (1)//i != -1 )//&& j != -1)
+		{
+			miniMatrix = s.substr(i, j - i + 1);
+			Vstack[k] = sizing(miniMatrix);
+			if (Vstack[1].rows != 0)
+			{
+				Vstack[0] = compare(Vstack[0], Vstack[1]);
+				Vstack[1].rows = 0; //it can be overwritten
+				Vstack[1].columns = 0;
+			}
+			s.erase(i, j - i + 1);
+			if (s.rfind('[') == -1)
+			{
+				int flag = 0;
+				for (int y = 0; y<s.length(); y++)
+				{
+					if (s[y] != ',' && s[y] != '[' && s[y] != ']')
+					{
+						flag = 1;
+					}
+				}
+				if (flag == 1)
+				{
+					Vstack[1] = sizing(s);
+					Vstack[0] = compare(Vstack[0], Vstack[1]);
+				}
+				break;
+			}
+			removeSpaces2(s);
+			for (int o = i; o <= (s.length()); o++)
+			{
+				if ((s[o] == ']' && s[o - 1] == '[')
+					|| (s[o] == ']' && s[o - 1] == ',' && s[o - 2] == '[')
+					|| (s[o] == ']' && s[o - 1] == ',')
+					|| (s[o] == '[' && s[o - 1] == ',')
+					|| (s[o] == ',' && s[o - 1] == ']')
+					|| (s[o] == ',' && s[o - 1] == '[')
+					)
+				{
+					if ((s[o] == ']' && s[o - 1] == '['))
+						s.erase(o - 1, 2);
+					else if ((s[o] == ']' && s[o - 1] == ',' && s[o - 2] == '['))
+						s.erase(o - 2, 3);
+					else if ((s[o] == ']' && s[o - 1] == ','))
+						s.erase(o - 1, 2);
+					else if ((s[o] == '[' && s[o - 1] == ','))
+						s.erase(o - 1, 2);
+					else if ((s[o] == ',' && s[o - 1] == ']'))
+						s.erase(o - 1, 2);
+					else if ((s[o] == ',' && s[o - 1] == '['))
+						s.erase(o - 1, 2);
+				}
+			}
+			k = 1;
+		}
+	}
+	return Vstack[0];
+}
+
+sizeValue calcSize(vector<string>& separatedString)
+{
+	vector <sizeValue> finStack;
+	int k = 0;
+	for (int i = 0; i<separatedString.size(); i++)
+	{
+		if (separatedString[i].find('[') == -1)
+			finStack.push_back(sizing(separatedString[i]));
+		else
+			finStack.push_back(conc(separatedString[i]));
+		k++;
+	}
+	if (finStack.size() == 1)
+	{
+		separatedString.clear();
+		return finStack[0];
+	}
+	sizeValue sum = compare(finStack[0], finStack[1]);
+	for (int i = 2; i<finStack.size(); i++)
+	{
+		sum = compare(sum, finStack[i]);
+	}
+	separatedString.clear();
+	return sum;
+}
+
+
 void sFill(matrix &mSoph, string mString)
 {
 	int lastPos = 0;
@@ -4063,7 +4067,7 @@ int main(int argv, char* argc[])
 			cout<<"#############"<<endl;
 			}
 			cout<<endl<<"--------------------------"<<endl;
-			   */
+			*/
 		}
 
 	return 0;
