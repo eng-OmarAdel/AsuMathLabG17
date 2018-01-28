@@ -7,7 +7,6 @@
 #include <fstream>
 #include <vector>
 #include "math.h"
-#include <time.h>
 #include <cmath>
 #define PI 3.14159265359
 using namespace std;
