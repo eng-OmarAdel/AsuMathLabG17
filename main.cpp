@@ -1,10 +1,14 @@
 #include <iostream>
 #include <string>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #include <sstream>
 #include <fstream>
 #include <vector>
-#include <math.h>
+#include "math.h"
 #include <time.h>
+#include <cmath>
 #define PI 3.14159265359
 using namespace std;
 
@@ -14,6 +18,12 @@ double StringToDouble(const string &text)
 {
 	stringstream ss(text);
 	double result;
+	return ss >> result ? result : 0;
+}
+int stoi(const string &text)
+{
+	stringstream ss(text);
+	int result;
 	return ss >> result ? result : 0;
 }
 //trigonometric functions for doubles NOT matrices
@@ -252,7 +262,7 @@ public:
 				else if(rows > 1)
                 		{
                     			nColumnsOtherRows++;
-                		}	
+                		}
 			}
 			if((nColumnsOtherRows != this->columns) && (nColumnsOtherRows != 0))
             		{
@@ -2043,7 +2053,6 @@ void input_checker(string input) // assignment or operation
 
 	/*	for (int i = 0; i < input.length(); i++)
 	{
-
 	if ((int(input[i])>=65&&int(input[i])<=90) || (int(input[i])>=97&&int(input[i])<=122))//if input contains letters
 	{
 	sAssignmentOP = true;
