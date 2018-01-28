@@ -1288,23 +1288,28 @@ public:
 
 	void print()
 	{
-		if (errorHandler == "Error There's a zero element in the matrix" || errorHandler == "Error The determinant of this matrix is eual to zero")
-			cout << errorHandler;
-		else
+		if (mName[0] != '@' && mName[0] != '&' &&
+			mName[0] != '#' && mName[0] != '_'  && mName[0] != '!' && mName[0] != '%' && mName[0] != '&')
 		{
-			cout << endl;
-			cout << mName << " = " << endl;
-			for (int i = 0; i<rows; i++)
+			if (errorHandler == "Error There's a zero element in the matrix" || errorHandler == "Error The determinant of this matrix is eual to zero")
+				cout << errorHandler;
+			else
 			{
-				for (int j = 0; j<columns; j++)
-				{
-					cout << "\t" << element[i][j].value;
-				}
 				cout << endl;
+				cout << mName << " = " << endl;
+				for (int i = 0; i<rows; i++)
+				{
+					for (int j = 0; j<columns; j++)
+					{
+						cout << "\t" << element[i][j].value;
+					}
+					cout << endl;
+				}
 			}
+			cout << endl;
+
+		 }
 		}
-		cout << endl;
-	}
 
 
 	~matrix()
@@ -2142,6 +2147,7 @@ void input_checker(string input) // assignment or operation
 		matrix zMatrix;
 		tempOPE = mul_ope_solver(tempOPE);
 		memory.create(mName);
+		memoryPointer++;
 		zMatrix.zeroes(memory.p[memoryCheck(tempOPE)].rows, memory.p[memoryCheck(tempOPE)].columns);
 		memory.p[memoryCheck(mName)].add(memory.p[memoryCheck(tempOPE)],zMatrix);
 		memory.p[memoryCheck(mName)].print();
@@ -2150,45 +2156,50 @@ void input_checker(string input) // assignment or operation
 	}
 	else
 	{
+		string mString = input.substr(EQPos + 1, (input.length() - EQPos + 1));
 		removeSpaces(input);
-		string tempTrig = input.substr(0, 3);
+		removeSpaces(mString);
+		string tempTrig = mString.substr(0, 3);
 		if ((memoryCheck(input) != -1) &&
 			memoryCheck(input)<memoryPointer)
 		{
 			memory.p[memoryCheck(input)].print();
 		}
 		
-		else if (tempTrig == "sin" || tempTrig == "cos" || tempTrig == "tan" || tempTrig == "sec" || tempTrig == "cot"
-			|| input.substr(0, 4) == "cose")
+		else if (tempTrig == "sin" || tempTrig == "cos" || tempTrig == "tan" || tempTrig == "sec" || tempTrig == "cot")
 		{
 			//basy le yasser
 		}
 		else if (tempTrig == "ran")
 		{
 			memory.create(mName);
-			string s1(1, input[5]);
-			string s3(1, input[7]);
+			memoryPointer++;
+			string s1(1, mString[5]);
+			string s3(1, mString[7]);
 			memory.p[memoryCheck(mName)].randM(StringToDouble(s1), StringToDouble(s1));
 		}
 		else if (tempTrig == "eye")
 		{
 			memory.create(mName);
-			string s1(1, input[4]);
-			string s3(1, input[6]);
+			memoryPointer++;
+			string s1(1, mString[4]);
+			string s3(1, mString[6]);
 			memory.p[memoryCheck(mName)].eye(StringToDouble(s1), StringToDouble(s1));
 		}
 		else if (tempTrig == "zer")
 		{
 			memory.create(mName);
-			string s1(1, input[6]);
-			string s3(1, input[8]);
+			memoryPointer++;
+			string s1(1, mString[6]);
+			string s3(1, mString[8]);
 			memory.p[memoryCheck(mName)].randM(StringToDouble(s1), StringToDouble(s1));
 		}
 		else if (tempTrig == "one")
 		{
 			memory.create(mName);
-			string s1(1, input[5]);
-			string s3(1, input[7]);
+			memoryPointer++;
+			string s1(1, mString[5]);
+			string s3(1, mString[7]);
 			memory.p[memoryCheck(mName)].ones(StringToDouble(s1), StringToDouble(s1));
 		}
 		else if (input == "exit")
@@ -2202,24 +2213,27 @@ void input_checker(string input) // assignment or operation
 }
 #define endl '\n'
 bool Is_operation(char character) {
-	if (character == '(' || character == ')' || character == '^' || character == '*' || character == '/' || character == '+' || character == '-')
+	if (character == '(' || character == ')' || character == '^' || character == '*' ||
+		character == '/' || character == '+' || character == '-' || character == '~')
 		return 1;
 	else return 0;
 }
 
 string alphanum =
 "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-string symb = "@#$_";
-int stringLength = sizeof(alphanum) - 1;
+string symb = "@#$_!&%";
+int stringLength = alphanum.length();
 int Mctr = 0;
 string genRandom()  // Random string generator function.
 {
 	if (Mctr >= stringLength)
 	{
 		symb.erase(0, 1);
+		alphanum =
+			"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+		Mctr = 0;
 	}
 	string ranS = "_a";
-	srand(time(NULL));
 	ranS[1] = alphanum[0];
 	ranS[0] = symb[0];
 	alphanum.erase(0, 1);
@@ -2227,7 +2241,7 @@ string genRandom()  // Random string generator function.
 	return ranS;
 }
 void calcAndRep(int i, int j, string  &fullOp, char ch_op) {
-	cout << i << " " << j << " " << fullOp << " " << ch_op << endl;
+	//cout<<i<<" "<<j << " "<<fullOp<<" "<<ch_op<<endl ;
 
 	int opOnNum = 1;
 	int pos1 = i, pos2 = j;
@@ -2238,15 +2252,15 @@ void calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 	stringstream strm, strm2;
 	stringstream strm3;
 	string result;
-	cout << "cheeeeeeeeeeeeeeeeeeeeck " << fullOp << endl;
 	string op = fullOp.substr(pos1, pos2 - pos1 + 1);
 
 
 	s_op1 = op.substr(0, op.find(ch_op, 1));
 	s_op2 = op.substr(op.find(ch_op, 1) + 1, pos2 - op.find(ch_op, 1) + 1);
-	if (ch_op == '.')
-		s_op2.erase(0, 1);
-	cout << op << " opers " << s_op1 << " " << s_op2 << endl;
+	if (ch_op == '~')
+		s_op2.erase(0, 2);
+
+	//cout<<op<<" opers "<<s_op1<<" "<<s_op2<<endl;
 	if (op.find("sqrt") == 0)
 	{
 		s_op1 = op.substr(4, op.length() - 4);
@@ -2264,7 +2278,7 @@ void calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 		res = sqrt(op1);
 		// cout<<s_op1<<endl;
 	}
-	else if (op.find(".+")<op.length())
+	else if (op.find("~P~")<op.length())
 	{
 		if (memoryCheck(s_op2) != -1)
 		{
@@ -2292,7 +2306,7 @@ void calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 			result = nMat;
 		}
 	}
-	else if (op.find(".-")<op.length())
+	else if (op.find("~S~")<op.length())
 	{
 		if (memoryCheck(s_op2) != -1)
 		{
@@ -2320,7 +2334,7 @@ void calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 			result = nMat;
 		}
 	}
-	else if (op.find("./")<op.length())
+	else if (op.find("~D~")<op.length())
 	{
 		if ((memoryCheck(s_op1) != -1) && memoryCheck(s_op2) != -1)
 		{
@@ -2329,6 +2343,7 @@ void calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 
 			memory.p[memoryPointer].divEL(memory.p[memoryCheck(s_op1)],
 				memory.p[memoryCheck(s_op2)]);
+
 			opOnNum = 0;
 			memoryPointer++;
 			result = nMat;
@@ -2341,6 +2356,8 @@ void calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 			memory.create(nMat);
 
 			memory.p[memoryPointer].divEL(memory.p[memoryCheck(s_op2)], op1);
+
+			memory.p[memoryPointer].elementWisePower(memory.p[memoryPointer], -1);
 			opOnNum = 0;
 			memoryPointer++;
 			result = nMat;
@@ -2358,7 +2375,7 @@ void calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 			result = nMat;
 		}
 	}
-	else if (op.find(".*")<op.length())
+	else if (op.find("~M~")<op.length())
 	{
 		if ((memoryCheck(s_op1) != -1) && memoryCheck(s_op2) != -1)
 		{
@@ -2397,7 +2414,7 @@ void calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 			result = nMat;
 		}
 	}
-	else if (op.find(".^")<op.length())
+	else if (op.find("~W~")<op.length())
 	{
 
 		if (memoryCheck(s_op1) != -1)
@@ -2643,7 +2660,7 @@ void calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 		strm << s_op1;
 		strm >> op1;
 		res = acosd(op1);
-		cout << s_op1 << endl;
+		// cout<<s_op1<<endl;
 	}
 	else if (op.find("acosh") == 0)
 	{
@@ -3077,7 +3094,7 @@ void calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 		strm << s_op1;
 		strm >> op1;
 		res = atanh(op1);
-		cout << s_op1 << endl;
+		//cout<<s_op1<<endl;
 	}
 	else if (op.find("deg2rad") == 0) //need some work
 	{
@@ -3085,7 +3102,7 @@ void calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 		strm << s_op1;
 		strm >> op1;
 		res = atanh(op1);
-		cout << s_op1 << endl;
+		// cout<<s_op1<<endl;
 	}
 	else if (op.find("rad2deg") == 0) //need some work
 	{
@@ -3093,7 +3110,7 @@ void calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 		strm << s_op1;
 		strm >> op1;
 		res = atanh(op1);
-		cout << s_op1 << endl;
+		// cout<<s_op1<<endl;
 	}
 	else
 	{
@@ -3109,6 +3126,34 @@ void calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 		switch (ch_op)
 		{
 		case '^':
+
+			if (memoryCheck(s_op1) != -1 && memoryCheck(s_op2) != -1)
+			{
+
+				if (memory.p[memoryCheck(s_op2)].getColumns() == 1 &&
+					memory.p[memoryCheck(s_op2)].getRows() == 1)
+				{
+					string nMat = genRandom();
+					memory.create(nMat);
+					memory.p[memoryPointer].power(memory.p[memoryCheck(s_op1)],
+						memory.p[memoryCheck(s_op2)].element[0][0].value);
+					opOnNum = 0;
+					memoryPointer++;
+					result = nMat;
+
+				}
+				else break;
+			}
+			else if (memoryCheck(s_op1) != -1)
+			{
+
+				string nMat = genRandom();
+				memory.create(nMat);
+				memory.p[memoryPointer].power(memory.p[memoryCheck(s_op1)], op2);
+				opOnNum = 0;
+				memoryPointer++;
+				result = nMat;
+			}
 			res = pow(op1, op2);
 			break;
 		case '+':
@@ -3188,6 +3233,27 @@ void Operation_solver(string &operation) {
 	if (operation.find("log10") != -1) {
 		int rep = operation.find("log10");
 		operation[rep] = 't';
+	}
+	if (operation.find(".*") != -1) {
+		int rep = operation.find(".*");
+		operation.replace(rep, 2, "~M~");
+
+	}
+	if (operation.find("./") != -1) {
+		int rep = operation.find("./");
+		operation.replace(rep, 2, "~D~");
+	}
+	if (operation.find(".+") != -1) {
+		int rep = operation.find(".+");
+		operation.replace(rep, 2, "~P~");
+	}
+	if (operation.find(".-") != -1) {
+		int rep = operation.find(".-");
+		operation.replace(rep, 2, "~S~");
+	}
+	if (operation.find(".^") != -1) {
+		int rep = operation.find(".^");
+		operation.replace(rep, 2, "~W~");
 	}
 
 	for (int i = operation.length() - 1; i >= 0; i--) {
@@ -3750,7 +3816,7 @@ void Operation_solver(string &operation) {
 					break;
 			calcAndRep(i, end, operation, operation[i]);
 
-			cout << operation << endl;
+			// cout<<operation<<endl;
 			Operation_solver(operation);
 			break;
 		}
@@ -3768,8 +3834,7 @@ void Operation_solver(string &operation) {
 				if (Is_operation(operation[end + 1]))
 					break;
 			calcAndRep(i, end, operation, operation[i]);
-
-			cout << operation << endl;
+			//cout<<operation<<endl;
 			Operation_solver(operation);
 			break;
 		}
@@ -3787,8 +3852,7 @@ void Operation_solver(string &operation) {
 				if (Is_operation(operation[end + 1]))
 					break;
 			calcAndRep(i, end, operation, operation[i]);
-
-			cout << operation << endl;
+			//cout<<operation<<endl;
 			Operation_solver(operation);
 			break;
 		}
@@ -3807,7 +3871,7 @@ void Operation_solver(string &operation) {
 					break;
 			calcAndRep(i, end, operation, operation[i]);
 
-			cout << operation << endl;
+			//cout<<operation<<endl;
 			Operation_solver(operation);
 			break;
 		}
@@ -3826,8 +3890,7 @@ void Operation_solver(string &operation) {
 				if (Is_operation(operation[end + 1]))
 					break;
 			calcAndRep(i, end, operation, operation[i]);
-
-			cout << operation << endl;
+			//cout<<operation<<endl;
 			Operation_solver(operation);
 			break;
 		}
@@ -3845,8 +3908,7 @@ void Operation_solver(string &operation) {
 				if (Is_operation(operation[end + 1]))
 					break;
 			calcAndRep(i, end, operation, operation[i]);
-
-			cout << operation << endl;
+			// cout<<operation<<endl;
 			Operation_solver(operation);
 			break;
 		}
@@ -3864,107 +3926,13 @@ void Operation_solver(string &operation) {
 				if (Is_operation(operation[end + 1]))
 					break;
 			calcAndRep(i, end, operation, operation[i]);
-
-			cout << operation << endl;
+			//cout<<operation<<endl;
 			Operation_solver(operation);
 			break;
 		}
 	}
-	for (int i = operation.length() - 1; i >= 0; i--) {
-		if (operation[i] == '.'&&operation[i + 1] == '^') {
-			int start = 0;
 
-			for (start = i - 1; start>0; start--)
-				if (Is_operation(operation[start - 1]) && start != 1)
-					break;
-			int end = 0;
 
-			for (end = i + 2; end<operation.length() - 1; end++)
-				if (Is_operation(operation[end + 1]))
-					break;
-			calcAndRep(start, end, operation, operation[i]);
-
-			cout << operation << endl;
-			Operation_solver(operation);
-			break;
-		}
-	}
-	for (int i = operation.length() - 1; i >= 0; i--) {
-		if (operation[i] == '.'&&operation[i + 1] == '*') {
-			int start = 0;
-
-			for (start = i - 1; start>0; start--)
-				if (Is_operation(operation[start - 1]) && start != 1)
-					break;
-			int end = 0;
-
-			for (end = i + 2; end<operation.length() - 1; end++)
-				if (Is_operation(operation[end + 1]))
-					break;
-			calcAndRep(start, end, operation, operation[i]);
-
-			cout << operation << endl;
-			Operation_solver(operation);
-			break;
-		}
-	}
-	for (int i = operation.length() - 1; i >= 0; i--) {
-		if (operation[i] == '.'&&operation[i + 1] == '/') {
-			int start = 0;
-
-			for (start = i - 1; start>0; start--)
-				if (Is_operation(operation[start - 1]) && start != 1)
-					break;
-			int end = 0;
-
-			for (end = i + 2; end<operation.length() - 1; end++)
-				if (Is_operation(operation[end + 1]))
-					break;
-			calcAndRep(start, end, operation, operation[i]);
-
-			cout << operation << endl;
-			Operation_solver(operation);
-			break;
-		}
-	}
-	for (int i = operation.length() - 1; i >= 0; i--) {
-		if (operation[i] == '.'&&operation[i + 1] == '+') {
-			int start = 0;
-
-			for (start = i - 1; start>0; start--)
-				if (Is_operation(operation[start - 1]) && start != 1)
-					break;
-			int end = 0;
-
-			for (end = i + 2; end<operation.length() - 1; end++)
-				if (Is_operation(operation[end + 1]))
-					break;
-			calcAndRep(start, end, operation, operation[i]);
-
-			cout << operation << endl;
-			Operation_solver(operation);
-			break;
-		}
-	}
-	for (int i = operation.length() - 1; i >= 0; i--) {
-		if (operation[i] == '.'&&operation[i + 1] == '-') {
-			int start = 0;
-
-			for (start = i - 1; start>0; start--)
-				if (Is_operation(operation[start - 1]) && start != 1)
-					break;
-			int end = 0;
-
-			for (end = i + 2; end<operation.length() - 1; end++)
-				if (Is_operation(operation[end + 1]))
-					break;
-			calcAndRep(start, end, operation, operation[i]);
-
-			cout << operation << endl;
-			Operation_solver(operation);
-			break;
-		}
-	}
 	for (int i = operation.length() - 1; i >= 0; i--) {
 		if (operation[i] == '^') {
 			int start = 0;
@@ -3979,7 +3947,7 @@ void Operation_solver(string &operation) {
 					break;
 			calcAndRep(start, end, operation, operation[i]);
 
-			cout << operation << endl;
+			// cout<<operation<<endl;
 			Operation_solver(operation);
 			break;
 		}
@@ -4018,6 +3986,62 @@ void Operation_solver(string &operation) {
 				if (Is_operation(operation[end + 1]))
 					break;
 			calcAndRep(start, end, operation, operation[i]);
+			//cout<<operation<<endl;
+			Operation_solver(operation);
+			break;
+		}
+	}
+	for (int i = 0; i<operation.length() - 1; i++) {
+		if (operation[i] == '~'&&operation[i + 1] == 'W'&&operation[i + 2] == '~') {
+			int start = 0;
+
+			for (start = i - 1; start>0; start--)
+				if (Is_operation(operation[start - 1]) && start != 1)
+					break;
+			int end = 0;
+
+			for (end = i + 3; end<operation.length() - 1; end++)
+				if (Is_operation(operation[end + 1]))
+					break;
+			calcAndRep(start, end, operation, operation[i]);
+			//cout<<operation<<endl;
+			Operation_solver(operation);
+			break;
+		}
+	}
+	for (int i = 0; i<operation.length() - 1; i++) {
+		if (operation[i] == '~'&&operation[i + 1] == 'M'&&operation[i + 2] == '~') {
+			int start = 0;
+
+			for (start = i - 1; start>0; start--)
+				if (Is_operation(operation[start - 1]) && start != 1)
+					break;
+			int end = 0;
+
+			for (end = i + 3; end<operation.length() - 1; end++)
+				if (Is_operation(operation[end + 1]))
+					break;
+			calcAndRep(start, end, operation, operation[i]);
+
+			//  cout<<operation<<endl;
+			Operation_solver(operation);
+			break;
+		}
+	}
+	for (int i = 0; i<operation.length() - 1; i++) {
+		if (operation[i] == '~'&&operation[i + 1] == 'D'&&operation[i + 2] == '~') {
+			int start = 0;
+
+			for (start = i - 1; start>0; start--)
+				if (Is_operation(operation[start - 1]) && start != 1)
+					break;
+			int end = 0;
+
+			for (end = i + 3; end<operation.length() - 1; end++)
+				if (Is_operation(operation[end + 1]))
+					break;
+			calcAndRep(start, end, operation, operation[i]);
+
 			//cout<<operation<<endl;
 			Operation_solver(operation);
 			break;
@@ -4064,10 +4088,49 @@ void Operation_solver(string &operation) {
 			break;
 		}
 	}
+	for (int i = operation.length() - 1; i >= 0; i--) {
+		if (operation[i] == '~'&&operation[i + 1] == 'P'&&operation[i + 2] == '~') {
+			int start = 0;
+
+			for (start = i - 1; start>0; start--)
+				if (Is_operation(operation[start - 1]) && start != 1)
+					break;
+			int end = 0;
+
+			for (end = i + 3; end<operation.length() - 1; end++)
+				if (Is_operation(operation[end + 1]))
+					break;
+			calcAndRep(start, end, operation, operation[i]);
+
+			// cout<<operation<<endl;
+			Operation_solver(operation);
+			break;
+		}
+	}
+	for (int i = operation.length() - 1; i >= 0; i--) {
+		if (operation[i] == '~'&&operation[i + 1] == 'S'&&operation[i + 2] == '~') {
+			int start = 0;
+
+			for (start = i - 1; start>0; start--)
+				if (Is_operation(operation[start - 1]) && start != 1)
+					break;
+			int end = 0;
+
+			for (end = i + 3; end<operation.length() - 1; end++)
+				if (Is_operation(operation[end + 1]))
+					break;
+			calcAndRep(start, end, operation, operation[i]);
+
+			//cout<<operation<<endl;
+			Operation_solver(operation);
+			break;
+		}
+	}
 
 
 
 }
+
 string mul_ope_solver(string &ope)
 {
 	Operation_solver(ope);
