@@ -1735,7 +1735,7 @@ sizeValue calcSize(vector<string>& separatedString)
 	return sum;
 }
 
-
+string mul_ope_solver(string &ope);
 void sFill(matrix &mSoph, string mString)
 {
 	int lastPos = 0;
@@ -1789,7 +1789,7 @@ void sFill(matrix &mSoph, string mString)
 							for (int cs = 0; cs < tempM.columns; cs++)
 							{
 								mSoph.element[r + rs][c + cs].value = tempM.element[rs][cs].value;
-								mSoph.element[r + rs][c + cs].isFilled == 1;
+								mSoph.element[r + rs][c + cs].isFilled = 1;
 							}
 						}
 						lastPos += temp.length();
@@ -1805,7 +1805,7 @@ void sFill(matrix &mSoph, string mString)
 							for (int cs = 0; cs < tempM.columns; cs++)
 							{
 								mSoph.element[r + rs][c + cs].value = tempM.element[rs][cs].value;
-								mSoph.element[r + rs][c + cs].isFilled == 1;
+								mSoph.element[r + rs][c + cs].isFilled = 1;
 							}
 						}
 						lastPos += temp.length();
@@ -1821,7 +1821,7 @@ void sFill(matrix &mSoph, string mString)
 							for (int cs = 0; cs < tempM.columns; cs++)
 							{
 								mSoph.element[r + rs][c + cs].value = tempM.element[rs][cs].value;
-								mSoph.element[r + rs][c + cs].isFilled == 1;
+								mSoph.element[r + rs][c + cs].isFilled = 1;
 							}
 						}
 						lastPos += temp.length();
@@ -1837,7 +1837,7 @@ void sFill(matrix &mSoph, string mString)
 							for (int cs = 0; cs < tempM.columns; cs++)
 							{
 								mSoph.element[r + rs][c + cs].value = tempM.element[rs][cs].value;
-								mSoph.element[r + rs][c + cs].isFilled == 1;
+								mSoph.element[r + rs][c + cs].isFilled = 1;
 							}
 						}
 						lastPos += temp.length();
@@ -1853,7 +1853,7 @@ void sFill(matrix &mSoph, string mString)
 							for (int cs = 0; cs < tempM.columns; cs++)
 							{
 								mSoph.element[r + rs][c + cs].value = tempM.element[rs][cs].value;
-								mSoph.element[r + rs][c + cs].isFilled == 1;
+								mSoph.element[r + rs][c + cs].isFilled = 1;
 							}
 						}
 						lastPos += temp.length();
@@ -1882,31 +1882,60 @@ void sFill(matrix &mSoph, string mString)
 				int spacePos = mString.find(' ', lastPos)
 					, semicolumnPos = mString.find(';', lastPos)
 					, CBPos = mString.find(']', lastPos);
+				int operatorPos = 999999
+					, plusPos = mString.find('+', lastPos)
+					, minusPos = mString.find('-', lastPos)
+					, divPos = mString.find('/', lastPos)
+					, multPos = mString.find('*', lastPos)
+					, powPos = mString.find('^', lastPos);
+				if (plusPos == -1) plusPos = 999999;
+				if (minusPos == -1) minusPos = 999999;
+				if (divPos == -1) divPos = 999999;
+				if (multPos == -1) multPos = 999999;
+				if (powPos == -1) powPos = 999999;
+
+				if ((plusPos < minusPos) && (plusPos < divPos) && (plusPos < multPos) && (plusPos < powPos))
+					operatorPos = plusPos;
+				else if ((minusPos < plusPos) && (minusPos< divPos) && (minusPos< multPos) && (minusPos< powPos))
+					operatorPos = minusPos;
+				else if ((divPos < plusPos) && (divPos<minusPos) && (divPos< multPos) && (divPos< powPos))
+					operatorPos = divPos;
+				else if ((multPos < plusPos) && (multPos<minusPos) && (multPos < divPos) && (multPos< powPos))
+					operatorPos = multPos;
+				else if ((powPos < plusPos) && (powPos<minusPos) && (powPos < divPos) && (powPos< multPos))
+					operatorPos = powPos;
+
 				if (spacePos == -1) spacePos = 999999;
 				if (semicolumnPos == -1) semicolumnPos = 999999;
+				if (CBPos == -1) CBPos = 999999;
 				//Because the separators inside [] are numerous
 				if ((spacePos < semicolumnPos) && (spacePos < CBPos))
 				{
 					temp = mString.substr(lastPos, spacePos - lastPos);
-				}
-				else if ((semicolumnPos < spacePos) && (semicolumnPos < CBPos))
-				{
-					temp = mString.substr(lastPos, semicolumnPos - lastPos);
-				}
-				else
-				{
-					temp = mString.substr(lastPos, CBPos - lastPos);
-				}
+					if (operatorPos < spacePos)//if it's not just a number but an operation
+					{
+						string tempOPE = temp;
+						tempOPE = mul_ope_solver(tempOPE);
+						for (int rs = 0; rs < memory.p[memoryCheck(tempOPE)].rows; rs++)
+						{
+							for (int cs = 0; cs < memory.p[memoryCheck(tempOPE)].columns; cs++)
+							{
+								mSoph.element[r + rs + OBRowCounter[OBCounter]][c + cs + OBColumnCounter[OBCounter]].value = memory.p[memoryCheck(tempOPE)].element[rs][cs].value;
+								mSoph.element[r + rs + OBRowCounter[OBCounter]][c + cs + OBColumnCounter[OBCounter]].isFilled = 1;
+							}
+						}
 
-				stringstream ss;
-				ss << temp;
-				double value;
-				ss >> value;
-				mSoph.element[r + OBRowCounter[OBCounter]][c + OBColumnCounter[OBCounter]].value = value;
-				mSoph.element[r + OBRowCounter[OBCounter]][c + OBColumnCounter[OBCounter]].isFilled = 1;
-
-				if ((spacePos < semicolumnPos) && (spacePos < CBPos))
-				{
+					}
+					else//if it's a number
+					{
+						stringstream ss;
+						ss << temp;
+						double value;
+						ss >> value;
+						mSoph.element[r + OBRowCounter[OBCounter]][c + OBColumnCounter[OBCounter]].value = value;
+						mSoph.element[r + OBRowCounter[OBCounter]][c + OBColumnCounter[OBCounter]].isFilled = 1;
+					}
+					//adjusting the position in the string and in the matrix
 					if (OBCounter != 0)
 					{
 						OBColumnCounter[OBCounter]++;//walking through the inner matrix
@@ -1916,6 +1945,30 @@ void sFill(matrix &mSoph, string mString)
 				}
 				else if ((semicolumnPos < spacePos) && (semicolumnPos < CBPos))
 				{
+					temp = mString.substr(lastPos, semicolumnPos - lastPos);
+					if (operatorPos < semicolumnPos) // if it's not just a number but an operation
+					{
+						string tempOPE = temp;
+						tempOPE = mul_ope_solver(tempOPE);
+						for (int rs = 0; rs < memory.p[memoryCheck(tempOPE)].rows; rs++)
+						{
+							for (int cs = 0; cs < memory.p[memoryCheck(tempOPE)].columns; cs++)
+							{
+								mSoph.element[r + rs + OBRowCounter[OBCounter]][c + cs + OBColumnCounter[OBCounter]].value = memory.p[memoryCheck(tempOPE)].element[rs][cs].value;
+								mSoph.element[r + rs + OBRowCounter[OBCounter]][c + cs + OBColumnCounter[OBCounter]].isFilled = 1;
+							}
+						}
+					}
+					else//if it's a number
+					{
+						stringstream ss;
+						ss << temp;
+						double value;
+						ss >> value;
+						mSoph.element[r + OBRowCounter[OBCounter]][c + OBColumnCounter[OBCounter]].value = value;
+						mSoph.element[r + OBRowCounter[OBCounter]][c + OBColumnCounter[OBCounter]].isFilled = 1;
+					}
+					//adjusting the position in the string and in the matrix
 					if (OBCounter != 0)
 					{
 						OBRowCounter[OBCounter]++;//walking through the inner matrix
@@ -1925,8 +1978,32 @@ void sFill(matrix &mSoph, string mString)
 
 					lastPos = semicolumnPos + 1;
 				}
-				else// ]
+				else
 				{
+					temp = mString.substr(lastPos, CBPos - lastPos);
+					if (operatorPos < CBPos)// if it's not just a number but an operation
+					{
+						string tempOPE = temp;
+						tempOPE = mul_ope_solver(tempOPE);
+						for (int rs = 0; rs < memory.p[memoryCheck(tempOPE)].rows; rs++)
+						{
+							for (int cs = 0; cs < memory.p[memoryCheck(tempOPE)].columns; cs++)
+							{
+								mSoph.element[r + rs + OBRowCounter[OBCounter]][c + cs + OBColumnCounter[OBCounter]].value = memory.p[memoryCheck(tempOPE)].element[rs][cs].value;
+								mSoph.element[r + rs + OBRowCounter[OBCounter]][c + cs + OBColumnCounter[OBCounter]].isFilled = 1;
+							}
+						}
+					}
+					else//if it's a number
+					{
+						stringstream ss;
+						ss << temp;
+						double value;
+						ss >> value;
+						mSoph.element[r + OBRowCounter[OBCounter]][c + OBColumnCounter[OBCounter]].value = value;
+						mSoph.element[r + OBRowCounter[OBCounter]][c + OBColumnCounter[OBCounter]].isFilled = 1;
+					}
+					//adjusting the position in the string and in the matrix
 					if (OBCounter != 0)
 					{
 						OBColumnCounter[OBCounter] = 0;//reseting both dimensions to the start position
@@ -1935,6 +2012,7 @@ void sFill(matrix &mSoph, string mString)
 
 					lastPos = CBPos;//I want to start from the ]
 				}
+
 				flag = 1;
 			}
 			if (flag == 0)//if the character im on now is rubish ( space , etc...)
