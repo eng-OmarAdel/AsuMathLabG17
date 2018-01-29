@@ -1311,24 +1311,28 @@ public:
 
 	void print()
 	{
-		if (errorHandler == "Error There's a zero element in the matrix" || errorHandler == "Error The determinant of this matrix is eual to zero")
-			cout << errorHandler;
-		else
+		if (mName[0] != '@' && mName[0] != '&' &&
+			mName[0] != '#' && mName[0] != '_'  && mName[0] != '!' && mName[0] != '%' && mName[0] != '&')
 		{
-			cout << endl;
-			cout << mName << " = " << endl;
-			for (int i = 0; i<rows; i++)
+			if (errorHandler == "Error There's a zero element in the matrix" || errorHandler == "Error The determinant of this matrix is eual to zero")
+				cout << errorHandler;
+			else
 			{
-				for (int j = 0; j<columns; j++)
-				{
-					cout << "\t" << element[i][j].value;
-				}
 				cout << endl;
+				cout << mName << " = " << endl;
+				for (int i = 0; i<rows; i++)
+				{
+					for (int j = 0; j<columns; j++)
+					{
+						cout << "\t" << element[i][j].value;
+					}
+					cout << endl;
+				}
 			}
-		}
-		cout << endl;
-	}
+			cout << endl;
 
+		 }
+		}
 
 	~matrix()
 	{
