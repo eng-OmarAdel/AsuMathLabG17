@@ -2287,7 +2287,7 @@ string genRandom()  // Random string generator function.
     Mctr++;
     return ranS;
 }
-void calcAndRep(int i, int j,string  &fullOp,char ch_op){
+bool calcAndRep(int i, int j,string  &fullOp,char ch_op){
 	//cout<<i<<" "<<j << " "<<fullOp<<" "<<ch_op<<endl ;
 
     int opOnNum=1;
@@ -2310,9 +2310,18 @@ void calcAndRep(int i, int j,string  &fullOp,char ch_op){
     //cout<<op<<" opers "<<s_op1<<" "<<s_op2<<endl;
     if(op.find("sqrt")==0)
     {
+
        s_op1=op.substr(4,op.length()-4);
         if(memoryCheck(s_op1)!=-1)
        {
+          for(int i=0;i<memory.p[memoryCheck(s_op1)].getRows();i++)
+          {
+             for(int j=0;j<memory.p[memoryCheck(s_op1)].getColumns();j++)
+             {
+                  if(memory.p[memoryCheck(s_op1)].element[i][j].value<=0)
+                    return 0;
+             }
+          }
            string nMat=genRandom();
            memory.create(nMat);
            memory.p[memoryPointer].sqrtMatrix(memory.p[memoryCheck(s_op1)]);
@@ -2320,9 +2329,14 @@ void calcAndRep(int i, int j,string  &fullOp,char ch_op){
            memoryPointer++;
            result=nMat;
        }
+       else{
        strm<<s_op1;
        strm>> op1;
+       if(op1<=0)
+        return 0;
        res=sqrt(op1);
+       }
+
       // cout<<s_op1<<endl;
     }
      else if(op.find("~P~")<op.length())
@@ -2468,6 +2482,8 @@ void calcAndRep(int i, int j,string  &fullOp,char ch_op){
         {
             strm<<s_op2;
             strm>> op2;
+            if(op2-(int)op2!=0)
+                return 0;
             string nMat=genRandom();
            memory.create(nMat);
 
@@ -3172,10 +3188,16 @@ void calcAndRep(int i, int j,string  &fullOp,char ch_op){
 
     switch (ch_op)
        {
-       case '^':
+     case '^':
+
 
      if(memoryCheck(s_op1)!=-1 && memoryCheck(s_op2)!=-1)
     {
+       if(memory.p[memoryCheck(s_op2)].getColumns()!=1
+       || memory.p[memoryCheck(s_op2)].getRows()!=1 )
+         return 0;
+      if(memory.p[memoryCheck(s_op1)].getColumns()==memory.p[memoryCheck(s_op1)].getRows())
+          return 0;
 
          if(memory.p[memoryCheck(s_op2)].getColumns()==1&&
             memory.p[memoryCheck(s_op2)].getRows()==1)
@@ -3193,7 +3215,10 @@ void calcAndRep(int i, int j,string  &fullOp,char ch_op){
     }
     else if(memoryCheck(s_op1)!=-1)
     {
-
+      if(memory.p[memoryCheck(s_op1)].getColumns()==memory.p[memoryCheck(s_op1)].getRows())
+          return 0;
+          if(op2<1 || op2-(int)op2!=0)
+            return 0;
         string nMat=genRandom();
          memory.create(nMat);
            memory.p[memoryPointer].power(memory.p[memoryCheck(s_op1)],op2);
@@ -3206,6 +3231,9 @@ void calcAndRep(int i, int j,string  &fullOp,char ch_op){
   case '+':
     if(memoryCheck(s_op1)!=-1 && memoryCheck(s_op2)!=-1)
     {
+        if(memory.p[memoryCheck(s_op1)].getColumns()!=memory.p[memoryCheck(s_op2)].getColumns()
+       ||memory.p[memoryCheck(s_op1)].getRows()!=memory.p[memoryCheck(s_op2)].getRows() )
+      return 0;
 
         string nMat=genRandom();
          memory.create(nMat);
@@ -3221,6 +3249,10 @@ void calcAndRep(int i, int j,string  &fullOp,char ch_op){
 case '-':
     if(memoryCheck(s_op1)!=-1 && memoryCheck(s_op2)!=-1)
     {
+        if(memory.p[memoryCheck(s_op1)].getColumns()!=memory.p[memoryCheck(s_op2)].getColumns()
+       ||memory.p[memoryCheck(s_op1)].getRows()!=memory.p[memoryCheck(s_op2)].getRows() )
+      return 0;
+
         string nMat=genRandom();
          memory.create(nMat);
            memory.p[memoryPointer].sub(memory.p[memoryCheck(s_op1)],
@@ -3233,9 +3265,12 @@ case '-':
   res = op1 - op2;
   break;
 case '*':
-        if(memoryCheck(s_op1)!=-1 && memoryCheck(s_op2)!=-1)
+  if(memoryCheck(s_op1)!=-1 && memoryCheck(s_op2)!=-1)
     {
-        string nMat=genRandom();
+    if(memory.p[memoryCheck(s_op1)].getColumns()!=memory.p[memoryCheck(s_op2)].getRows()
+       ||memory.p[memoryCheck(s_op2)].getColumns()!=memory.p[memoryCheck(s_op1)].getRows() )
+      return 0;
+            string nMat=genRandom();
          memory.create(nMat);
            memory.p[memoryPointer].mult(memory.p[memoryCheck(s_op1)],
                                 memory.p[memoryCheck(s_op2)]);
@@ -3249,16 +3284,24 @@ case '*':
   case '/':
    if(memoryCheck(s_op1)!=-1 && memoryCheck(s_op2)!=-1)
      {
+         if(memory.p[memoryCheck(s_op1)].getColumns()!=memory.p[memoryCheck(s_op2)].getRows()
+       ||memory.p[memoryCheck(s_op2)].getColumns()!=memory.p[memoryCheck(s_op1)].getRows() )
+      return 0;
         string nMat=genRandom();
          memory.create(nMat);
-           memory.p[memoryPointer].div(memory.p[memoryCheck(s_op1)],
+         memory.p[memoryPointer].div(memory.p[memoryCheck(s_op1)],
                                 memory.p[memoryCheck(s_op2)]);
            opOnNum=0;
            memoryPointer++;
-        result=nMat;
+          result=nMat;
      }
     else
-  res = op1 / op2;
+    {
+        if(op2==0)
+            return 0;
+        res = op1 / op2;
+    }
+
   break;
 }
     }
@@ -3273,10 +3316,22 @@ if(opOnNum)
 
 fullOp.replace(pos1,pos2-pos1+1,result);
 //cout<<fullOp<<endl;
+return 1;
 }
 
 void Operation_solver(string &operation){
+    if(operation=="Statement or Expression is incorrect"||operation=="Matrix dimensions must agree")
+        return;
 	removeSpaces(operation) ;
+	bool error=1;
+    if(Is_operation(operation[operation.length()-1]) && operation[operation.length()-1]!=')'){
+        operation="Statement or Expression is incorrect" ;
+        return ;
+    }
+    if(operation[operation.length()-1]=='*' && operation[operation.length()-1]=='.'){
+        operation="Statement or Expression is incorrect" ;
+        return ;
+    }
 	if(operation.find("log10")!=-1){
         int rep= operation.find("log10");
         operation[rep]='t' ;
@@ -3306,10 +3361,20 @@ void Operation_solver(string &operation){
 	for(int i=operation.length()-1 ; i>=0 ; i--){
 		if(operation[i]=='('){
 			int j=0;
+			int found_bracket=0 ;
 
 			for(j=i ; j<operation.length(); j++)
-				if(operation[j]==')')
-			break;
+				if(operation[j]==')'){
+                      found_bracket=1;
+                    break;
+				}
+			if(found_bracket==0){
+                    operation="Statement or Expression is incorrect" ;
+        return ;
+
+			}
+
+
 
 			string temp=operation.substr(i+1,j-i-1);
 			//cout<<"Temp "<<temp<<endl;
@@ -3321,14 +3386,19 @@ void Operation_solver(string &operation){
 		 }
 		}
 
-		for(int i=operation.length()-1 ; i>=0 ; i--){ //sqrt
+for(int i=operation.length()-1 ; i>=0 ; i--){ //sqrt
 			if(operation[i]=='s'&&operation[i+1]=='q'&&operation[i+2]=='r'
                 &&operation[i+3]=='t'){
 				int end=0 ;
 				for( end=i+4 ; end<operation.length()-1; end++)
 					if(Is_operation(operation[end+1])  )
 						break;
-				calcAndRep(i,end,operation,operation[i]);
+				error=calcAndRep(i,end,operation,operation[i]);
+				if(error==0){
+                     operation="Statement or expression is incorrect" ;
+                    return;
+				}
+
                 //cout<<operation<<endl;
 				Operation_solver(operation) ;
 				break;
@@ -3342,7 +3412,7 @@ void Operation_solver(string &operation){
 				for( end=i+5 ; end<operation.length()-1; end++)
 					if(Is_operation(operation[end+1])  )
 						break;
-				calcAndRep(i,end,operation,operation[i]);
+				error=calcAndRep(i,end,operation,operation[i]);
 				Operation_solver(operation) ;
 				break;
 			}
@@ -3354,7 +3424,7 @@ void Operation_solver(string &operation){
 				for( end=i+5 ; end<operation.length()-1; end++)
 					if(Is_operation(operation[end+1])  )
 						break;
-				calcAndRep(i,end,operation,operation[i]);
+				error=calcAndRep(i,end,operation,operation[i]);
                // cout<<operation<<endl;
 				Operation_solver(operation) ;
 				break;
@@ -3368,7 +3438,7 @@ void Operation_solver(string &operation){
 					if(Is_operation(operation[end+1])  )
 						break;
 
-				calcAndRep(i,end,operation,operation[i]);
+				error=calcAndRep(i,end,operation,operation[i]);
                // cout<<operation<<endl;
 				Operation_solver(operation) ;
 				break;
@@ -3381,7 +3451,7 @@ void Operation_solver(string &operation){
 				for( end=i+4 ; end<operation.length()-1; end++)
 					if(Is_operation(operation[end+1])  )
 						break;
-				calcAndRep(i,end,operation,operation[i]);
+				error=calcAndRep(i,end,operation,operation[i]);
                // cout<<operation<<endl;
 				Operation_solver(operation) ;
 				break;
@@ -3394,7 +3464,7 @@ void Operation_solver(string &operation){
 				for( end=i+4 ; end<operation.length()-1; end++)
 					if(Is_operation(operation[end+1])  )
 						break;
-				calcAndRep(i,end,operation,operation[i]);
+				error=calcAndRep(i,end,operation,operation[i]);
                // cout<<operation<<endl;
 				Operation_solver(operation) ;
 				break;
@@ -3406,7 +3476,7 @@ void Operation_solver(string &operation){
 				for( end=i+3 ; end<operation.length()-1; end++)
 					if(Is_operation(operation[end+1])  )
 						break;
-				calcAndRep(i,end,operation,operation[i]);
+				error=calcAndRep(i,end,operation,operation[i]);
               //  cout<<operation<<endl;
 				Operation_solver(operation) ;
 				break;
@@ -3420,7 +3490,7 @@ void Operation_solver(string &operation){
 				for( end=i+5 ; end<operation.length()-1; end++)
 					if(Is_operation(operation[end+1])  )
 						break;
-				calcAndRep(i,end,operation,operation[i]);
+				error=calcAndRep(i,end,operation,operation[i]);
                 //cout<<operation<<endl;
 				Operation_solver(operation) ;
 				break;
@@ -3978,6 +4048,74 @@ for(int i=operation.length()-1 ; i>=0 ; i--){
 				break;
 			}
 		}
+		for(int i=0;  i<operation.length()-1 ; i++){
+			if(operation[i]=='~'&&operation[i+1]=='W'&&operation[i+2]=='~'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+3 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				error=calcAndRep(start,end,operation,operation[i]);
+				if(error==0){
+                    operation="Matrix dimensions must agree";
+                    return;
+				}
+                //cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=0;  i<operation.length()-1 ; i++){
+			if(operation[i]=='~'&&operation[i+1]=='M'&&operation[i+2]=='~'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+3 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				error=calcAndRep(start,end,operation,operation[i]);
+				if(error==0){
+                   operation="Matrix dimensions must agree";
+                    return;
+				}
+
+              //  cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
+		for(int i=0;  i<operation.length()-1 ; i++){
+			if(operation[i]=='~'&&operation[i+1]=='D'&&operation[i+2]=='~'){
+				int start=0;
+
+				for(start=i-1 ; start>0 ; start--)
+					if(Is_operation(operation[start-1])&&start!=1)
+						break;
+				int end=0;
+
+				for( end=i+3 ; end<operation.length()-1; end++)
+					if(Is_operation(operation[end+1])  )
+						break;
+				error=calcAndRep(start,end,operation,operation[i]);
+				if(error==0){
+                    operation="Matrix dimensions must agree";
+                    return;
+				}
+
+                //cout<<operation<<endl;
+				Operation_solver(operation) ;
+				break;
+			}
+		}
 
 
 		for(int i=operation.length()-1 ; i>=0 ; i--){
@@ -3992,7 +4130,11 @@ for(int i=operation.length()-1 ; i>=0 ; i--){
 				for( end=i+1 ; end<operation.length()-1; end++)
 					if(Is_operation(operation[end+1])  )
 						break;
-				calcAndRep(start,end,operation,operation[i]);
+				error=calcAndRep(start,end,operation,operation[i]);
+				if(error==0){
+                    operation="Matrix dimensions must agree";
+                    return;
+				}
 
                // cout<<operation<<endl;
 				Operation_solver(operation) ;
@@ -4012,7 +4154,11 @@ for(int i=0;  i<operation.length()-1 ; i++){
 				for( end=i+1 ; end<operation.length()-1; end++)
 					if(Is_operation(operation[end+1])  )
 						break;
-				calcAndRep(start,end,operation,operation[i]);
+				error=calcAndRep(start,end,operation,operation[i]);
+				if(error==0){
+                    operation="Matrix dimensions must agree";
+                    return;
+				}
                 //cout<<operation<<endl;
 				Operation_solver(operation) ;
 				break;
@@ -4032,14 +4178,18 @@ for(int i=0;  i<operation.length()-1 ; i++){
 				for( end=i+1 ; end<operation.length()-1; end++)
 					if(Is_operation(operation[end+1])  )
 						break;
-				calcAndRep(start,end,operation,operation[i]);
+				error=calcAndRep(start,end,operation,operation[i]);
+				if(error==0){
+                   operation="Matrix dimensions must agree";
+                    return;
+				}
                 //cout<<operation<<endl;
 				Operation_solver(operation) ;
 				break;
 			}
 		}
-		for(int i=0;  i<operation.length()-1 ; i++){
-			if(operation[i]=='~'&&operation[i+1]=='W'&&operation[i+2]=='~'){
+			for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='~'&&operation[i+1]=='P'&&operation[i+2]=='~'){
 				int start=0;
 
 				for(start=i-1 ; start>0 ; start--)
@@ -4050,14 +4200,19 @@ for(int i=0;  i<operation.length()-1 ; i++){
 				for( end=i+3 ; end<operation.length()-1; end++)
 					if(Is_operation(operation[end+1])  )
 						break;
-				calcAndRep(start,end,operation,operation[i]);
-                //cout<<operation<<endl;
+				error=calcAndRep(start,end,operation,operation[i]);
+				if(error==0){
+                     operation="Matrix dimensions must agree";
+                    return;
+				}
+
+               // cout<<operation<<endl;
 				Operation_solver(operation) ;
 				break;
 			}
 		}
-		for(int i=0;  i<operation.length()-1 ; i++){
-			if(operation[i]=='~'&&operation[i+1]=='M'&&operation[i+2]=='~'){
+		for(int i=operation.length()-1 ; i>=0 ; i--){
+			if(operation[i]=='~'&&operation[i+1]=='S'&&operation[i+2]=='~'){
 				int start=0;
 
 				for(start=i-1 ; start>0 ; start--)
@@ -4068,32 +4223,20 @@ for(int i=0;  i<operation.length()-1 ; i++){
 				for( end=i+3 ; end<operation.length()-1; end++)
 					if(Is_operation(operation[end+1])  )
 						break;
-				calcAndRep(start,end,operation,operation[i]);
+				error=calcAndRep(start,end,operation,operation[i]);
+				if(error==0){
+                    operation="Matrix dimensions must agree";
+                    return;
+				}
 
-              //  cout<<operation<<endl;
-				Operation_solver(operation) ;
-				break;
-			}
-		}
-		for(int i=0;  i<operation.length()-1 ; i++){
-			if(operation[i]=='~'&&operation[i+1]=='D'&&operation[i+2]=='~'){
-				int start=0;
-
-				for(start=i-1 ; start>0 ; start--)
-					if(Is_operation(operation[start-1])&&start!=1)
-						break;
-				int end=0;
-
-				for( end=i+3 ; end<operation.length()-1; end++)
-					if(Is_operation(operation[end+1])  )
-						break;
-				calcAndRep(start,end,operation,operation[i]);
 
                 //cout<<operation<<endl;
 				Operation_solver(operation) ;
 				break;
 			}
 		}
+
+
 			for(int i=0 ; i<operation.length() ; i++){
 			if(operation[i]=='-' && i!=0){
             int end=0;
@@ -4109,7 +4252,11 @@ for(int i=0;  i<operation.length()-1 ; i++){
 					if(Is_operation(operation[start-1])&&start!=1)
 						break;
 
-				calcAndRep(start,end,operation,operation[i]);
+				error=calcAndRep(start,end,operation,operation[i]);
+				if(error==0){
+                    operation="Matrix dimensions must agree";
+                    return;
+				}
                 //cout<<operation<<endl;
 				Operation_solver(operation) ;
 				break;
@@ -4129,60 +4276,29 @@ for(int i=0;  i<operation.length()-1 ; i++){
 				for( end=i+1 ; end<operation.length()-1; end++)
 					if(Is_operation(operation[end+1])  )
 						break;
-				calcAndRep(start,end,operation,operation[i]);
+				error=calcAndRep(start,end,operation,operation[i]);
+				if(error==0){
+                    operation="Matrix dimensions must agree";
+                    return;
+				}
                 //cout<<operation<<endl;
 				Operation_solver(operation) ;
 				break;
 			}
 		}
-		for(int i=operation.length()-1 ; i>=0 ; i--){
-			if(operation[i]=='~'&&operation[i+1]=='P'&&operation[i+2]=='~'){
-				int start=0;
 
-				for(start=i-1 ; start>0 ; start--)
-					if(Is_operation(operation[start-1])&&start!=1)
-						break;
-				int end=0;
-
-				for( end=i+3 ; end<operation.length()-1; end++)
-					if(Is_operation(operation[end+1])  )
-						break;
-				calcAndRep(start,end,operation,operation[i]);
-
-               // cout<<operation<<endl;
-				Operation_solver(operation) ;
-				break;
-			}
-		}
-		for(int i=operation.length()-1 ; i>=0 ; i--){
-			if(operation[i]=='~'&&operation[i+1]=='S'&&operation[i+2]=='~'){
-				int start=0;
-
-				for(start=i-1 ; start>0 ; start--)
-					if(Is_operation(operation[start-1])&&start!=1)
-						break;
-				int end=0;
-
-				for( end=i+3 ; end<operation.length()-1; end++)
-					if(Is_operation(operation[end+1])  )
-						break;
-				calcAndRep(start,end,operation,operation[i]);
-
-                //cout<<operation<<endl;
-				Operation_solver(operation) ;
-				break;
-			}
-		}
 
 
 
 	}
 
+
 string mul_ope_solver(string &ope)
 	{
 	    Operation_solver(ope);
 
-	    if(memoryCheck(ope)==-1 )
+	    if(memoryCheck(ope)==-1 &&
+        ope!="Statement or Expression is incorrect"&& ope!="Matrix dimensions must agree" )
          {
               string temp2,tName;
              tName=genRandom();
