@@ -2528,8 +2528,6 @@ bool calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 		{
 			strm << s_op2;
 			strm >> op2;
-			if (op2 - (int)op2 != 0)
-				return 0;
 			string nMat = genRandom();
 			memory.create(nMat);
 
