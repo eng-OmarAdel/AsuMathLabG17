@@ -594,6 +594,47 @@ public:
 
 
 	}
+	
+	void zeroes(int r,int c)
+	{
+		rows = r;
+		columns = c;
+		initialising(r, c);
+		for (int rs = 0; rs < r; rs++)
+			for (int cs = 0; cs < c; cs++)
+				element[rs][cs].value = 0;
+
+	}
+	void ones(int r, int c)
+	{
+		rows = r;
+		columns = c;
+		initialising(r, c);
+		for (int rs = 0; rs < r; rs++)
+			for (int cs = 0; cs < c; cs++)
+				element[rs][cs].value = 1;
+
+	}
+	void eye(int r, int c)
+	{
+		rows = r;
+		columns = c;
+		initialising(r, c);
+		for (int rs = 0; rs < r; rs++)
+			for (int cs = 0; cs < c; cs++)
+				if(rs==cs)element[rs][cs].value = 1;
+
+	}
+	void randM(int r, int c)
+	{
+		rows = r;
+		columns = c;
+		initialising(r, c);
+		for (int rs = 0; rs < r; rs++)
+			for (int cs = 0; cs < c; cs++)
+				element[rs][cs].value = rand() % 10 + 1;
+
+	}
 	//trigonometric functions , any trigonometric function for a matrix is started with 'M'
 	//sin functions --> sin , sind , asin , asind , sinh , asinh
 	void Msin(matrix &x)
