@@ -1833,6 +1833,12 @@ void sFill(matrix &mSoph, string mString, string mName, matrix &trMat)
 			{
 				//If it's a stored matrix
 				int index = memoryCheck(temp);
+				int spacePos = mString.find(' ', lastPos)
+					, semicolumnPos = mString.find(';', lastPos)
+					, CBPos = mString.find(']', lastPos);
+				if (spacePos == -1) spacePos = 999999;
+				if (semicolumnPos == -1) semicolumnPos = 999999;
+				if (CBPos == -1) CBPos = 999999;
 				if (index != -1)
 				{
 					//B
@@ -1979,6 +1985,31 @@ void sFill(matrix &mSoph, string mString, string mName, matrix &trMat)
 						flag = 1;
 					}
 				}
+				if ((spacePos < semicolumnPos) && (spacePos < CBPos))
+				{
+					if (OBCounter != 0)
+					{
+						OBColumnCounter[OBCounter]++;//walking through the inner matrix
+						c--;//freezing c as it will increase by one the next loop
+					}
+				}
+				else if ((semicolumnPos < spacePos) && (semicolumnPos < CBPos))
+				{
+					if (OBCounter != 0)
+					{
+						OBRowCounter[OBCounter]++;//walking through the inner matrix
+						OBColumnCounter[OBCounter] = 0;//reseting column to start position
+						c--;
+					}
+				}
+				else
+				{
+					if (OBCounter != 0)
+					{
+						OBColumnCounter[OBCounter] = 0;//reseting both dimensions to the start position
+						OBRowCounter[OBCounter] = 0;
+					}
+				}
 			}
 			//if [ 1 2 3]
 			else if (temp[0] == '[')
@@ -2120,7 +2151,7 @@ void sFill(matrix &mSoph, string mString, string mName, matrix &trMat)
 						tempOPE = mul_ope_solver(tempOPE);
 						if (tempOPE == "Statement or Expression is incorrect" || tempOPE == "Matrix dimensions must agree")
 						{
-							cout << tempOPE<<endl;
+							cout << tempOPE << endl;
 							delete &mSoph;
 							return;
 						}
