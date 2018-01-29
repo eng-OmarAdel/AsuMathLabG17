@@ -2235,7 +2235,7 @@ void input_checker(string input) // assignment or operation
 		else
 		{
 			bool notNumber=false;
-			if (mString[mString.length() - 1] == ';') mString=mString.substr(0 , mString.length() - 1);
+			if (mString[mString.length() - 1] == ';' || mString[mString.length() - 1] == '\r') mString=mString.substr(0 , mString.length() - 1);
 			for (int i = 0; i < mString.length(); i++)
 				if (!(mString[i] >= '0' && mString[i] <= '9') && (mString[i] !='.'))
 				{
