@@ -17,12 +17,12 @@ double StringToDouble(const string &text)
 	double result;
 	return ss >> result ? result : 0;
 }
-/*int stoi(const string &text)
+int stoi(const string &text)
 {
 	stringstream ss(text);
 	int result;
 	return ss >> result ? result : 0;
-}*/
+}
 
 int ValidDimensions(string mString)
 {
@@ -4522,12 +4522,13 @@ int main(int argv, char* argc[])
 		{
 			if (temp.find("\r") != -1)
 				temp.replace(temp.find("\r"), 2, "");
-			sFile += temp;
-			if (sFile.find("]") != -1 || sFile.find("];") != -1 || sFile.find("+") != -1 || sFile.find("*") != -1 || sFile.find("/") != -1 || sFile.find("'") != -1 || sFile.find("./") != -1 || (sFile.find("-") != -1 && sFile.length() <= 10))
-			{
+			sFile = temp;
+
+			/*if (sFile.find("]") != -1 || sFile.find("];") != -1 || sFile.find("+") != -1 || sFile.find("*") != -1 || sFile.find("/") != -1 || sFile.find("'") != -1 || sFile.find("./") != -1 || (sFile.find("-") != -1 && sFile.length() <= 10))
+			{*/
 				input_checker(sFile);
 				sFile = "";
-			}
+			//}
 		}
 		infile.close();
 	}
