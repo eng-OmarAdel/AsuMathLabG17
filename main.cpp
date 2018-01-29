@@ -325,11 +325,15 @@ public:
 
 		setRows(0);
 		setColumns(0);
-		for (int i = 0; i<rows; i++)
+		if (element)
 		{
-			delete[] element[i];
+			for (int i = 0; i< this->rows; i++)
+			{
+				delete[] element[i];
+			}
+			delete[] element;
 		}
-		delete[] element;
+		
 		initialising(mName, rows, columns);
 
 	}
@@ -1807,7 +1811,7 @@ sizeValue calcSize(vector<string>& separatedString)
 }
 
 string mul_ope_solver(string &ope);
-void sFill(matrix &mSoph, string mString)
+void sFill(matrix &mSoph, string mString, string mName,matrix &trMat)
 {
 	int lastPos = 0;
 	string temp;
@@ -1833,14 +1837,29 @@ void sFill(matrix &mSoph, string mString)
 				{
 					//B
 					//memory.p[index]
-					for (int rs = 0; rs < memory.p[index].rows; rs++)
+					if (temp == mName)
 					{
-						for (int cs = 0; cs < memory.p[index].columns; cs++)
+						for (int rs = 0; rs < trMat.rows; rs++)
 						{
-							mSoph.element[r + rs][c + cs].value = memory.p[index].element[rs][cs].value;
-							mSoph.element[r + rs][c + cs].isFilled = 1;
+							for (int cs = 0; cs < trMat.columns; cs++)
+							{
+								mSoph.element[r + rs + OBRowCounter[OBCounter]][c + cs + OBColumnCounter[OBCounter]].value = trMat.element[rs][cs].value;
+								mSoph.element[r + rs + OBRowCounter[OBCounter]][c + cs + OBColumnCounter[OBCounter]].isFilled = 1;
+							}
 						}
 					}
+					else
+					{
+						for (int rs = 0; rs < memory.p[index].rows; rs++)
+						{
+							for (int cs = 0; cs < memory.p[index].columns; cs++)
+							{
+								mSoph.element[r + rs + OBRowCounter[OBCounter]][c + cs + OBColumnCounter[OBCounter]].value = memory.p[index].element[rs][cs].value;
+								mSoph.element[r + rs + OBRowCounter[OBCounter]][c + cs + OBColumnCounter[OBCounter]].isFilled = 1;
+							}
+						}
+					}
+					
 					lastPos += 1;
 					flag = 1;
 				}
@@ -1961,26 +1980,28 @@ void sFill(matrix &mSoph, string mString)
 			}
 			else if (temp[0] == ']')
 			{
+				OBColumnCounter[OBCounter] = 0;
+				OBRowCounter[OBCounter] = 0;
 				OBCounter--;
-				if (OBCounter == 0)
+				if (OBCounter==0)
 				{
 					OBColumnCounter[OBCounter] = 0;
 					OBRowCounter[OBCounter] = 0;
 				}
 			}
 			//if 2.3
-			else if ((int(temp[0]) <= 57) && (int(temp[0]) >= 48))
+			else if (((int(temp[0]) <= 57) && (int(temp[0]) >= 48)) || temp[0]=='-')
 			{
 
 				int spacePos = mString.find(' ', lastPos)
 					, semicolumnPos = mString.find(';', lastPos)
 					, CBPos = mString.find(']', lastPos);
 				int operatorPos = 999999
-					, plusPos = mString.find('+', lastPos)
-					, minusPos = mString.find('-', lastPos)
-					, divPos = mString.find('/', lastPos)
-					, multPos = mString.find('*', lastPos)
-					, powPos = mString.find('^', lastPos);
+					, plusPos = mString.find('+', lastPos + 1)
+					, minusPos = mString.find('-', lastPos + 1)
+					, divPos = mString.find('/', lastPos + 1)
+					, multPos = mString.find('*', lastPos + 1)
+					, powPos = mString.find('^', lastPos + 1);
 				if (plusPos == -1) plusPos = 999999;
 				if (minusPos == -1) minusPos = 999999;
 				if (divPos == -1) divPos = 999999;
@@ -2149,9 +2170,16 @@ void input_checker(string input) // assignment or operation
 																			 //call concatenation function to calculate the rows and the columns of the matrix and to create it
 		separate(mString);
 		sizeValue mSize = calcSize(separatedString);
+		matrix trickyMat;
+		if (index != -1)
+		{
+			matrix tempM;
+			tempM.zeroes(memory.p[index].rows, memory.p[index].columns);
+			trickyMat.add(memory.p[index], tempM);
+		}
 		memorizeMatrix(index, mSize.rows, mSize.columns, mName);
 		index = memoryCheck(mName);
-		sFill(memory.p[index], mString);
+		sFill(memory.p[index], mString,mName,trickyMat);
 		// memory.p[index]; this will be the matrix im working on
 		//memory.p[index].sFill(mString); sophisticated filling
 	}
@@ -2159,10 +2187,10 @@ void input_checker(string input) // assignment or operation
 	{
 		string mString = input.substr(FOBPos + 1, (LCBPos - 2 - FOBPos + 1));//FOB+1 & LCB-2 to remove braces
 		if (!ValidDimensions(mString))
-			 {
+		{
 			cout << "Dimensions of matrices being concatenated are not consistent." << endl;
 			return;
-			}
+		}
 		else memorizeMatrix(index, mString, mName);
 	}
 
@@ -2234,10 +2262,10 @@ void input_checker(string input) // assignment or operation
 		}
 		else
 		{
-			bool notNumber=false;
-			if (mString[mString.length() - 1] == ';' || mString[mString.length() - 1] == '\r') mString=mString.substr(0 , mString.length() - 1);
+			bool notNumber = false;
+			if (mString[mString.length() - 1] == ';') mString = mString.substr(0, mString.length() - 1);
 			for (int i = 0; i < mString.length(); i++)
-				if (!(mString[i] >= '0' && mString[i] <= '9') && (mString[i] !='.'))
+				if (!(mString[i] >= '0' && mString[i] <= '9') && (mString[i] != '.'))
 				{
 					notNumber = true;
 					break;
@@ -2251,18 +2279,9 @@ void input_checker(string input) // assignment or operation
 				memorizeMatrix(index, mString, mName);
 			}
 		}
-			
+
 	}
 }
-#define endl '\n'
-
-bool Is_operation(char character) {
-	if (character == '(' || character == ')' || character == '^' || character == '*' ||
-		character == '/' || character == '+' || character == '-' || character == '~')
-		return 1;
-	else return 0;
-}
-
 string alphanum =
 "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 string symb = "@#$_!&%";
