@@ -2090,6 +2090,7 @@ void input_checker(string input) // assignment or operation
 
 	/*	for (int i = 0; i < input.length(); i++)
 	{
+
 	if ((int(input[i])>=65&&int(input[i])<=90) || (int(input[i])>=97&&int(input[i])<=122))//if input contains letters
 	{
 	sAssignmentOP = true;
@@ -2105,7 +2106,6 @@ void input_checker(string input) // assignment or operation
 		sizeValue mSize = calcSize(separatedString);
 		memorizeMatrix(index, mSize.rows, mSize.columns, mName);
 		index = memoryCheck(mName);
-		mString = input.substr(FOBPos + 1, (LCBPos - 2 - FOBPos + 1));
 		sFill(memory.p[index], mString);
 		// memory.p[index]; this will be the matrix im working on
 		//memory.p[index].sFill(mString); sophisticated filling
@@ -2113,159 +2113,75 @@ void input_checker(string input) // assignment or operation
 	else if (assignmentOP)
 	{
 		string mString = input.substr(FOBPos + 1, (LCBPos - 2 - FOBPos + 1));//FOB+1 & LCB-2 to remove braces
-		if(!ValidDimensions(mString))
-        {
-            cout << "Dimensions of matrices being concatenated are not consistent." << endl;
-            return;
-        }
-		else memorizeMatrix(index, mString, mName); //I think we may handle sin() & 1X1 matrix inside this func
+		if (!ValidDimensions(mString))
+			- {
+			-cout << "Dimensions of matrices being concatenated are not consistent." << endl;
+			-return;
+			-}
+		-else memorizeMatrix(index, mString, mName);
 	}
 
 	else if (mathOP)
 	{
-		string operation = input.substr(EQPos + 1, (input.length() - EQPos + 1));
-		removeSpaces(operation);
-		string variable1, variable2;
-		int index1, index2;
-
-
-		//memory.push_back(temp);
-		if (plusPos != -1)
-		{
-			cut(variable1, variable2, index1, index2, '+', operation);
-
-
-			if (index != -1)
-			{
-				asg = (index1 == index || index2 == index);
-				memory.p[index].add(memory.p[index1], memory.p[index2], asg);
-				memory.p[index].print();
-			}
-
-			else
-			{
-				memory.create(mName);
-				memory.p[memoryPointer].add(memory.p[index1], (memory.p[index2]));
-				memory.p[memoryPointer].print();
-				memoryPointer++;
-			}
-		}
-
-		else if (minusPos != -1)
-		{
-			cut(variable1, variable2, index1, index2, '-', operation);
-
-
-			if (index != -1)
-			{
-				asg = (index1 == index || index2 == index);
-				memory.p[index].sub(memory.p[index1], (memory.p[index2]), asg);
-				memory.p[index].print();
-			}
-
-			else
-			{
-				memory.create(mName);
-				memory.p[memoryPointer].sub(memory.p[index1], (memory.p[index2]));
-				memory.p[memoryPointer].print();
-				memoryPointer++;
-			}
-
-
-		}
-		else if (multPos != -1)
-		{
-			cut(variable1, variable2, index1, index2, '*', operation);
-
-			if (index != -1)
-			{
-				asg = (index1 == index);
-				if (index2 == index) asg = 2;
-				memory.p[index].mult(memory.p[index1], (memory.p[index2]), asg);
-				memory.p[index].print();
-			}
-
-			else
-			{
-				memory.create(mName);
-				memory.p[memoryPointer].mult(memory.p[index1], (memory.p[index2]));
-				memory.p[memoryPointer].print();
-				memoryPointer++;
-			}
-		}
-		else if (elemWiseInvPos != -1)
-		{
-			cut(variable1, index1, './', operation);
-			if (index != -1)
-			{
-				memory.p[index].inversePerElement(memory.p[index1]);
-				memory.p[index].print();
-			}
-
-			else
-			{
-				memory.create(mName);
-				memory.p[memoryPointer].inversePerElement(memory.p[index1]);
-				memory.p[memoryPointer].print();
-				memoryPointer++;
-			}
-		}
-		else if (divPos != -1)
-		{
-			cut(variable1, variable2, index1, index2, '/', operation);
-			//cout<<memory.p[index2].getDeterminant()<<endl;
-			if (memory.p[index2].getDeterminant() == 0)
-			{
-				cout << "Division cannot done" << endl;
-				return;
-			}
-
-			else if (index != -1)
-			{
-				memory.p[index].div(memory.p[index1], (memory.p[index2]));
-				memory.p[index].print();
-			}
-
-			else
-			{
-				memory.create(mName);
-				memory.p[memoryPointer].div(memory.p[index1], (memory.p[index2]));
-				memory.p[memoryPointer].print();
-				memoryPointer++;
-			}
-		}
-		else if (transPos != -1)
-		{
-			string var;
-			int ind;
-			var = operation.substr(0, operation.find("'"));
-			ind = memoryCheck(var);
-
-
-			if (index != -1)
-			{
-				memory.p[index].getTranspose(memory.p[ind]);
-				memory.p[index].print();
-			}
-
-			else
-			{
-				memory.create(mName);
-				memory.p[memoryPointer].getTranspose(memory.p[ind]);
-				memory.p[memoryPointer].print();
-				memoryPointer++;
-			}
-		}
+		string mString = input.substr(EQPos + 1, (input.length() - EQPos + 1));
+		string tempOPE = mString;
+		matrix zMatrix;
+		tempOPE = mul_ope_solver(tempOPE);
+		memory.create(mName);
+		memoryPointer++;
+		zMatrix.zeroes(memory.p[memoryCheck(tempOPE)].rows, memory.p[memoryCheck(tempOPE)].columns);
+		memory.p[memoryCheck(mName)].add(memory.p[memoryCheck(tempOPE)],zMatrix);
+		memory.p[memoryCheck(mName)].print();
+		//3shan te3mel copy e3mel add(m,0) , we 3shan tet2akked en law 3amalt call 2 times mayeb2ash 3andak 2 funcs L
+		//me7tageen nerga3 nezbot 7ewar el exit we enena lamma nekteb esm matrix ye3mellaha print
 	}
-
-
 	else
 	{
+		string mString = input.substr(EQPos + 1, (input.length() - EQPos + 1));
 		removeSpaces(input);
+		removeSpaces(mString);
+		string tempTrig = mString.substr(0, 3);
 		if ((memoryCheck(input) != -1) &&
 			memoryCheck(input)<memoryPointer)
 		{
 			memory.p[memoryCheck(input)].print();
+		}
+		
+		else if (tempTrig == "sin" || tempTrig == "cos" || tempTrig == "tan" || tempTrig == "sec" || tempTrig == "cot")
+		{
+			//basy le yasser
+		}
+		else if (tempTrig == "ran")
+		{
+			memory.create(mName);
+			memoryPointer++;
+			string s1(1, mString[5]);
+			string s3(1, mString[7]);
+			memory.p[memoryCheck(mName)].randM(StringToDouble(s1), StringToDouble(s1));
+		}
+		else if (tempTrig == "eye")
+		{
+			memory.create(mName);
+			memoryPointer++;
+			string s1(1, mString[4]);
+			string s3(1, mString[6]);
+			memory.p[memoryCheck(mName)].eye(StringToDouble(s1), StringToDouble(s3));
+		}
+		else if (tempTrig == "zer")
+		{
+			memory.create(mName);
+			memoryPointer++;
+			string s1(1, mString[6]);
+			string s3(1, mString[8]);
+			memory.p[memoryCheck(mName)].zeroes(StringToDouble(s1), StringToDouble(s3));
+		}
+		else if (tempTrig == "one")
+		{
+			memory.create(mName);
+			memoryPointer++;
+			string s1(1, mString[5]);
+			string s3(1, mString[7]);
+			memory.p[memoryCheck(mName)].ones(StringToDouble(s1), StringToDouble(s3));
 		}
 		else if (input == "exit")
 		{
@@ -2275,8 +2191,6 @@ void input_checker(string input) // assignment or operation
 		else
 			cout << "invalid input" << endl;
 	}
-
-
 }
 #define endl '\n'
 
