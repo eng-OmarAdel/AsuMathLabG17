@@ -3176,7 +3176,7 @@ bool calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 				if (memory.p[memoryCheck(s_op2)].getColumns() != 1
 					|| memory.p[memoryCheck(s_op2)].getRows() != 1)
 					return 0;
-				if (memory.p[memoryCheck(s_op1)].getColumns() == memory.p[memoryCheck(s_op1)].getRows())
+				if (memory.p[memoryCheck(s_op1)].getColumns() != memory.p[memoryCheck(s_op1)].getRows())
 					return 0;
 
 				if (memory.p[memoryCheck(s_op2)].getColumns() == 1 &&
@@ -3195,7 +3195,7 @@ bool calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 			}
 			else if (memoryCheck(s_op1) != -1)
 			{
-				if (memory.p[memoryCheck(s_op1)].getColumns() == memory.p[memoryCheck(s_op1)].getRows())
+				if (memory.p[memoryCheck(s_op1)].getColumns() != memory.p[memoryCheck(s_op1)].getRows())
 					return 0;
 				if (op2<1 || op2 - (int)op2 != 0)
 					return 0;
