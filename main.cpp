@@ -1810,11 +1810,13 @@ void sFill(matrix &mSoph, string mString)
 						temp = mString.substr(lastPos, mString.find(')', lastPos) - lastPos + 1);
 						//didn't handle if there are brackets inside the asdsin(())
 						//tempM = Trig(temp);
-						for (int rs = 0; rs < tempM.rows; rs++)
+						string tempOPE = temp;
+						tempOPE = mul_ope_solver(tempOPE);
+						for (int rs = 0; rs < memory.p[memoryCheck(tempOPE)].rows; rs++)
 						{
-							for (int cs = 0; cs < tempM.columns; cs++)
+							for (int cs = 0; cs < memory.p[memoryCheck(tempOPE)].columns; cs++)
 							{
-								mSoph.element[r + rs][c + cs].value = tempM.element[rs][cs].value;
+								mSoph.element[r + rs][c + cs].value = memory.p[memoryCheck(tempOPE)].element[rs][cs].value;
 								mSoph.element[r + rs][c + cs].isFilled = 1;
 							}
 						}
@@ -1826,11 +1828,16 @@ void sFill(matrix &mSoph, string mString)
 					{
 						temp = mString.substr(lastPos + 4, mString.find(')', lastPos) - lastPos + 1);
 						//tempM = rand(temp)
-						for (int rs = 0; rs < tempM.rows; rs++)
+						matrix rMatrix;
+						removeSpaces(temp);
+						string s1(1,temp[1]);
+						string s3(1, temp[3]);
+						rMatrix.randM(StringToDouble(s1), StringToDouble(s1));
+						for (int rs = 0; rs < rMatrix.rows; rs++)
 						{
-							for (int cs = 0; cs < tempM.columns; cs++)
+							for (int cs = 0; cs < rMatrix.columns; cs++)
 							{
-								mSoph.element[r + rs][c + cs].value = tempM.element[rs][cs].value;
+								mSoph.element[r + rs][c + cs].value = rMatrix.element[rs][cs].value;
 								mSoph.element[r + rs][c + cs].isFilled = 1;
 							}
 						}
@@ -1842,11 +1849,16 @@ void sFill(matrix &mSoph, string mString)
 					{
 						temp = mString.substr(lastPos + 3, mString.find(')', lastPos) - lastPos + 1);
 						//tempM = eye(temp)
-						for (int rs = 0; rs < tempM.rows; rs++)
+						matrix rMatrix;
+						removeSpaces(temp);
+						string s1(1, temp[1]);
+						string s3(1, temp[3]);
+						rMatrix.eye(StringToDouble(s1), StringToDouble(s1));
+						for (int rs = 0; rs < rMatrix.rows; rs++)
 						{
-							for (int cs = 0; cs < tempM.columns; cs++)
+							for (int cs = 0; cs < rMatrix.columns; cs++)
 							{
-								mSoph.element[r + rs][c + cs].value = tempM.element[rs][cs].value;
+								mSoph.element[r + rs][c + cs].value = rMatrix.element[rs][cs].value;
 								mSoph.element[r + rs][c + cs].isFilled = 1;
 							}
 						}
@@ -1858,11 +1870,16 @@ void sFill(matrix &mSoph, string mString)
 					{
 						temp = mString.substr(lastPos + 6, mString.find(')', lastPos) - lastPos + 1);
 						//tempM = rand(temp)
-						for (int rs = 0; rs < tempM.rows; rs++)
+						matrix rMatrix;
+						removeSpaces(temp);
+						string s1(1, temp[1]);
+						string s3(1, temp[3]);
+						rMatrix.zeroes(StringToDouble(s1), StringToDouble(s1));
+						for (int rs = 0; rs < rMatrix.rows; rs++)
 						{
-							for (int cs = 0; cs < tempM.columns; cs++)
+							for (int cs = 0; cs < rMatrix.columns; cs++)
 							{
-								mSoph.element[r + rs][c + cs].value = tempM.element[rs][cs].value;
+								mSoph.element[r + rs][c + cs].value = rMatrix.element[rs][cs].value;
 								mSoph.element[r + rs][c + cs].isFilled = 1;
 							}
 						}
@@ -1874,11 +1891,16 @@ void sFill(matrix &mSoph, string mString)
 					{
 						temp = mString.substr(lastPos + 4, mString.find(')', lastPos) - lastPos + 1);
 						//tempM = rand(temp)
-						for (int rs = 0; rs < tempM.rows; rs++)
+						matrix rMatrix;
+						removeSpaces(temp);
+						string s1(1, temp[1]);
+						string s3(1, temp[3]);
+						rMatrix.ones(StringToDouble(s1), StringToDouble(s1));
+						for (int rs = 0; rs < rMatrix.rows; rs++)
 						{
-							for (int cs = 0; cs < tempM.columns; cs++)
+							for (int cs = 0; cs < rMatrix.columns; cs++)
 							{
-								mSoph.element[r + rs][c + cs].value = tempM.element[rs][cs].value;
+								mSoph.element[r + rs][c + cs].value = rMatrix.element[rs][cs].value;
 								mSoph.element[r + rs][c + cs].isFilled = 1;
 							}
 						}
@@ -2051,7 +2073,6 @@ void sFill(matrix &mSoph, string mString)
 		}
 	}
 }
-
 void input_checker(string input) // assignment or operation
 {
 
