@@ -2285,7 +2285,7 @@ string genRandom()  // Random string generator function.
 	return ranS;
 }
 bool calcAndRep(int i, int j, string  &fullOp, char ch_op) {
-	cout<<i<<" "<<j << " "<<fullOp<<" "<<ch_op<<endl ;
+	//cout<<i<<" "<<j << " "<<fullOp<<" "<<ch_op<<endl ;
 
 	int opOnNum = 1;
 	int pos1 = i, pos2 = j;
