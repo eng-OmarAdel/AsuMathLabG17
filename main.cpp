@@ -1811,7 +1811,7 @@ sizeValue calcSize(vector<string>& separatedString)
 }
 
 string mul_ope_solver(string &ope);
-void sFill(matrix &mSoph, string mString, string mName,matrix &trMat)
+void sFill(matrix &mSoph, string mString, string mName, matrix &trMat)
 {
 	int lastPos = 0;
 	string temp;
@@ -1859,7 +1859,7 @@ void sFill(matrix &mSoph, string mString, string mName,matrix &trMat)
 							}
 						}
 					}
-					
+
 					lastPos += 1;
 					flag = 1;
 				}
@@ -1876,6 +1876,13 @@ void sFill(matrix &mSoph, string mString, string mName,matrix &trMat)
 						//tempM = Trig(temp);
 						string tempOPE = temp;
 						tempOPE = mul_ope_solver(tempOPE);
+						if (tempOPE == "Statement or Expression is incorrect" || tempOPE == "Matrix dimensions must agree")
+						{
+							cout << tempOPE << endl;
+							delete &mSoph;
+							return;
+						}
+
 						for (int rs = 0; rs < memory.p[memoryCheck(tempOPE)].rows; rs++)
 						{
 							for (int cs = 0; cs < memory.p[memoryCheck(tempOPE)].columns; cs++)
@@ -1983,14 +1990,14 @@ void sFill(matrix &mSoph, string mString, string mName,matrix &trMat)
 				OBColumnCounter[OBCounter] = 0;
 				OBRowCounter[OBCounter] = 0;
 				OBCounter--;
-				if (OBCounter==0)
+				if (OBCounter == 0)
 				{
 					OBColumnCounter[OBCounter] = 0;
 					OBRowCounter[OBCounter] = 0;
 				}
 			}
 			//if 2.3
-			else if (((int(temp[0]) <= 57) && (int(temp[0]) >= 48)) || temp[0]=='-')
+			else if (((int(temp[0]) <= 57) && (int(temp[0]) >= 48)) || temp[0] == '-')
 			{
 
 				int spacePos = mString.find(' ', lastPos)
@@ -2030,6 +2037,12 @@ void sFill(matrix &mSoph, string mString, string mName,matrix &trMat)
 					{
 						string tempOPE = temp;
 						tempOPE = mul_ope_solver(tempOPE);
+						if (tempOPE == "Statement or Expression is incorrect" || tempOPE == "Matrix dimensions must agree")
+						{
+							cout << tempOPE << endl;
+							delete &mSoph;
+							return;
+						}
 						for (int rs = 0; rs < memory.p[memoryCheck(tempOPE)].rows; rs++)
 						{
 							for (int cs = 0; cs < memory.p[memoryCheck(tempOPE)].columns; cs++)
@@ -2064,6 +2077,12 @@ void sFill(matrix &mSoph, string mString, string mName,matrix &trMat)
 					{
 						string tempOPE = temp;
 						tempOPE = mul_ope_solver(tempOPE);
+						if (tempOPE == "Statement or Expression is incorrect" || tempOPE == "Matrix dimensions must agree")
+						{
+							cout << tempOPE << endl;
+							delete &mSoph;
+							return;
+						}
 						for (int rs = 0; rs < memory.p[memoryCheck(tempOPE)].rows; rs++)
 						{
 							for (int cs = 0; cs < memory.p[memoryCheck(tempOPE)].columns; cs++)
@@ -2099,6 +2118,12 @@ void sFill(matrix &mSoph, string mString, string mName,matrix &trMat)
 					{
 						string tempOPE = temp;
 						tempOPE = mul_ope_solver(tempOPE);
+						if (tempOPE == "Statement or Expression is incorrect" || tempOPE == "Matrix dimensions must agree")
+						{
+							cout << tempOPE<<endl;
+							delete &mSoph;
+							return;
+						}
 						for (int rs = 0; rs < memory.p[memoryCheck(tempOPE)].rows; rs++)
 						{
 							for (int cs = 0; cs < memory.p[memoryCheck(tempOPE)].columns; cs++)
@@ -2138,6 +2163,7 @@ void sFill(matrix &mSoph, string mString, string mName,matrix &trMat)
 			continued = 0;
 		}
 	}
+	mSoph.print();
 }
 void input_checker(string input) // assignment or operation
 {
@@ -2179,7 +2205,7 @@ void input_checker(string input) // assignment or operation
 		}
 		memorizeMatrix(index, mSize.rows, mSize.columns, mName);
 		index = memoryCheck(mName);
-		sFill(memory.p[index], mString,mName,trickyMat);
+		sFill(memory.p[index], mString, mName, trickyMat);
 		// memory.p[index]; this will be the matrix im working on
 		//memory.p[index].sFill(mString); sophisticated filling
 	}
@@ -2200,6 +2226,11 @@ void input_checker(string input) // assignment or operation
 		string tempOPE = mString;
 		matrix zMatrix;
 		tempOPE = mul_ope_solver(tempOPE);
+		if (tempOPE == "Statement or Expression is incorrect" || tempOPE == "Matrix dimensions must agree")
+		{
+			cout << tempOPE << endl;
+			return;
+		}
 		memory.create(mName);
 		memoryPointer++;
 		zMatrix.zeroes(memory.p[memoryCheck(tempOPE)].rows, memory.p[memoryCheck(tempOPE)].columns);
