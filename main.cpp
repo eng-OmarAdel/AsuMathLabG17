@@ -2285,7 +2285,7 @@ string genRandom()  // Random string generator function.
 	return ranS;
 }
 bool calcAndRep(int i, int j, string  &fullOp, char ch_op) {
-	//cout<<i<<" "<<j << " "<<fullOp<<" "<<ch_op<<endl ;
+	cout<<i<<" "<<j << " "<<fullOp<<" "<<ch_op<<endl ;
 
 	int opOnNum = 1;
 	int pos1 = i, pos2 = j;
@@ -2338,7 +2338,17 @@ bool calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 	}
 	else if (op.find("~P~")<op.length())
 	{
-		if (memoryCheck(s_op2) != -1)
+      if (memoryCheck(s_op2) != -1 && memoryCheck(s_op1) != -1)
+        {
+            string nMat = genRandom();
+			memory.create(nMat);
+
+			memory.p[memoryPointer].add(memory.p[memoryCheck(s_op2)], memory.p[memoryCheck(s_op1)]);
+			opOnNum = 0;
+			memoryPointer++;
+			result = nMat;
+        }
+		else if (memoryCheck(s_op2) != -1)
 		{
 
 			strm << s_op1;
@@ -2351,7 +2361,7 @@ bool calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 			memoryPointer++;
 			result = nMat;
 		}
-		if (memoryCheck(s_op1) != -1)
+		else if (memoryCheck(s_op1) != -1)
 		{
 			strm << s_op2;
 			strm >> op2;
@@ -2366,7 +2376,17 @@ bool calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 	}
 	else if (op.find("~S~")<op.length())
 	{
-		if (memoryCheck(s_op2) != -1)
+		if (memoryCheck(s_op2) != -1 && memoryCheck(s_op1) != -1)
+        {
+            string nMat = genRandom();
+			memory.create(nMat);
+
+			memory.p[memoryPointer].sub(memory.p[memoryCheck(s_op1)], memory.p[memoryCheck(s_op2)]);
+			opOnNum = 0;
+			memoryPointer++;
+			result = nMat;
+        }
+		else if (memoryCheck(s_op2) != -1)
 		{
 
 			strm << s_op1;
@@ -2379,7 +2399,7 @@ bool calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 			memoryPointer++;
 			result = nMat;
 		}
-		if (memoryCheck(s_op1) != -1)
+		else if (memoryCheck(s_op1) != -1)
 		{
 			strm << s_op2;
 			strm >> op2;
@@ -2414,7 +2434,6 @@ bool calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 			memory.create(nMat);
 
 			memory.p[memoryPointer].divEL(memory.p[memoryCheck(s_op2)], op1);
-
 			memory.p[memoryPointer].elementWisePower(memory.p[memoryPointer], -1);
 			opOnNum = 0;
 			memoryPointer++;
@@ -3240,6 +3259,27 @@ bool calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 				memoryPointer++;
 				result = nMat;
 			}
+			else if (memoryCheck(s_op1) != -1 )
+            {
+                string nMat = genRandom();
+				memory.create(nMat);
+				memory.p[memoryPointer].addEL(memory.p[memoryCheck(s_op1)],
+					op2);
+				opOnNum = 0;
+				memoryPointer++;
+				result = nMat;
+            }
+            else if (memoryCheck(s_op2) != -1 )
+            {
+
+                string nMat = genRandom();
+				memory.create(nMat);
+				memory.p[memoryPointer].addEL(memory.p[memoryCheck(s_op2)],
+					op1);
+				opOnNum = 0;
+				memoryPointer++;
+				result = nMat;
+            }
 			else
 				res = op1 + op2;
 			break;
@@ -3258,6 +3298,27 @@ bool calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 				memoryPointer++;
 				result = nMat;
 			}
+			else if (memoryCheck(s_op1) != -1 )
+            {
+                string nMat = genRandom();
+				memory.create(nMat);
+				memory.p[memoryPointer].subEL(memory.p[memoryCheck(s_op1)],
+					op2);
+				opOnNum = 0;
+				memoryPointer++;
+				result = nMat;
+            }
+            else if (memoryCheck(s_op2) != -1 )
+            {
+
+                string nMat = genRandom();
+				memory.create(nMat);
+				memory.p[memoryPointer].subEL(memory.p[memoryCheck(s_op2)],
+					op1);
+				opOnNum = 0;
+				memoryPointer++;
+				result = nMat;
+            }
 			else
 				res = op1 - op2;
 			break;
@@ -3275,6 +3336,27 @@ bool calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 				memoryPointer++;
 				result = nMat;
 			}
+			else if (memoryCheck(s_op1) != -1 )
+            {
+                string nMat = genRandom();
+				memory.create(nMat);
+				memory.p[memoryPointer].multEL(memory.p[memoryCheck(s_op1)],
+					op2);
+				opOnNum = 0;
+				memoryPointer++;
+				result = nMat;
+            }
+            else if (memoryCheck(s_op2) != -1 )
+            {
+
+                string nMat = genRandom();
+				memory.create(nMat);
+				memory.p[memoryPointer].multEL(memory.p[memoryCheck(s_op2)],
+					op1);
+				opOnNum = 0;
+				memoryPointer++;
+				result = nMat;
+            }
 			else
 				res = op1 * op2;
 			break;
@@ -3292,6 +3374,29 @@ bool calcAndRep(int i, int j, string  &fullOp, char ch_op) {
 				memoryPointer++;
 				result = nMat;
 			}
+			else if (memoryCheck(s_op1) != -1 )
+            {
+                string nMat = genRandom();
+				memory.create(nMat);
+				memory.p[memoryPointer].divEL(memory.p[memoryCheck(s_op1)],op2);
+
+				opOnNum = 0;
+				memoryPointer++;
+				result = nMat;
+            }
+            else if (memoryCheck(s_op2) != -1 )
+            {
+                if(memory.p[memoryCheck(s_op2)].getColumns()!=1 &&
+                   memory.p[memoryCheck(s_op2)].getRows()!=1)
+                    return 0;
+                string nMat = genRandom();
+				memory.create(nMat);
+				memory.p[memoryPointer].divEL(memory.p[memoryCheck(s_op2)],op1);
+				memory.p[memoryPointer].elementWisePower(memory.p[memoryPointer], -1);
+				opOnNum = 0;
+				memoryPointer++;
+				result = nMat;
+            }
 			else
 			{
 				if (op2 == 0)
