@@ -4511,53 +4511,127 @@ string mul_ope_solver(string &ope)
 /*End Here*/
 
 int main(int argv, char* argc[])
+
 {
+
 	ios_base::sync_with_stdio(false);
+
 	cin.tie(0);
 
+
+
 	if (argv>1)
+
 	{
+
 		ifstream infile(argc[1]);
-		string sFile, temp;
+
+		string sFile="", temp;
+		int Ncomplete=0;
+		
+
 		while (getline(infile, temp))
+
 		{
+
 			if (temp.find("\r") != -1)
-				temp.replace(temp.find("\r"), 2, "");
-			sFile = temp;
+			temp.replace(temp.find("\r"), 2, "");
+
+
+			
+			sFile+=temp;
+			if(sFile.find('[')!=-1||sFile.find(']')!=-1){
+				for(int i=0; i<sFile.length() ;i++)
+				{
+					if(sFile[i]=='[')
+						Ncomplete++;
+					else if(sFile[i]==']')
+						Ncomplete--;
+
+				}
+			}
+			
+				if(Ncomplete==0){
+
+			input_checker(sFile);
+
+				sFile = "";
+				Ncomplete=0;
+				}
+
+
+
+			
+
+
 
 			/*if (sFile.find("]") != -1 || sFile.find("];") != -1 || sFile.find("+") != -1 || sFile.find("*") != -1 || sFile.find("/") != -1 || sFile.find("'") != -1 || sFile.find("./") != -1 || (sFile.find("-") != -1 && sFile.length() <= 10))
+
 			{*/
-				input_checker(sFile);
-				sFile = "";
+
+				
+
 			//}
+
 		}
+
 		infile.close();
+
 	}
+
 	else
+
 		while (1) {
+
 			exit1 = 0;
+
 			cout << ">> ";
 
+
+
 			string ins;
+
 			getline(cin, ins);
+
 			if (ins.find("\r") != -1)
+
 				ins.replace(ins.find("\r"), 2, "");
+
 			input_checker(ins);
+
 			if (exit1 == 1)
+
 				break;
 
 
+
+
+
 			/*
+
 			cout<<endl<<"memory----------------"<<endl;
+
 			for(int z=0;z<memoryPointer;z++)
+
 			{
+
 			cout<<memory[z].getName()<<" "<<memory[z].getRows()<<" "<<memory[z].getColumns()<<endl;
+
 			memory[z].print();
+
 			cout<<"#############"<<endl;
+
 			}
+
 			cout<<endl<<"--------------------------"<<endl;
+
 			*/
+
 		}
 
+
+
 	return 0;
+
 }
+
