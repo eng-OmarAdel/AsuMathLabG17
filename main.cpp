@@ -2184,7 +2184,7 @@ void input_checker(string input) // assignment or operation
 			memoryPointer++;
 			string s1(1, mString[4]);
 			string s3(1, mString[6]);
-			memory.p[memoryCheck(mName)].eye(StringToDouble(s1), StringToDouble(s1));
+			memory.p[memoryCheck(mName)].eye(StringToDouble(s1), StringToDouble(s3));
 		}
 		else if (tempTrig == "zer")
 		{
@@ -2192,7 +2192,7 @@ void input_checker(string input) // assignment or operation
 			memoryPointer++;
 			string s1(1, mString[6]);
 			string s3(1, mString[8]);
-			memory.p[memoryCheck(mName)].randM(StringToDouble(s1), StringToDouble(s1));
+			memory.p[memoryCheck(mName)].zeroes(StringToDouble(s1), StringToDouble(s3));
 		}
 		else if (tempTrig == "one")
 		{
@@ -2200,7 +2200,7 @@ void input_checker(string input) // assignment or operation
 			memoryPointer++;
 			string s1(1, mString[5]);
 			string s3(1, mString[7]);
-			memory.p[memoryCheck(mName)].ones(StringToDouble(s1), StringToDouble(s1));
+			memory.p[memoryCheck(mName)].ones(StringToDouble(s1), StringToDouble(s3));
 		}
 		else if (input == "exit")
 		{
