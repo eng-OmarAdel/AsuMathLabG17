@@ -2282,6 +2282,17 @@ void input_checker(string input) // assignment or operation
 
 	}
 }
+bool Is_operation(char character) {
+
+	if (character == '(' || character == ')' || character == '^' || character == '*' ||
+
+		character == '/' || character == '+' || character == '-' || character == '~')
+
+		return 1;
+
+	else return 0;
+
+}
 string alphanum =
 "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 string symb = "@#$_!&%";
