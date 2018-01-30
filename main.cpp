@@ -1884,7 +1884,7 @@ void sFill(matrix &mSoph, string mString, string mName, matrix &trMat)
 						tempOPE = mul_ope_solver(tempOPE); 
 						if (tempOPE == "Statement or Expression is incorrect" || tempOPE == "Matrix dimensions must agree") 
 						{ 
-							cout << tempOPE << endl; 
+							cout << "Statement or Expression is incorrect. for more info type help" << endl; 
 							delete &mSoph; 
 							return; 
 						} 
@@ -2070,7 +2070,7 @@ void sFill(matrix &mSoph, string mString, string mName, matrix &trMat)
 						tempOPE = mul_ope_solver(tempOPE); 
 						if (tempOPE == "Statement or Expression is incorrect" || tempOPE == "Matrix dimensions must agree") 
 						{ 
-							cout << tempOPE << endl; 
+							cout << "Statement or Expression is incorrect. for more info type help" << endl; 
 							delete &mSoph; 
 							return; 
 						} 
@@ -2109,8 +2109,8 @@ void sFill(matrix &mSoph, string mString, string mName, matrix &trMat)
 						string tempOPE = temp; 
 						tempOPE = mul_ope_solver(tempOPE); 
 						if (tempOPE == "Statement or Expression is incorrect" || tempOPE == "Matrix dimensions must agree") 
-						{ 
-							cout << tempOPE << endl; 
+						{	
+							cout << "Statement or Expression is incorrect. for more info type help" << endl; 
 							delete &mSoph; 
 							return; 
 						} 
@@ -2151,7 +2151,7 @@ void sFill(matrix &mSoph, string mString, string mName, matrix &trMat)
 						tempOPE = mul_ope_solver(tempOPE); 
 						if (tempOPE == "Statement or Expression is incorrect" || tempOPE == "Matrix dimensions must agree") 
 						{ 
-							cout << tempOPE << endl; 
+							cout << "Statement or Expression is incorrect. for more info type help" << endl; 
 							delete &mSoph; 
 							return; 
 						} 
@@ -2259,7 +2259,7 @@ void input_checker(string input) // assignment or operation
 		tempOPE = mul_ope_solver(tempOPE); 
 		if (tempOPE == "Statement or Expression is incorrect" || tempOPE == "Matrix dimensions must agree") 
 		{ 
-			cout << tempOPE << endl; 
+			cout << "Statement or Expression is incorrect. for more info type help" << endl; 
 			return; 
 		} 
 		memory.create(mName); 
@@ -2326,6 +2326,10 @@ void input_checker(string input) // assignment or operation
 			exit1 = 1; 
 			return; 
 		} 
+		else if (input == "help")
+		{
+			cout<<errorHelp<<endl;
+		}
 		else 
 		{ 
 			bool notNumber = false; 
