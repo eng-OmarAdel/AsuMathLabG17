@@ -2,9 +2,9 @@
 
 ## Introduction ##
 
-This is a college project which aims to make a C++ library that works as MATLAB does.
+This is a college project which aims to make a C++ console app that works as MATLAB does.
 
-It's a mathematical library software similar to MATLAB, it mainly performs all matrices operations.
+It's a mathematical software similar to MATLAB, it mainly performs most of operations.
 It's develepod in two phases.
 
 
